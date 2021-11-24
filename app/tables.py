@@ -34,3 +34,7 @@ class CovidWorld(Base):
 
     def __repr__(self):
         return f"Date <{self.date}>"
+
+def create_database():
+    """cria a tabela no banco de dados"""
+    Base.metadata.create_all(engine)

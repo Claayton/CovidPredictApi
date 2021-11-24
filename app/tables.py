@@ -4,7 +4,7 @@ from sqlalchemy import create_engine, Column, Integer, Date
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 
-engine = create_engine('sqlite:///app/database/database.db', echo=True)
+engine = create_engine('sqlite:///app/database.db', echo=True)
 
 Session = sessionmaker(bind=engine)
 session = Session()
@@ -21,7 +21,7 @@ class CovidBrazil(Base):
     new_cases = Column(Integer)
 
     def __repr__(self):
-        return f"Date {self.date}"
+        return f"Date <{self.date}>"
 
 
 class CovidWorld(Base):
@@ -33,7 +33,4 @@ class CovidWorld(Base):
     new_cases = Column(Integer)
 
     def __repr__(self):
-        return f"Date {self.date}"
-
-
-Base.metadata.create_all(engine)
+        return f"Date <{self.date}>"

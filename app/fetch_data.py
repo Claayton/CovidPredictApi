@@ -1,7 +1,7 @@
 """Script de pesquisa e cadastro de dados na API"""
 from datetime import date
 import requests
-from app.tables import CovidBrazil, session
+from .tables import CovidBrazil, session
 
 search_url = "https://covid.ourworldindata.org/data/owid-covid-data.json"
 
@@ -45,7 +45,7 @@ def register_data_from_brazil():
 def read_data_from_brazil():
     """faz a leitura dos dados no banco de dados"""
     querry = session.query(CovidBrazil.date, CovidBrazil.new_cases).all()
-    print(querry)
+    return querry
 
 
 # register_data_from_brazil()

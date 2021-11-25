@@ -1,7 +1,7 @@
 """Script de pesquisa e cadastro de dados na API"""
 from datetime import date
 import requests
-from .tables import CovidBrazil, session
+from app import tables
 
 search_url = "https://covid.ourworldindata.org/data/owid-covid-data.json"
 
@@ -34,17 +34,17 @@ def register_data_from_brazil():
     brasilian_data = fetch_data_by_country(search_url, "BRA")
 
     for data in brasilian_data:
-        new_day = CovidBrazil(
+        new_day = tables.CovidBrazil(
             date=date.fromisoformat(data["date"]),
             new_cases=int(data["new_cases"])
         )
-        session.add(new_day)
+        tables.session.add(new_day)
         print(new_day)
-    session.commit()
+    tables.session.commit()
 
 def read_data_from_brazil():
     """faz a leitura dos dados no banco de dados"""
-    querry = session.query(CovidBrazil.date, CovidBrazil.new_cases).all()
+    querry = tables.session.query(tables.CovidBrazil.date, tables.CovidBrazil.new_cases).all()
     return querry
 
 

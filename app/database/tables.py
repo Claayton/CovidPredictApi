@@ -4,7 +4,7 @@ from sqlalchemy import create_engine, Column, Integer, Date
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 
-engine = create_engine('sqlite:///app/database.db', echo=True)
+engine = create_engine('sqlite:///app/database/datacovid.db', echo=True)
 
 Session = sessionmaker(bind=engine)
 session = Session()
@@ -35,6 +35,18 @@ class CovidWorld(Base):
     def __repr__(self):
         return f"Date <{self.date}>"
 
-def create_database():
+    @classmethod
+    def find_by_date(cls, current_session, date):
+        return current_session.query(cls).filter_by(date=date).all()
+
+def create_database_if_not_exist():
     """cria a tabela no banco de dados"""
-    Base.metadata.create_all(engine)
+    file = 'app/database/datacovid.db'
+    try:
+        a = open(file, 'rt')
+        a.close()
+        return True
+    except FileNotFoundError:
+        print(f'File {file} does not exist!, creating...')
+        Base.metadata.create_all(engine)
+        return False

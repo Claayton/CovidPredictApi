@@ -51,24 +51,35 @@ class DadosCovid():
 
     def register_data_from_world(self):
         """Registra os dados do mundo inteiro relacionados ao Covid-19 no banco de dados"""
-
+        
         for country in all_countries:
             world_data = self.fetch_data_by_country(country)
 
-            query = session.query(CovidWorld.new_cases).first()
+            query = session.query(CovidWorld.date, CovidWorld.new_cases).all()
             if not query:
                 for data in world_data:
                     new_day = CovidWorld(
                     date=date.fromisoformat(data["date"]),
                     new_cases=int(data["new_cases"])
                     )
-                session.add(new_day)
+                    session.add(new_day)
+                session.commit()
             else:
                 for data in world_data:
-                    query = CovidWorld.find_by_date(session, data["date"])
+                    query = session.query(
+                        CovidWorld.date,
+                        CovidWorld.new_cases
+                    ).filter_by(date=data["date"]).all()
                     print(f'\033[35m{data["date"]}\033[m')
                     print(f'\033[32m{query}\033[m')
-                    query.new_cases = self + int(data["new_cases"])
+                    if not query:
+                        continue
+                    current_date = query[0][0]
+                    current_new_cases = query[0][1]
+                    print(f'\033[32m{current_new_cases}\033[m')
+                    current_new_cases += int(data["new_cases"])
+                    print(f'\033[35m{data}\033[m')
+                    print(f'\033[32m{current_new_cases}\033[m')
                     session.commit()
 
     def read_data_from_brazil(self):

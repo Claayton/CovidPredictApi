@@ -6,16 +6,27 @@ class Interface():
 
     def cabeçalho(self):
         """Cabeçalho do app"""
-        print(f'\033[35m{"=" * 60}\033[m')
-        print(f'\033[34m{"VIDENTE CARLINHOS":^60}\033[m')
-        print(f'{"Previsões de evolução do COVID-19🦠":^59}')
-        print(f'\033[35m{"=" * 60}\033[m')
+        print(f'\033[35m{"=" * 75}\033[m')
+        print(f'\033[34m{"VIDENTE CARLINHOS":^75}\033[m')
+        print(f'{"Previsões de evolução do COVID-19🦠":^74}')
+        print(f'\033[35m{"=" * 75}\033[m')
 
-    # def read_data_menu(self):
-    #     """Menu para realizar a leitura dos dados"""
+    def read_data_menu(self, local):
+        """Menu para realizar a leitura dos dados"""
+        print(f'\033[35m{"=" * 75}\033[m')
+        while True:
+            choice = str(input(
+                f'Quantos dias no futuro deseja prever a evolução do Covid-19 no {local}? '
+            ))
+            if choice.isnumeric():
+                choice = int(choice)
+                break
+            print(f'\033[7;31;47m{"ERRO, DIGITE UM NÚMERO INTEIRO VÁLIDO!":^75}\033[m')
+        return choice
 
     def main_menu(self):
         """Menu principal do app"""
+
         os.system('clear')
         self.cabeçalho()
         while True:

@@ -4,8 +4,8 @@ from math import sqrt
 import pandas as pd
 from numpy import mean
 from sklearn.metrics import mean_squared_error
-from .database.fetch_data import DadosCovid
-from . import config
+from ..database.fetch_data import DadosCovid
+from .. import config
 
 dc = DadosCovid(config.search_url, "BRA")
 data = dc.read_data_from_brazil()
@@ -54,8 +54,8 @@ class AnalizadorDeCovid():
             history.append(valor_real)
 
             print(f'Dia: {X[index][0]}:\
-                    Valor predito: {valor_predito:.2f},\
-                    Valor real:{valor_real:.2f}')
+                    Valor predito: {valor_predito:.0f},\
+                    Valor real:{valor_real:.0f}')
 
         rmse = sqrt(mean_squared_error(test, predicoes))
         print(f'Metrica de RMSE: {rmse}')

@@ -33,8 +33,32 @@ class DadosCovid():
                 country_data_per_day.append(data.copy())
                 data.clear()
             except KeyError:
-                pass
+                continue
         return country_data_per_day
+
+    def fetch_data_from_world(self):
+        """Busca dados de todos os paises do mundo"""
+        world_data_by_country = []
+        country_data_per_day = []
+        data = {}
+
+        response = requests.get(self.url).json()
+
+        for country in all_countries:
+            data_by_country = response[country]["data"]
+            for index, day in enumerate(data_by_country):
+                try:
+                    data["id"] = index
+                    data["date"] = day["date"]
+                    data["new_cases"] = day["new_cases"]
+                    country_data_per_day.append(data.copy())
+                    data.clear()
+                except KeyError:
+                    continue
+            world_data_by_country.append(country_data_per_day[:])
+            country_data_per_day.clear()
+
+        return world_data_by_country
 
     def register_data_from_brazil(self):
         """Registra os dados do brasil relacionados ao COvid-19 no banco de dados"""
@@ -50,37 +74,32 @@ class DadosCovid():
         session.commit()
 
     def register_data_from_world(self):
-        """Registra os dados do mundo inteiro relacionados ao Covid-19 no banco de dados"""
-        
-        for country in all_countries:
-            world_data = self.fetch_data_by_country(country)
+        """
+        Registra os dados do mundo inteiro relacionados ao Covid-19 no banco de dados
+        """
+        world_data_list = {}
 
-            query = session.query(CovidWorld.date, CovidWorld.new_cases).all()
-            if not query:
-                for data in world_data:
-                    new_day = CovidWorld(
-                    date=date.fromisoformat(data["date"]),
-                    new_cases=int(data["new_cases"])
-                    )
-                    session.add(new_day)
-                session.commit()
-            else:
-                for data in world_data:
-                    query = session.query(
-                        CovidWorld.date,
-                        CovidWorld.new_cases
-                    ).filter_by(date=data["date"]).all()
-                    print(f'\033[35m{data["date"]}\033[m')
-                    print(f'\033[32m{query}\033[m')
-                    if not query:
-                        continue
-                    current_date = query[0][0]
-                    current_new_cases = query[0][1]
-                    print(f'\033[32m{current_new_cases}\033[m')
-                    current_new_cases += int(data["new_cases"])
-                    print(f'\033[35m{data}\033[m')
-                    print(f'\033[32m{current_new_cases}\033[m')
-                    session.commit()
+        world_data_by_country = self.fetch_data_from_world()
+        world_data_list = world_data_by_country[0]
+
+        for country in world_data_by_country:
+            for day in country:
+
+                current_date = day["date"]
+                current_new_cases = day["new_cases"]
+
+                for day_world_list in world_data_list:
+                    if current_date == day_world_list["date"]:
+                        day_world_list["new_cases"] += current_new_cases
+
+        for data in world_data_list:
+            new_day = CovidWorld(
+                date=date.fromisoformat(data["date"]),
+                new_cases=int(data["new_cases"])
+            )
+            session.add(new_day)
+            print(new_day)
+        session.commit()
 
     def read_data_from_brazil(self):
         """faz a leitura dos dados no banco de dados"""

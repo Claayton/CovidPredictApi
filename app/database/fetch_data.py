@@ -1,14 +1,15 @@
 """Script de pesquisa e cadastro de dados na API"""
 from datetime import date
 import requests
-from app.database.tables import CovidBrazil, CovidWorld, session
 from app.database.countries_list import all_countries
+from app.database.tables import CovidBrazil, CovidWorld, session, create_database_if_not_exist
 
 
 class DadosCovid():
     """Realiza o tratamento dos dados do covid no brasil"""
 
     def __init__(self, url, country):
+        create_database_if_not_exist('app/database/datacovid.db')
         self.url = url
         self.country = country
 
@@ -70,7 +71,6 @@ class DadosCovid():
                 new_cases=int(data["new_cases"])
             )
             session.add(new_day)
-            print(new_day)
         session.commit()
 
     def register_data_from_world(self):

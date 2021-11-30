@@ -1,15 +1,24 @@
 "tables"
 
+import os.path
 from sqlalchemy import create_engine, Column, Integer, Date
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 
-engine = create_engine('sqlite:///app/database/datacovid.db', echo=True)
+file = 'app/database/datacovid.db'
+engine = create_engine(f'sqlite:///{file}', echo=True)
 
 Session = sessionmaker(bind=engine)
 session = Session()
 
 Base = declarative_base()
+
+def create_database_if_not_exist(file='app/database/datacovid.db'):
+    if os.path.isfile(file):
+        print('\033[35mBanco de dados já existe\033[m')
+    else:
+        print(f'\033[35mFile {file} does not exist!, creating...\033[m')
+        Base.metadata.create_all(engine)
 
 
 class CovidBrazil(Base):
@@ -34,19 +43,3 @@ class CovidWorld(Base):
 
     def __repr__(self):
         return f"Date <{self.date}>"
-
-    @classmethod
-    def find_by_date(cls, current_session, date):
-        return current_session.query(cls).filter_by(date=date).all()
-
-def create_database_if_not_exist():
-    """cria a tabela no banco de dados"""
-    file = 'app/database/datacovid.db'
-    try:
-        a = open(file, 'rt')
-        a.close()
-        return True
-    except FileNotFoundError:
-        print(f'File {file} does not exist!, creating...')
-        Base.metadata.create_all(engine)
-        return False

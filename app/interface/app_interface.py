@@ -40,6 +40,6 @@ class Interface():
                 if choice in (0, 1):
                     break
             os.system('clear')
-            print(f'\033[7;31;47m{"ERRO, DIGITE UM NÚMERO INTEIRO VÁLIDO!":^60}\033[m')
+            print(f'\033[7;31;47m{"ERRO, DIGITE UM NÚMERO INTEIRO VÁLIDO!":^75}\033[m')
             self.cabeçalho()
         return choice

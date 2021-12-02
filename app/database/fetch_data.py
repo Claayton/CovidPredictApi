@@ -1,5 +1,6 @@
-"""Script de pesquisa e cadastro de dados na API"""
+"""Script de pesquisa e registro de dados na API"""
 from datetime import date
+from time import sleep
 import requests
 from app.database.countries_list import all_countries
 from app.database.tables import CovidBrazil, CovidWorld, session, create_database_if_not_exist
@@ -7,7 +8,6 @@ from app.database.tables import CovidBrazil, CovidWorld, session, create_databas
 
 class DadosCovid():
     """Realiza o tratamento dos dados do covid no brasil"""
-
     def __init__(self, url, country):
         create_database_if_not_exist('app/database/datacovid.db')
         self.url = url
@@ -38,7 +38,11 @@ class DadosCovid():
         return country_data_per_day
 
     def fetch_data_from_world(self):
-        """Busca dados de todos os paises do mundo"""
+        """
+        Busca dados de todos os paises do mundo,
+        Realiza a soma dos casos de cada dia em todos os países do mundo
+        :return: Uma lista com os casos de cada dia no mundo.
+        """
         world_data_by_country = []
         country_data_per_day = []
         data = {}
@@ -62,9 +66,17 @@ class DadosCovid():
         return world_data_by_country
 
     def register_data_from_brazil(self):
-        """Registra os dados do brasil relacionados ao COvid-19 no banco de dados"""
+        """
+        Registra os dados do brasil relacionados ao COvid-19 no banco de dados.
+        """
+        print(f'\033[35m{"Coletando dados...":^75}\033[m')
+        sleep(2)
+        print(f'\033[35m\
+            {"São muitos dados e isso pode demorar um pouco na primeira vez, aguarde...":^75}\
+            \033[m')
+        
         brazil_data = self.fetch_data_by_country("BRA")
-
+        
         for data in brazil_data:
             new_day = CovidBrazil(
                 date=date.fromisoformat(data["date"]),
@@ -75,10 +87,15 @@ class DadosCovid():
 
     def register_data_from_world(self):
         """
-        Registra os dados do mundo inteiro relacionados ao Covid-19 no banco de dados
+        Registra os dados do mundo inteiro relacionados ao Covid-19 no banco de dados.
         """
+        print(f'\033[35m{"Coletando dados...":^75}\033[m')
+        sleep(2)
+        print(f'\033[35m\
+            {"São muitos dados e isso pode demorar um pouco na primeira vez, aguarde...":^75}\
+            \033[m')
+        
         world_data_list = {}
-
         world_data_by_country = self.fetch_data_from_world()
         world_data_list = world_data_by_country[0]
 
@@ -98,15 +115,18 @@ class DadosCovid():
                 new_cases=int(data["new_cases"])
             )
             session.add(new_day)
-            print(new_day)
         session.commit()
 
     def read_data_from_brazil(self):
-        """faz a leitura dos dados no banco de dados"""
+        """
+        Realiza a leitura dos dados do Brasil no banco de dados.
+        """
         query = session.query(CovidBrazil.date, CovidBrazil.new_cases).all()
         return query
 
     def read_data_from_world(self):
-        """faz a leitura dos dados no banco de dados"""
+        """
+        Realiza a leitura dos dados do mundo no banco de dados.
+        """
         query = session.query(CovidWorld.date, CovidWorld.new_cases).all()
         return query

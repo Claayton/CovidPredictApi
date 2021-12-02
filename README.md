@@ -1,7 +1,7 @@
 
-# Analizador Covid-19
+# Analizador Covid-19 (modo terminal)
 
-Um pequeno analizador que coleta dados sobre a covid-19 em uma API, analisa esses dados e realiza uma previsão de novos casos, apartir de um número indicado pelo usuário.
+Um pequeno analizador que coleta dados sobre a covid-19 em uma API, separa esses dados, realiza uma analise, e por fim uma previsão de novos casos, apartir de um número indicado pelo usuário.
 
 
 

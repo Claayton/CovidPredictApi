@@ -4,14 +4,22 @@ from sqlalchemy.exc import OperationalError
 from app import config
 from app.interface.app_interface import Interface
 from app.database.fetch_data import DadosCovid
-from app.analyzer.data_analise import AnalizadorDeCovid
+from app.analyzer.data_analysis import CovidAnalyzer
+from app.database.tables import delete_arquivo_if_exist
 
 def run():
-    interface = Interface()
-    dc = DadosCovid(config.search_url, "BRA")
+    """Rodar diretamente o programa"""
 
-    choice = interface.main_menu()
-    if choice == 0:
+    interface = Interface()
+
+    while True:
+        choice = interface.main_menu()
+        if choice == 0:
+            delete_arquivo_if_exist('app/database/datacovid.db')
+        else:
+            break
+    dc = DadosCovid(config.search_url, "BRA")
+    if choice == 1:
         try:
             data = dc.read_data_from_brazil()
             if not data:
@@ -19,11 +27,9 @@ def run():
         except (OperationalError, ValueError):
             dc.register_data_from_brazil()
             data = dc.read_data_from_brazil()
-            print(data)
         days = interface.read_data_menu('Brasil')
-        ac = AnalizadorDeCovid(data, days)
-        ac.adicionar_dias_ao_data_frame()
-        ac.vidente_carlinhos()
+        ac = CovidAnalyzer(data, days)
+        result = ac.predict_covid_evolution()
     else:
         try:
             data = dc.read_data_from_world()
@@ -33,6 +39,8 @@ def run():
             dc.register_data_from_world()
             data = dc.read_data_from_world()
         days = interface.read_data_menu('Mundo')
-        ac = AnalizadorDeCovid(data, days)
-        ac.adicionar_dias_ao_data_frame()
-        ac.vidente_carlinhos()
+        ac = CovidAnalyzer(data, days)
+        result = ac.predict_covid_evolution()
+    for day in result:
+        print(f'Dia: {day["index"]}:\
+                Previsão: {day["predito"]:.2f}')

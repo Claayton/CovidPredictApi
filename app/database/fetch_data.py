@@ -1,9 +1,11 @@
 """Script de pesquisa e registro de dados na API"""
 from datetime import date
-from time import sleep
 import requests
 from app.database.countries_list import all_countries
 from app.database.tables import CovidBrazil, CovidWorld, session, create_database_if_not_exist
+from app.interface.app_interface import Interface
+
+interface = Interface()
 
 
 class DadosCovid():
@@ -69,11 +71,7 @@ class DadosCovid():
         """
         Registra os dados do brasil relacionados ao COvid-19 no banco de dados.
         """
-        print(f'\033[35m{"Coletando dados...":^75}\033[m')
-        sleep(2)
-        print(f'\033[35m\
-            {"São muitos dados e isso pode demorar um pouco na primeira vez, aguarde...":^75}\
-            \033[m')
+        interface.collecting_data()
 
         brazil_data = self.fetch_data_by_country("BRA")
 
@@ -89,11 +87,7 @@ class DadosCovid():
         """
         Registra os dados do mundo inteiro relacionados ao Covid-19 no banco de dados.
         """
-        print(f'\033[35m{"Coletando dados...":^75}\033[m')
-        sleep(2)
-        print(f'\033[35m\
-            {"São muitos dados e isso pode demorar um pouco na primeira vez, aguarde...":^75}\
-            \033[m')
+        interface.collecting_data()
 
         world_data_list = {}
         world_data_by_country = self.fetch_data_from_world()

@@ -1,5 +1,6 @@
 """Interface da aplicação"""
 import os
+from time import sleep
 
 
 class Interface():
@@ -46,9 +47,33 @@ class Interface():
             ))
             if choice.isnumeric():
                 choice = int(choice)
-                if choice in (0, 1, 2):
+                if choice in (0, 1, 2, 777):
                     break
             os.system('clear')
             print(f'\033[7;31;47m{"ERRO, DIGITE UM NÚMERO INTEIRO VÁLIDO!":^75}\033[m')
             self.cabeçalho()
         return choice
+
+    def collecting_data(self):
+        """Mensagem indicando que os dados estão sendo coletados"""
+        print(f'\033[35m{"Coletando dados...":^75}\033[m')
+        sleep(2)
+        print(f'\033[35m{"São muitos dados e isso pode demorar um pouco na primeira vez, aguarde...":^75}\033[m')
+
+    def again(self):
+        """Opção para usuário continuar utilizando o programa ou sair.
+        :return: Escolha do usuário"""
+        while True:
+            choice = str(input(
+                f'Deseja realizar outra previsão? '
+            ))
+            if choice[0] in 'sSnN':
+                break
+            print(f'\033[7;31;47m{"ERRO, DIGITE SIM OU NÃO!":^75}\033[m')
+        return choice
+
+    def farewall(self):
+        """Pequena despedida quando o usuário sair do programa."""
+        print(f'\033[35m{"=" * 75}\033[m')
+        print(f'\033[34m{"OBRIGADO POR UTILIZAR O PROGRAMA, ATÉ MAIS :D":^75}\033[m')
+        print(f'\033[35m{"=" * 75}\033[m')

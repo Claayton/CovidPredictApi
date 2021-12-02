@@ -7,20 +7,9 @@ Um pequeno analizador que coleta dados sobre a covid-19 em uma API, analisa esse
 
 ## Demo
 
-Insert gif or link to demo
+Insert ![previsao](https://user-images.githubusercontent.com/76628101/144463995-ffdea2c5-70c0-4542-b0c2-498ee70f1482.gif)
 
 
-## Documentation
+## Instruções
 
-[Documentation](docs.md)
-
-
-
-## Executando testes
-
-Para executar testes, execute o seguinte comando
-
-```bash
-  pytest
-```
-
+[Instruções](docs.md)

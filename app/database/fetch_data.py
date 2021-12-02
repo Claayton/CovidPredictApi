@@ -74,9 +74,9 @@ class DadosCovid():
         print(f'\033[35m\
             {"São muitos dados e isso pode demorar um pouco na primeira vez, aguarde...":^75}\
             \033[m')
-        
+
         brazil_data = self.fetch_data_by_country("BRA")
-        
+
         for data in brazil_data:
             new_day = CovidBrazil(
                 date=date.fromisoformat(data["date"]),
@@ -94,7 +94,7 @@ class DadosCovid():
         print(f'\033[35m\
             {"São muitos dados e isso pode demorar um pouco na primeira vez, aguarde...":^75}\
             \033[m')
-        
+
         world_data_list = {}
         world_data_by_country = self.fetch_data_from_world()
         world_data_list = world_data_by_country[0]

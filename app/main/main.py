@@ -45,9 +45,8 @@ def run():
             days = interface.read_data_menu('Mundo')
             ac = CovidAnalyzer(data, days)
             result = ac.predict_covid_evolution()
-        for day in result:
-            print(f'Dia: {day["index"]}:\
-                    Previsão: {day["predito"]:.2f}')
+        for index, day in enumerate(result):
+            print(f'{day["index"]} -> {index + 1} -> {day["predito"]:.2f}')
         again = interface.again()
         if again[0] in 'Nn':
             interface.farewall()

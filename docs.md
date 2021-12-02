@@ -4,7 +4,7 @@
 O projeto foi desenvolvido utilizando Python 3.8.10, recomendo utilizar a mesma versão,
 vc pode instalar o Python [nesse link](https://www.python.org/downloads/).
 
-*Você vai precisar também de um ambiente virtual para evitar conflitos entre versões na tua maquina, utilize o comando a seguir para instalar o **virtualenv***:
+*Você vai precisar também de um ambiente virtual para evitar conflitos entre versões na tua maquina, utilize o comando a seguir para instalar o **virtualenv** caso ainda não tenha instalado*:
 ```
 pip install virtualenv
 ```
@@ -20,4 +20,19 @@ source venv/Scripts/activate - #windows
 *Agora instale as **bibliotecas e pacotes** necessários para rodar o projeto:*
 ```
 pip install -r requirements.txt
+```
+
+## Rodando o programa
+
+E para rodar o programa, abrir o terminal dentro do repositório e executar o seguinte comando
+```
+python3 run.py
+```
+
+## Executando testes
+
+Para executar testes, execute o seguinte comando
+
+```
+  pytest -v
 ```

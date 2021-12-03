@@ -22,7 +22,7 @@ class Interface():
         print(f'\033[35m{"=" * 75}\033[m')
         while True:
             choice = str(input(
-                f'Quantos dias no futuro deseja prever a evolução do Covid-19 no {local}? '
+                f'Quantos dias no futuro deseja prever a evolução do Covid-19 no {local}?: '
             ))
             if choice.isnumeric():
                 choice = int(choice)
@@ -40,9 +40,10 @@ class Interface():
         self.cabeçalho()
         while True:
             choice = str(input(
-                "\033[32m[ 0 ]\033[m - \033[34mResetar dados do sistema\
-                \n\033[32m[ 1 ]\033[m - \033[34mPrever a evolução do COVID-19 no Brasil\
-                \n\033[32m[ 2 ]\033[m - \033[34mPrever a evolução do COVID-19 no Mundo\
+                "\033[32m[  0  ]\033[m - \033[34mResetar dados do sistema\
+                \n\033[32m[  1  ]\033[m - \033[34mPrever a evolução do COVID-19 no Brasil\
+                \n\033[32m[  2  ]\033[m - \033[34mPrever a evolução do COVID-19 no Mundo\
+                \n\033[32m[ 777 ]\033[m - \033[34mSair\
                 \n\033[mEscolha uma opção para prever a evolução por COVID-19: "
             ))
             if choice.isnumeric():
@@ -67,10 +68,13 @@ class Interface():
             choice = str(input(
                 f'Deseja realizar outra previsão? '
             ))
-            if choice[0] in 'sSnN':
-                break
-            print(f'\033[7;31;47m{"ERRO, DIGITE SIM OU NÃO!":^75}\033[m')
-        return choice
+            try:
+                if choice[0] not in 'sSnN':
+                    raise ValueError()
+            except (IndexError,ValueError):
+                print(f'\033[7;31;47m{"ERRO, DIGITE SIM OU NÃO!":^75}\033[m')
+                continue
+            return choice
 
     def farewall(self):
         """Pequena despedida quando o usuário sair do programa."""

@@ -4,6 +4,8 @@
 O projeto foi desenvolvido utilizando Python 3.8.10, recomendo utilizar a mesma versão,
 vc pode instalar o Python [nesse link](https://www.python.org/downloads/).
 
+Outra coisa que preciso ressaltar é que o projeto foi desenvolvido em ambiente linux (Ubuntu 20.04) e por ainda não ter os conhecimentos necessários em Docker, ainda não pude implementá-lo, por isso Docker será o tema dos meus estudos ao fim desse projeto.
+
 *Você vai precisar também de um ambiente virtual para evitar conflitos entre versões na tua maquina, utilize o comando a seguir para instalar o **virtualenv** caso ainda não tenha instalado*:
 ```
 pip install virtualenv
@@ -34,5 +36,6 @@ python3 run.py
 Para executar testes, execute o seguinte comando
 
 ```
-  pytest -v
+  pytest - #Rodar o testes da forma padrão
+  pytest -v - #Roda os teste mostrando os detalhes caso ocorra algum erro
 ```

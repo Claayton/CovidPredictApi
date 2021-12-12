@@ -8,21 +8,28 @@ from src.interface.app_interface import Interface
 interface = Interface()
 
 
-class DadosCovid():
+class DataCovidConsumer:
     """Realiza o tratamento dos dados do covid no brasil"""
-    def __init__(self, url, country):
+
+    def __init__(self, country: str):
         create_database_if_not_exist('app/database/datacovid.db')
-        self.url = url
         self.country = country
 
-    def fetch_data_by_country(self, country):
+    @classmethod
+    def get_data_covid(self, ) -> any:
+        """ Busca dados na Api"""
+
+        response = requests.get('https://covid.ourworldindata.org/data/owid-covid-data.json/')
+        return response.json()
+
+    def separates_data_from_a_country(self, country: str) -> list:
         """
         Buscar dos dados da COVID-19 por cada país.
         :param country: País no qual deve ser buscados os dados
         :return: Uma lista de cada dia desde 26-02-2020,
         separados por id, data e número de novos casos registrados no país.
         """
-        response = requests.get(self.url).json()
+        response = self.get_data_covid()
         days = response[country]["data"]
 
         country_data_per_day = []
@@ -39,7 +46,7 @@ class DadosCovid():
                 continue
         return country_data_per_day
 
-    def fetch_data_from_world(self):
+    def separates_data_from_the_world(self, ):
         """
         Busca dados de todos os paises do mundo,
         Realiza a soma dos casos de cada dia em todos os países do mundo
@@ -49,7 +56,7 @@ class DadosCovid():
         country_data_per_day = []
         data = {}
 
-        response = requests.get(self.url).json()
+        response = self.get_data_covid()
 
         for country in all_countries:
             data_by_country = response[country]["data"]
@@ -73,7 +80,7 @@ class DadosCovid():
         """
         interface.collecting_data()
 
-        brazil_data = self.fetch_data_by_country("BRA")
+        brazil_data = self.separates_data_from_a_country("BRA")
 
         for data in brazil_data:
             new_day = CovidBrazil(
@@ -90,7 +97,7 @@ class DadosCovid():
         interface.collecting_data()
 
         world_data_list = {}
-        world_data_by_country = self.fetch_data_from_world()
+        world_data_by_country = self.separates_data_from_the_world()
         world_data_list = world_data_by_country[0]
 
         for country in world_data_by_country:

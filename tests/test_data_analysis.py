@@ -32,4 +32,4 @@ def test_if_predict_covid_evolution_is_working():
     ac = CovidAnalyzer(data, 7)
     response = ac.predict_covid_evolution()
     assert 'predito' in response[0]
-    assert int(response[0]['predito']) == 281
+    assert int(response[0]['predito']) == 273

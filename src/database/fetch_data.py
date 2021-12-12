@@ -1,6 +1,9 @@
 """Script de pesquisa e registro de dados na API"""
 from datetime import date
+from typing import Type
+from collections import namedtuple
 import requests
+from requests import Request
 from src.database.countries_list import all_countries
 from src.database.tables import CovidBrazil, CovidWorld, session, create_database_if_not_exist
 from src.interface.app_interface import Interface
@@ -11,16 +14,40 @@ interface = Interface()
 class DataCovidConsumer:
     """Realiza o tratamento dos dados do covid no brasil"""
 
-    def __init__(self, country: str):
-        create_database_if_not_exist('app/database/datacovid.db')
+    def __init__(self, country: str) -> None:
+        self.get_data_covid_response = namedtuple(
+            'GET_Dados_covid',
+            'status_code request response'
+        )
         self.country = country
+        create_database_if_not_exist('app/database/datacovid.db')
 
-    @classmethod
-    def get_data_covid(self, ) -> any:
+    def get_data_covid(self) -> any:
         """ Busca dados na Api"""
 
-        response = requests.get('https://covid.ourworldindata.org/data/owid-covid-data.json/')
-        return response.json()
+        request = requests.Request(
+            method='GET',
+            url='https://covid.ourworldindata.org/data/owid-covid-data.json/',
+        )
+        request_prepared = request.prepare()
+        response = self.__send_http_request(request_prepared)
+
+        return self.get_data_covid_response(
+            status_code=response.status_code,
+            request=request,
+            response=response.json()
+        )
+
+    @classmethod
+    def __send_http_request(cls, request_prepared: Type[Request]) -> any:
+        """
+        Prepara a seção e envia a requisição http
+        :param request_prepared: Objeto de requisição com todos os parâmetros.
+        :return: A resposta da requisição http.
+        """
+        http_session = requests.Session()
+        response = http_session.send(request_prepared)
+        return response
 
     def separates_data_from_a_country(self, country: str) -> list:
         """

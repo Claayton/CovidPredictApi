@@ -1,0 +1,1 @@
+from .data_covid_list_colector import DataCovidListColectorInterface

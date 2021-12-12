@@ -1,9 +1,9 @@
 """Script de pesquisa e registro de dados na API"""
 from datetime import date
 import requests
-from app.database.countries_list import all_countries
-from app.database.tables import CovidBrazil, CovidWorld, session, create_database_if_not_exist
-from app.interface.app_interface import Interface
+from src.database.countries_list import all_countries
+from src.database.tables import CovidBrazil, CovidWorld, session, create_database_if_not_exist
+from src.interface.app_interface import Interface
 
 interface = Interface()
 

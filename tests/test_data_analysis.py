@@ -1,6 +1,6 @@
 """Testes relacionados a analise dos dados coletados"""
 from datetime import date
-from app.analyzer.data_analysis import CovidAnalyzer
+from src.analyzer.data_analysis import CovidAnalyzer
 
 def test_if_add_days_to_data_frame_is_working():
     """

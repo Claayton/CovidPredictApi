@@ -1,11 +1,11 @@
 """Módulo principal do programa"""
 
 from sqlalchemy.exc import OperationalError
-from app import config
-from app.interface.app_interface import Interface
-from app.database.fetch_data import DadosCovid
-from app.analyzer.data_analysis import CovidAnalyzer
-from app.database.tables import delete_arquivo_if_exist
+from src import config
+from src.interface.app_interface import Interface
+from src.database.fetch_data import DadosCovid
+from src.analyzer.data_analysis import CovidAnalyzer
+from src.database.tables import delete_arquivo_if_exist
 
 def run():
     """Rodar diretamente o programa"""
@@ -16,7 +16,7 @@ def run():
         while True:
             choice = interface.main_menu()
             if choice == 0:
-                delete_arquivo_if_exist('app/database/datacovid.db')
+                delete_arquivo_if_exist('src/database/datacovid.db')
             else:
                 break
         if choice == 777:

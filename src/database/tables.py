@@ -6,7 +6,7 @@ from sqlalchemy import create_engine, Column, Integer, Date
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 
-engine = create_engine('sqlite:///app/database/datacovid.db')
+engine = create_engine('sqlite:///src/database/datacovid.db')
 
 Session = sessionmaker(bind=engine)
 session = Session()

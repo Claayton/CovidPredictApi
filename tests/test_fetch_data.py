@@ -1,7 +1,7 @@
 """Testes relacionados a busca de dados na API"""
 import requests
-from app import config
-from app.database.fetch_data import DadosCovid
+from src import config
+from src.database.fetch_data import DadosCovid
 
 def test_if_the_search_url_is_working():
     """Test if the search url is working"""

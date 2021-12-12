@@ -1,0 +1,1 @@
+from .data_covid_consumer import DataCovidConsumer

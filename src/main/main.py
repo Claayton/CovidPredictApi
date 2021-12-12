@@ -3,7 +3,7 @@
 from sqlalchemy.exc import OperationalError
 from src import config
 from src.interface.app_interface import Interface
-from src.database.fetch_data import DadosCovid
+from src.infra.data_covid_consumer import DadosCovid
 from src.analyzer.data_analysis import CovidAnalyzer
 from src.database.tables import delete_arquivo_if_exist
 

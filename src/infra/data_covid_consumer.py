@@ -8,11 +8,12 @@ from src.database.countries_list import all_countries
 from src.database.tables import CovidBrazil, CovidWorld, session, create_database_if_not_exist
 from src.interface.app_interface import Interface
 from src.errors import HttpRequestError
+from src.data.interfaces.data_covid_consumer import DataCovidConsumerInterface
 
 interface = Interface()
 
 
-class DataCovidConsumer:
+class DataCovidConsumer(DataCovidConsumerInterface):
     """
     Classe responsável pelo consumo da API de dados do covid utilizando requisições http.
     """

@@ -1,0 +1,13 @@
+"""Diretório de interface de consumo da API"""
+from abc import ABC, abstractmethod
+from typing import Type, Tuple, Dict
+from requests import Request
+
+
+class DataCovidConsumerInterface(ABC):
+    """Interface de consumo de API"""
+
+    @abstractmethod
+    def get_data_covid(self) -> Tuple[int, Type[Request], Dict]:
+        """Deve ser implementado"""
+        raise Exception('Must implement get_data_covid')

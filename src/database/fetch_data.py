@@ -1,42 +1,56 @@
 """Script de pesquisa e registro de dados na API"""
 from datetime import date
-from typing import Type
+from typing import Dict, Tuple, Type
 from collections import namedtuple
 import requests
 from requests import Request
 from src.database.countries_list import all_countries
 from src.database.tables import CovidBrazil, CovidWorld, session, create_database_if_not_exist
 from src.interface.app_interface import Interface
+from src.errors import HttpRequestError
 
 interface = Interface()
 
 
 class DataCovidConsumer:
-    """Realiza o tratamento dos dados do covid no brasil"""
+    """
+    Classe responsável pelo consumo da API de dados do covid utilizando requisições http.
+    """
 
-    def __init__(self, country: str) -> None:
+    def __init__(self, url: str) -> None:
         self.get_data_covid_response = namedtuple(
             'GET_Dados_covid',
             'status_code request response'
         )
-        self.country = country
+        self.url = url
         create_database_if_not_exist('app/database/datacovid.db')
 
-    def get_data_covid(self) -> any:
-        """ Busca dados na Api"""
+    def get_data_covid(self) -> Tuple[int, Type[Request], Dict]:
+        """
+        Realiza a requisição para a API de dados do covid.
+        :return: Uma tupla com os atributos: (status_code, request, response).
+        """
 
         request = requests.Request(
             method='GET',
-            url='https://covid.ourworldindata.org/data/owid-covid-data.json/',
+            url=self.url,
         )
         request_prepared = request.prepare()
-        response = self.__send_http_request(request_prepared)
 
-        return self.get_data_covid_response(
-            status_code=response.status_code,
-            request=request,
-            response=response.json()
-        )
+        response = self.__send_http_request(request_prepared)
+        status_code = response.status_code
+
+        if (status_code >= 200) and (status_code <= 299):
+            return self.get_data_covid_response(
+                status_code=status_code,
+                request=request,
+                response=response.json()
+            )
+        else:
+            raise HttpRequestError(
+                message=response.json()['details'],
+                status_code=status_code
+            )
 
     @classmethod
     def __send_http_request(cls, request_prepared: Type[Request]) -> any:

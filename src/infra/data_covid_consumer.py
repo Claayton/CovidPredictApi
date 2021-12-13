@@ -1,6 +1,6 @@
 """Script de pesquisa e registro de dados na API"""
 from datetime import date
-from typing import Dict, Tuple, Type
+from typing import Dict, Tuple, Type, List
 from collections import namedtuple
 import requests
 from requests import Request
@@ -18,12 +18,13 @@ class DataCovidConsumer(DataCovidConsumerInterface):
     Classe responsável pelo consumo da API de dados do covid utilizando requisições http.
     """
 
-    def __init__(self, url: str) -> None:
+    def __init__(self, url: str, country: List[str]) -> None:
         self.get_data_covid_response = namedtuple(
             'GET_Dados_covid',
             'status_code request response'
         )
         self.url = url
+        self.country = country
         create_database_if_not_exist('app/database/datacovid.db')
 
     def get_data_covid(self) -> Tuple[int, Type[Request], Dict]:

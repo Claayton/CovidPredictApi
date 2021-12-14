@@ -118,7 +118,6 @@ class DataCovidConsumer(DataCovidConsumerInterface):
         """
         Registra os dados do brasil relacionados ao COvid-19 no banco de dados.
         """
-        interface.collecting_data()
 
         brazil_data = self.separates_data_from_a_country("BRA")
 
@@ -134,7 +133,6 @@ class DataCovidConsumer(DataCovidConsumerInterface):
         """
         Registra os dados do mundo inteiro relacionados ao Covid-19 no banco de dados.
         """
-        interface.collecting_data()
 
         world_data_list = {}
         world_data_by_country = self.separates_data_from_the_world()

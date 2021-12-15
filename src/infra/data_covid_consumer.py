@@ -4,7 +4,7 @@ from typing import Dict, Tuple, Type
 from collections import namedtuple
 import requests
 from requests import Request
-from src.database.countries_list import all_countries
+from src.validators.countries_list import ALL_COUNTRIES
 from src.database.tables import CovidBrazil, CovidWorld, session, create_database_if_not_exist
 from src.errors import HttpRequestError
 from src.data.interfaces.data_covid_consumer import DataCovidConsumerInterface
@@ -97,7 +97,7 @@ class DataCovidConsumer(DataCovidConsumerInterface):
 
         response = self.get_data_covid()
 
-        for country in all_countries:
+        for country in ALL_COUNTRIES:
             data_by_country = response[country]["data"]
             for index, day in enumerate(data_by_country):
                 try:

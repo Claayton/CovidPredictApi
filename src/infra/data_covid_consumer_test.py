@@ -15,7 +15,7 @@ def test_get_data_covid(requests_mock):
         json = {'some': 'thing', country[0]: {'data': [{}]}}
     )
 
-    data_covid_consumer = DataCovidConsumer(url, country)
+    data_covid_consumer = DataCovidConsumer(url)
     get_data_covid_response = data_covid_consumer.get_data_covid()
 
     assert get_data_covid_response.request.method == 'GET'
@@ -36,7 +36,7 @@ def test_get_data_covid_http_error(requests_mock):
         json = {'details': 'somenthing'}
     )
 
-    data_covid_consumer = DataCovidConsumer(url, country)
+    data_covid_consumer = DataCovidConsumer(url)
     try:
         data_covid_consumer.get_data_covid()
         assert True is False

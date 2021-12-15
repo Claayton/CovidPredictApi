@@ -9,7 +9,7 @@ async def request_adapter(request: RequestFastApi, callback: Callable):
     try:
         body = await request.json()
     except:
-        pass
+        print('\033[31An error has occured!\033[m')
 
     http_request = {
         'query_params': request.query_params,
@@ -20,4 +20,4 @@ async def request_adapter(request: RequestFastApi, callback: Callable):
         http_response = callback(http_request)
         return http_response
     except:
-        print('An error has occured!')
+        print('\033[31An error has occured!\033[m')

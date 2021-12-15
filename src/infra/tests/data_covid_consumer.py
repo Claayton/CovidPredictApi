@@ -1,11 +1,11 @@
 """Diretório de mocks de dados"""
-from typing import List
+from typing import Dict
 from collections import namedtuple
 from faker import Faker
 
 fake = Faker()
 
-def mock_data_covid():
+def mock_data_covid() -> Dict:
     """
     Mock de dados do covid
     :return: Um dicionario com as informações do covid
@@ -27,8 +27,10 @@ class DataCovidConsumerSpy:
         )
         self.get_data_covid_attributes = {}
 
-    def get_data_covid(self, country: List[str]) -> any:
+    def get_data_covid(self) -> any:
         """Mock para get_data_covid"""
+
+        country = ["BRA"]
 
         self.get_data_covid_attributes["country"] = country
         return self.get_data_covid_response(

@@ -1,6 +1,6 @@
 """Script de pesquisa e registro de dados na API"""
 from datetime import date
-from typing import Dict, Tuple, Type, List
+from typing import Dict, Tuple, Type
 from collections import namedtuple
 import requests
 from requests import Request
@@ -15,14 +15,13 @@ class DataCovidConsumer(DataCovidConsumerInterface):
     Classe responsável pelo consumo da API de dados do covid utilizando requisições http.
     """
 
-    def __init__(self, url: str, country: List[str]) -> None:
+    def __init__(self, url: str) -> None:
         self.get_data_covid_response = namedtuple(
             'GET_Dados_covid',
             'status_code request response'
         )
         self.url = url
-        self.country = country
-        create_database_if_not_exist('app/database/datacovid.db')
+        # create_database_if_not_exist('app/database/datacovid.db')
 
     def get_data_covid(self) -> Tuple[int, Type[Request], Dict]:
         """
@@ -86,7 +85,7 @@ class DataCovidConsumer(DataCovidConsumerInterface):
                 continue
         return country_data_per_day
 
-    def separates_data_from_the_world(self, ):
+    def separates_data_from_the_world(self):
         """
         Busca dados de todos os paises do mundo,
         Realiza a soma dos casos de cada dia em todos os países do mundo

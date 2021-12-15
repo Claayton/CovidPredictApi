@@ -4,9 +4,9 @@ from cerberus import Validator
 def get_from_country_validator(request: any):
     """Validor de paginação"""
     querry_param_validator = Validator({
-        'page': {
+        'country': {
             'type': 'string',
-            'allowed': ['1', '2', '3', '4'],
+            'allowed': ['BRA', 'USA'],
             'required': True
         }
     })

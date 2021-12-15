@@ -11,7 +11,7 @@ class DataCovidListColector(DataCovidListColectorInterface):
         self.__api_consumer = api_consumer
 
     def list(self, country: List[str]) -> List[Dict]:
-        api_response = self.__api_consumer.get_data_covid(country)
+        api_response = self.__api_consumer.get_data_covid()
         data_covid_formated_list = self.__format_api_response(
             api_response.response[country[0]]['data']
         )

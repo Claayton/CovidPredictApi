@@ -20,6 +20,10 @@ class DataCovidConsumer(DataCovidConsumerInterface):
             'GET_Dados_covid',
             'status_code request response'
         )
+        self.get_data_covid_information_response = namedtuple(
+            'GET_Dados_covid_Info',
+            'status_code request response'
+        )
         self.url = url
         # create_database_if_not_exist('app/database/datacovid.db')
 
@@ -57,9 +61,37 @@ class DataCovidConsumer(DataCovidConsumerInterface):
         :param request_prepared: Objeto de requisição com todos os parâmetros.
         :return: A resposta da requisição http.
         """
+
         http_session = requests.Session()
         response = http_session.send(request_prepared)
         return response
+
+    def get_data_covid_information(self, country: str) -> Tuple[int, Type[Request], Dict]:
+        """
+        Realiza a requisição para a API de dados do covid.
+        :return: Uma tupla com os atributos: (status_code, request, response).
+        """
+
+        request = requests.Request(
+            method='GET',
+            url=f'{self.url}',
+        )
+        request_prepared = request.prepare()
+
+        response = self.__send_http_request(request_prepared)
+        status_code = response.status_code
+
+        if (status_code >= 200) and (status_code <= 299):
+            return self.get_data_covid_information_response(
+                status_code=status_code,
+                request=request,
+                response=response.json()[country]['data']
+            )
+        else:
+            raise HttpRequestError(
+                message=response.json()['details'],
+                status_code=status_code
+            )
 
     def separates_data_from_a_country(self, country: str) -> list:
         """

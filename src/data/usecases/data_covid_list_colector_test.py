@@ -10,7 +10,7 @@ def test_list():
     data_covid_list_colector = DataCovidListColector(api_consumer)
 
     country = ['BRA']
-    response = data_covid_list_colector.list(country)
+    response = data_covid_list_colector.list()
 
     assert api_consumer.get_data_covid_attributes == {'country': country}
     assert isinstance(response, list)

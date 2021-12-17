@@ -21,4 +21,4 @@ ALL_COUNTRIES = [
     'TJK', 'TZA', 'THA', 'TLS', 'TGO', 'TKL', 'TON', 'TTO', 'TUN', 'TUR', 'TKM', 'TCA', 'TUV',\
     'UGA', 'UKR', 'ARE', 'GBR', 'USA', 'OWID_UMC', 'URY', 'UZB', 'VUT', 'VAT', 'VEN', 'VNM',\
     'WLF', 'OWID_WRL', 'YEM', 'ZMB', 'ZWE'
-    ]
+]

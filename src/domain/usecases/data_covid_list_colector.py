@@ -6,6 +6,6 @@ class DataCovidListColectorInterface(ABC):
     """Coletor de Interface de dados covid"""
 
     @abstractmethod
-    def list(self, country: List[str]) -> List[Dict]:
+    def list(self) -> List[Dict]:
         """Deve ser implementado"""
         raise Exception('Must implement list method')

@@ -1,10 +1,11 @@
 """Caso de uso para DataCovidInformation"""
 from typing import List, Type, Dict
-from datetime import date, datetime
+
+# from datetime import date, datetime
 import pandas as pd
 from numpy import mean
 from src.domain.usecases.data_covid_information_colector import (
-    DataCovidInformationColectorInterface
+    DataCovidInformationColectorInterface,
 )
 from src.data.interfaces.data_covid_consumer import DataCovidConsumerInterface
 
@@ -18,9 +19,11 @@ class DataCovidInformationColector(DataCovidInformationColectorInterface):
     def find_country(self, country: str, time: int) -> Dict:
         country_information = self.__search_country(country)
 
-        predicted_evolution = self.__calculate_predict_covid_evolution(country_information, time)
+        predicted_evolution = self.__calculate_predict_covid_evolution(
+            country_information, time
+        )
 
-        formated_response = self.__format_response(predicted_evolution)
+        formated_response = self.__format_response(predicted_evolution, country)
         return formated_response
 
     def __search_country(self, country: str) -> Dict:
@@ -29,7 +32,9 @@ class DataCovidInformationColector(DataCovidInformationColectorInterface):
         return api_response.response
 
     @classmethod
-    def __calculate_predict_covid_evolution(cls, data_base: List[Dict], time: int) -> List:
+    def __calculate_predict_covid_evolution(
+        cls, data_base: List[Dict], time: int
+    ) -> List[Dict]:
         """
         Realiza a previsão de casos de covid nos proximos dias,
         com base na média de casos dos últimos 7 dias.
@@ -52,7 +57,9 @@ class DataCovidInformationColector(DataCovidInformationColectorInterface):
         for index, value in enumerate(test):
 
             length = len(history)
-            average_of_previous_days = mean([history[i] for i in range(length - window, length)])
+            average_of_previous_days = mean(
+                [history[i] for i in range(length - window, length)]
+            )
 
             # Adiciona 10% ou subtrai 15% ao suposto valor real de casos previstos,
             # Dependendo da diferença entre o ultimo e penúltimo dos 7 dias anteriores.
@@ -72,26 +79,30 @@ class DataCovidInformationColector(DataCovidInformationColectorInterface):
             history.append(real_value)
 
             # if datetime.strptime(data_values[index][1], "%Y-%m-%d") >= datetime.today():
-            predicted_evolution.append({
-                    "id": data_values[index][0],
-                    "country": data_values[index][3],
-                    "date": data_values[index][1],
+            predicted_evolution.append(
+                {
+                    "id": data_values[index][1],
+                    "date": data_values[index][0],
                     "new_cases_real": real_value,
-                    "predicted_evolution": average_of_previous_days
-            })
+                    "predicted_evolution": average_of_previous_days,
+                }
+            )
         return predicted_evolution
 
     @classmethod
-    def __format_response(cls, predicted_evolution: List[Dict]) -> Dict:
+    def __format_response(
+        cls, predicted_evolution: List[Dict], country: str
+    ) -> List[Dict]:
 
         result = []
 
         for day in predicted_evolution:
-            result.append({
-            "id": day["id"],
-            "country": day["country"],
-            "date": day["date"],
-            "new_cases_real": day["new_cases_real"],
-            "predicted_evolution": day["predicted_evolution"]
-        })
-        return result
+            result.append(
+                {
+                    "id": day["id"],
+                    "date": day["date"],
+                    "new_cases_real": day["new_cases_real"],
+                    "predicted_evolution": day["predicted_evolution"],
+                }
+            )
+        return {"country": country, "data": result}

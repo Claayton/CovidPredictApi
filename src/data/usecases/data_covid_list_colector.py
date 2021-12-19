@@ -13,32 +13,34 @@ class DataCovidListColector(DataCovidListColectorInterface):
 
     def list(self) -> List[Dict]:
         api_response = self.__api_consumer.get_data_covid()
-        data_covid_formated_list = self.__format_api_response(
-            api_response.response
-        )
+        data_covid_formated_list = self.__format_api_response(api_response.response)
         return data_covid_formated_list
 
     @classmethod
     def __format_api_response(cls, api_response: List[Dict]) -> List[Dict]:
 
         data_covid_formated_list = []
-
+        data_covid_country = []
         for country in ALL_COUNTRIES:
             try:
                 data_by_country = api_response[country]["data"]
 
                 for index, day in enumerate(data_by_country):
                     try:
-                        data_covid_formated_list.append(
+                        data_covid_country.append(
                             {
                                 "id": index,
                                 "date": day["date"],
-                                "new_cases": day["new_cases"]
+                                "new_cases": day["new_cases"],
                             }
                         )
                     except KeyError:
                         continue
             except KeyError:
                 continue
+
+            data_covid_formated_list.append(
+                {"country": country, "data": data_covid_country}
+            )
 
         return data_covid_formated_list

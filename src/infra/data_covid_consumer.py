@@ -1,27 +1,27 @@
 """Script de pesquisa e registro de dados na API"""
-from datetime import date
+# from datetime import date
 from typing import Dict, Tuple, Type
 from collections import namedtuple
 import requests
 from requests import Request
-from src.database.tables import CovidBrazil, CovidWorld, session
+
+# from src.database.tables import CovidBrazil, CovidWorld, session
 from src.errors import HttpRequestError
 from src.data.interfaces.data_covid_consumer import DataCovidConsumerInterface
 
 
 class DataCovidConsumer(DataCovidConsumerInterface):
     """
-    Classe responsável pelo consumo da API de dados do covid utilizando requisições http.
+    Classe responsável pelo consumo da API de dados do covid,
+    utilizando requisições http.
     """
 
     def __init__(self, url: str) -> None:
         self.get_data_covid_response = namedtuple(
-            'GET_Dados_covid',
-            'status_code request response'
+            "GET_Dados_covid", "status_code request response"
         )
         self.get_data_covid_information_response = namedtuple(
-            'GET_Dados_covid_Info',
-            'status_code request response'
+            "GET_Dados_covid_Info", "status_code request response"
         )
         self.url = url
         # create_database_if_not_exist('app/database/datacovid.db')
@@ -33,7 +33,7 @@ class DataCovidConsumer(DataCovidConsumerInterface):
         """
 
         request = requests.Request(
-            method='GET',
+            method="GET",
             url=self.url,
         )
         request_prepared = request.prepare()
@@ -41,19 +41,15 @@ class DataCovidConsumer(DataCovidConsumerInterface):
         response = self.__send_http_request(request_prepared)
         status_code = response.status_code
 
-        if (status_code >= 200) and (status_code <= 299):
-            return self.get_data_covid_response(
-                status_code=status_code,
-                request=request,
-                response=response.json()
-            )
-        else:
-            raise HttpRequestError(
-                message=response.json()['details'],
-                status_code=status_code
-            )
+        if not ((status_code >= 200) and (status_code <= 299)):
+            raise HttpRequestError(message=response, status_code=status_code)
+        return self.get_data_covid_response(
+            status_code=status_code, request=request, response=response.json()
+        )
 
-    def get_data_covid_information(self, country: str) -> Tuple[int, Type[Request], Dict]:
+    def get_data_covid_information(
+        self, country: str
+    ) -> Tuple[int, Type[Request], Dict]:
         """
         Realiza a requisição para a API de dados do covid,
         retornando apenas os dados de um único país.
@@ -62,8 +58,8 @@ class DataCovidConsumer(DataCovidConsumerInterface):
         """
 
         request = requests.Request(
-            method='GET',
-            url=f'{self.url}',
+            method="GET",
+            url=f"{self.url}",
         )
         request_prepared = request.prepare()
 
@@ -71,14 +67,11 @@ class DataCovidConsumer(DataCovidConsumerInterface):
         status_code = response.status_code
 
         if not ((status_code >= 200) and (status_code <= 299)):
-            raise HttpRequestError(
-                message=response.json()['details'],
-                status_code=status_code
-            )
+            raise HttpRequestError(message=response, status_code=status_code)
         return self.get_data_covid_information_response(
             status_code=status_code,
             request=request,
-            response=response.json()[country]["data"]
+            response=response.json()[country]["data"],
         )
 
     @classmethod
@@ -95,7 +88,8 @@ class DataCovidConsumer(DataCovidConsumerInterface):
 
     # def register_data_from_brazil(self):
     #     """
-    #     Registra os dados do brasil relacionados ao COvid-19 no banco de dados.
+    #     Registra os dados do brasil relacionados ao COvid-19,
+    #     no banco de dados.
     #     """
 
     #     brazil_data = self.separates_data_from_a_country("BRA")
@@ -110,7 +104,8 @@ class DataCovidConsumer(DataCovidConsumerInterface):
 
     # def register_data_from_world(self):
     #     """
-    #     Registra os dados do mundo inteiro relacionados ao Covid-19 no banco de dados.
+    #     Registra os dados do mundo inteiro relacionados ao Covid-19
+    #     no banco de dados.
     #     """
 
     #     world_data_list = {}

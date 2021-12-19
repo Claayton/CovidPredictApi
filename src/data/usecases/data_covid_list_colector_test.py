@@ -1,6 +1,6 @@
 """Testes relacionados a dominios e casos de uso"""
 from src.data.usecases.data_covid_list_colector import DataCovidListColector
-from src.infra.tests.data_covid_consumer import DataCovidConsumerSpy
+from src.infra.consumer.tests.data_covid_consumer import DataCovidConsumerSpy
 
 
 def test_list():

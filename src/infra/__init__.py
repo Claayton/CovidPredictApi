@@ -1,1 +1,1 @@
-from .data_covid_consumer import DataCovidConsumer
+from .consumer.data_covid_consumer import DataCovidConsumer

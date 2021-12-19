@@ -1,5 +1,5 @@
 """Diretório de inicialização e instâncias das classes"""
-from src.infra.data_covid_consumer import DataCovidConsumer
+from src.infra.consumer.data_covid_consumer import DataCovidConsumer
 from src.data.usecases.data_covid_information_colector import (
     DataCovidInformationColector,
 )

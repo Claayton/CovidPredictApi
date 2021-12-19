@@ -1,5 +1,5 @@
 """Testes relacionados a busca de dados na API"""
-from src.infra.data_covid_consumer import DataCovidConsumer
+from src.infra.consumer.data_covid_consumer import DataCovidConsumer
 from src import config
 from src.errors import HttpRequestError
 

@@ -11,3 +11,8 @@ class DataCovidConsumerInterface(ABC):
     def get_data_covid(self) -> Tuple[int, Type[Request], Dict]:
         """Deve ser implementado"""
         raise Exception('Must implement get_data_covid')
+
+    @abstractmethod
+    def get_data_covid_information(self, country: str) -> Tuple[int, Type[Request], Dict]:
+        """Deve ser implementado"""
+        raise Exception('Must implement get_data_covid_information')

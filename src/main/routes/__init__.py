@@ -1,0 +1,1 @@
+from .data_covid_routes import data_covid_routes

@@ -1,6 +1,6 @@
 """Lista de todos os países da pesquisa"""
 
-all_countries = [
+ALL_COUNTRIES = [
     'AFG', 'OWID_AFR', 'ALB', 'DZA', 'AND', 'AGO', 'AIA', 'ATG', 'ARG', 'ARM', 'ABW',\
     'OWID_ASI', 'AUS', 'AUT', 'AZE', 'BHS', 'BHR', 'BGD', 'BRB', 'BLR', 'BEL', 'BLZ', 'BEN',\
     'BMU', 'BTN', 'BOL', 'BES', 'BIH', 'BWA', 'BRA', 'VGB', 'BRN', 'BGR', 'BFA', 'BDI', 'KHM',\
@@ -21,4 +21,4 @@ all_countries = [
     'TJK', 'TZA', 'THA', 'TLS', 'TGO', 'TKL', 'TON', 'TTO', 'TUN', 'TUR', 'TKM', 'TCA', 'TUV',\
     'UGA', 'UKR', 'ARE', 'GBR', 'USA', 'OWID_UMC', 'URY', 'UZB', 'VUT', 'VAT', 'VEN', 'VNM',\
     'WLF', 'OWID_WRL', 'YEM', 'ZMB', 'ZWE'
-    ]
+]

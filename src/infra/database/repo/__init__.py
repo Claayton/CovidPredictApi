@@ -1,2 +1,2 @@
 """Diretório de inicialização do módulo"""
-from .data_brazil import CovidBrazilRepo
+from .brazil_days_repo import CovidBrazilRepo

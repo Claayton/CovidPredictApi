@@ -1,7 +1,7 @@
 """Administração dos dados"""
 from datetime import date
 from src.infra.database.config import DataBaseConnectionHandler
-from src.infra.database.entities import CovidWorld
+from src.infra.database.entities import WorldDay
 
 
 class WorldDayRepo:
@@ -13,7 +13,7 @@ class WorldDayRepo:
 
         with DataBaseConnectionHandler() as data_base:
             try:
-                new_data = CovidWorld(
+                new_data = WorldDay(
                     date=date.fromisoformat("1997-08-01"), new_cases="123"
                 )
                 data_base.session.add(new_data)

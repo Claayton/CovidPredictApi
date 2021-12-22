@@ -1,16 +1,17 @@
-"""Administração dos dados"""
+"""Diretório de manipulação de dados"""
 from typing import List, Tuple
 from src.infra.database.config import DataBaseConnectionHandler
 from src.infra.database.entities import Country
 
 
 class CountryRepo:
-    """A simple repository"""
+    """Manipulação de dados da tabela Country"""
 
     @classmethod
     def insert_country(cls, name: str) -> None:
         """
-        Registra os dados do brasil relacionados ao COvid-19 no banco de dados.
+        Realiza a inserção de um novo país na tabela Country.
+        :param name: Nome ou abreviação do nome do país.
         """
 
         with DataBaseConnectionHandler() as data_base:
@@ -26,7 +27,10 @@ class CountryRepo:
 
     @classmethod
     def get_countries(cls) -> List[Tuple]:
-        """Selecionar todos os paises"""
+        """
+        Realiza a busca de todos os países cadastrados.
+        :return: Uma lista com tuplas de todos países cadastrados.
+        """
 
         try:
             with DataBaseConnectionHandler() as data_base:

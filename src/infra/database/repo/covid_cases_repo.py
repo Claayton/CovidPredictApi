@@ -1,15 +1,41 @@
-"""Administração dos dados"""
+"""Diretório de manipulação de dados"""
 from datetime import date
+from typing import Tuple, List
 from src.infra.database.config import DataBaseConnectionHandler
 from src.infra.database.entities import CovidCases
 from src.infra.database.entities.countries import Country
 
 
 class CovidCasesRepo:
-    """A simple repository"""
+    """Manipulação de dados da tabela CovidCases"""
+
+    @classmethod
+    def __find_country_id(cls, country: str) -> int:
+        """
+        Encontrar o id de um país cadastrado no banco de dados.
+        :param country: País de referência para a busca no banco.
+        :return: O id do país desejado que esta cadastrado no banco de dados.
+        """
+
+        with DataBaseConnectionHandler() as data_base:
+            try:
+                country_id = (
+                    data_base.session.query(Country.id).filter_by(name=country).first()
+                )
+                return country_id
+            except:
+                data_base.session.rollback()
+                raise
+            finally:
+                data_base.session.close()
 
     def insert_data(self, data_date: str, new_cases: int, country: str) -> None:
-        """Inserir novos dados na tabela CovidCases"""
+        """
+        Realiza a inserção de dados diários para a tabela CovidCases.
+        :param data_date: Data de referência dos casos no formato string ('aaaa-mm-dd').
+        :param new_cases: Novos casos de covid19 registrados.
+        :param country: País de referência dos casos.
+        """
 
         data_date = date.fromisoformat(data_date)
         country_id = self.__find_country_id(country)
@@ -26,7 +52,12 @@ class CovidCasesRepo:
                 data_base.session.close()
 
     def update_data(self, data_date: str, new_cases: int, country: str) -> None:
-        """Atualizar dados ja cadastrados no banco"""
+        """
+        Realiza a atualização dos dados ja cadastrados no banco na tabela CovidCases.
+        :param data_date: Data de referência dos casos no formato string ('aaaa-mm-dd').
+        :param new_cases: Novos casos de covid19 registrados.
+        :param country: País de referência dos casos.
+        """
 
         data_date = date.fromisoformat(data_date)
         country_id = self.__find_country_id(country)
@@ -51,18 +82,27 @@ class CovidCasesRepo:
             finally:
                 data_base.session.close()
 
-    @classmethod
-    def __find_country_id(cls, country: str) -> int:
-        """Busca o id do pais pelo nome"""
+    def get_data_by_country(self, country: str) -> List[Tuple]:
+        """
+        Realiza a busca de todos os dados de casos de covid, buscando por país.
+        :param country: País de referência para a busca.
+        :return: Uma lista com tuplas de todos os dados registrados do país.
+        """
 
-        with DataBaseConnectionHandler() as data_base:
-            try:
-                country_id = (
-                    data_base.session.query(Country.id).filter_by(name=country).first()
+        country_id = self.__find_country_id(country)
+
+        try:
+            with DataBaseConnectionHandler() as data_base:
+                query_data = (
+                    data_base.session.query(
+                        CovidCases.id, CovidCases.date, CovidCases.new_cases
+                    )
+                    .filter(CovidCases.country_id == country_id[0])
+                    .all()
                 )
-                return country_id
-            except:
-                data_base.session.rollback()
-                raise
-            finally:
-                data_base.session.close()
+            return query_data
+        except:
+            data_base.session.rollback()
+            raise
+        finally:
+            data_base.session.close()

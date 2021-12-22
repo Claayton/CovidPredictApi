@@ -1,4 +1,5 @@
 """Administração dos dados"""
+from typing import List, Tuple
 from src.infra.database.config import DataBaseConnectionHandler
 from src.infra.database.entities import Country
 
@@ -22,3 +23,17 @@ class CountryRepo:
                 raise
             finally:
                 data_base.session.close()
+
+    @classmethod
+    def get_countries(cls) -> List[Tuple]:
+        """Selecionar todos os paises"""
+
+        try:
+            with DataBaseConnectionHandler() as data_base:
+                query_data = data_base.session.query(Country.name).all()
+            return query_data
+        except:
+            data_base.session.rollback()
+            raise
+        finally:
+            data_base.session.close()

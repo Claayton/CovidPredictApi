@@ -1,3 +1,3 @@
 """Diretório de inicialização do módulo"""
-from .world_days import WorldDay
+from .covid_cases import CovidCases
 from .countries import Country

@@ -13,7 +13,8 @@ class Country(Base):
 
     id = Column(Integer, primary_key=True)
     name = Column(String, nullable=False, unique=True)
-    data_world = relationship("world_days")
+
+    covid_cases = relationship("CovidCases", back_populates="countries")
 
     def __init__(self, name: str) -> None:
         self.name = name

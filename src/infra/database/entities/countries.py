@@ -13,8 +13,10 @@ class Country(Base):
 
     id = Column(Integer, primary_key=True)
     name = Column(String, nullable=False, unique=True)
+    data_world = relationship("world_days")
 
-    daily = relationship("world_days")
+    def __init__(self, name: str) -> None:
+        self.name = name
 
     def __repr__(self):
         return f"Date <{self.date}>"

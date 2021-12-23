@@ -1,5 +1,5 @@
 """Diretório de manipulação de dados"""
-from typing import List, Tuple
+from typing import List
 from src.infra.database.config import DataBaseConnectionHandler
 from src.infra.database.entities import Country as CountryModel
 from src.domain.models import Country
@@ -30,15 +30,16 @@ class CountryRepo:
                 data_base.session.close()
 
     @classmethod
-    def get_countries(cls) -> List[Tuple]:
+    def get_countries(cls) -> List[Country]:
         """
-        Realiza a busca de todos os países cadastrados.
-        :return: Uma lista com tuplas de todos países cadastrados.
+        Realiza a busca dos países cadastrados no banco de dados.
+        :return: Uma lista com todos países cadastrados.
         """
 
         try:
+
             with DataBaseConnectionHandler() as data_base:
-                query_data = data_base.session.query(Country.name).all()
+                query_data = data_base.session.query(CountryModel).all()
             return query_data
         except:
             data_base.session.rollback()

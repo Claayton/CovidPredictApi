@@ -1,8 +1,8 @@
 """Diretório de manipulação de dados"""
-from typing import List, Tuple
-from collections import namedtuple
+from typing import List
 from src.infra.database.config import DataBaseConnectionHandler
-from src.infra.database.entities import Country
+from src.infra.database.entities import Country as CountryModel
+from src.domain.models import Country
 
 
 class CountryRepo:
@@ -16,14 +16,13 @@ class CountryRepo:
         :return: Uma tupla nomeada com os todos os dados do novo país cadastrado.
         """
 
-        insert_data = namedtuple("Country", "id name")
-
         with DataBaseConnectionHandler() as data_base:
             try:
-                new_country = Country(name=name)
+                new_country = CountryModel(name=name)
                 data_base.session.add(new_country)
                 data_base.session.commit()
-                return insert_data(id=new_country.id, name=new_country.name)
+
+                return Country(id=new_country.id, name=new_country.name)
             except:
                 data_base.session.rollback()
                 raise
@@ -31,15 +30,16 @@ class CountryRepo:
                 data_base.session.close()
 
     @classmethod
-    def get_countries(cls) -> List[Tuple]:
+    def get_countries(cls) -> List[Country]:
         """
-        Realiza a busca de todos os países cadastrados.
-        :return: Uma lista com tuplas de todos países cadastrados.
+        Realiza a busca dos países cadastrados no banco de dados.
+        :return: Uma lista com todos países cadastrados.
         """
 
         try:
+
             with DataBaseConnectionHandler() as data_base:
-                query_data = data_base.session.query(Country.name).all()
+                query_data = data_base.session.query(CountryModel).all()
             return query_data
         except:
             data_base.session.rollback()

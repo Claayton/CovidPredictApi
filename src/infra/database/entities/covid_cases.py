@@ -1,4 +1,4 @@
-"Criação de banco de dados e tabelas"
+"Instância da tabela CovidCases e seus métodos"
 from sqlalchemy import Column, Integer, Date
 from sqlalchemy.sql.schema import ForeignKey
 from sqlalchemy.orm import relationship
@@ -7,7 +7,7 @@ from src.infra.database.config import Base
 
 class CovidCases(Base):
     """
-    Tabela de dados sobre o covid-19 no mundo nos ultimos 600 dias aproximadamente.
+    Tabela de dados do covid19 por país, com dados de todo o mundo nos ultimos 600 dias.
     """
 
     __tablename__ = "covid_cases"
@@ -26,3 +26,12 @@ class CovidCases(Base):
 
     def __repr__(self):
         return f"Date <{self.date}>"
+
+    def __eq__(self, other):
+        if (
+            self.id == other.id
+            and self.date == other.date
+            and self.new_cases == other.new_cases
+        ):
+            return True
+        return False

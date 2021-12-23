@@ -23,3 +23,23 @@ def test_insert_country():
 
     assert new_country.id == query_country.id
     assert new_country.name == query_country.name
+
+
+def test_get_countries():
+    """Teste ára a busca de países no banco de dados"""
+
+    country_id = faker.random_number(digits=10)
+    name = faker.name()
+
+    engine = data_base_connection_handler.get_engine()
+    engine.execute(
+        f"INSERT INTO countries (id, name) VALUES ('{country_id}', '{name}');"
+    )
+    engine.execute("SELECT * FROM countries;")
+
+    query_country = country_repo.get_countries()
+
+    assert isinstance(query_country, list)
+    assert query_country[-1].id == country_id
+
+    engine.execute(f"DELETE FROM countries WHERE id='{country_id}';")

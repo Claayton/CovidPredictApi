@@ -1,4 +1,4 @@
-"Criação de banco de dados e tabelas"
+"Instância da tabela Country e seus métodos"
 from sqlalchemy import Column, Integer, String
 from sqlalchemy.orm import relationship
 from src.infra.database.config import Base
@@ -6,7 +6,7 @@ from src.infra.database.config import Base
 
 class Country(Base):
     """
-    Tabela de dados sobre o covid-19 no brasil nos ultimos 600 dias aproximadamente.
+    Tabela contendo todos os países do mundo que foram coletados os dados do covid19.
     """
 
     __tablename__ = "countries"
@@ -20,4 +20,9 @@ class Country(Base):
         self.name = name
 
     def __repr__(self):
-        return f"Date <{self.date}>"
+        return f"Country <{self.name}>"
+
+    def __eq__(self, other):
+        if self.id == other.id and self.name == other.name:
+            return True
+        return False

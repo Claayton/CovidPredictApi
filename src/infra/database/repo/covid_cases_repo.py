@@ -1,13 +1,14 @@
 """Diretório de manipulação de dados"""
 from datetime import date
 from typing import Tuple, List
+from src.data.interfaces import CovidCasesRepoInterface
 from src.infra.database.config import DataBaseConnectionHandler
 from src.infra.database.entities import CovidCases as CovidCasesModel
 from src.domain.models import CovidCases
 from src.infra.database.entities.countries import Country as CountryModel
 
 
-class CovidCasesRepo:
+class CovidCasesRepo(CovidCasesRepoInterface):
     """Manipulação de dados da tabela CovidCases"""
 
     @classmethod

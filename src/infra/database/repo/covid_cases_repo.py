@@ -64,31 +64,31 @@ class CovidCasesRepo:
             finally:
                 data_base.session.close()
 
-    def update_data(self, data_date: str, new_cases: int, country: str) -> None:
+    @classmethod
+    def update_cases(cls, cases_id: int, new_cases: int) -> CovidCases:
         """
         Realiza a atualização dos dados ja cadastrados no banco na tabela CovidCases.
-        :param data_date: Data de referência dos casos no formato string ('aaaa-mm-dd').
-        :param new_cases: Novos casos de covid19 registrados.
-        :param country: País de referência dos casos.
+        :param id: ID de referência para realizar a atualização de dados.
+        :param new_cases: Numero de novos casos de covid19 para atualização.
+        :return: Uma tupla nomeada com os todos os novos dados cadastrado.
         """
-
-        data_date = date.fromisoformat(data_date)
-        country_id = self.__find_country_id(country)
 
         with DataBaseConnectionHandler() as data_base:
             try:
                 data_country = (
-                    data_base.session.query(CovidCases)
-                    .filter(
-                        (CovidCasesModel.country_id == country_id[0]),
-                        (CovidCasesModel.date == data_date),
-                    )
+                    data_base.session.query(CovidCasesModel)
+                    .filter_by(id=cases_id)
                     .first()
                 )
-                data_country.date = data_date
                 data_country.new_cases = new_cases
-                data_country.country_id = country_id[0]
                 data_base.session.commit()
+
+                return CovidCases(
+                    id=data_country.id,
+                    date=data_country.date,
+                    new_cases=data_country.new_cases,
+                    country_id=data_country.country_id,
+                )
             except:
                 data_base.session.rollback()
                 raise

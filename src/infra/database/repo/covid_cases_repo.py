@@ -112,7 +112,7 @@ class CovidCasesRepo:
                         CovidCasesModel.date,
                         CovidCasesModel.new_cases,
                     )
-                    .filter(CovidCasesModel.country_id == country_id[0])
+                    .filter(CovidCasesModel.country_id == country_id)
                     .all()
                 )
             return query_data

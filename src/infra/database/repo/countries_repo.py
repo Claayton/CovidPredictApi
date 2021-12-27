@@ -1,11 +1,12 @@
 """Diretório de manipulação de dados"""
 from typing import List
+from src.data.interfaces import CountryRepoInterface
 from src.infra.database.config import DataBaseConnectionHandler
 from src.infra.database.entities import Country as CountryModel
 from src.domain.models import Country
 
 
-class CountryRepo:
+class CountryRepo(CountryRepoInterface):
     """Manipulação de dados da tabela Country"""
 
     @classmethod

@@ -15,8 +15,8 @@ class CovidCases(Base):
     id = Column(Integer, primary_key=True)
     date = Column(Date, nullable=False)
     new_cases = Column(Integer)
+    country_id = Column(Integer, ForeignKey("countries.id"), nullable=False)
 
-    country_id = Column(Integer, ForeignKey("countries.id"))
     countries = relationship("Country", back_populates="covid_cases")
 
     def __init__(self, date: str, new_cases: int, country_id: int) -> None:

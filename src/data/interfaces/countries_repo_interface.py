@@ -1,3 +1,4 @@
+"""Interface para a classe CountryRepo"""
 from abc import ABC, abstractmethod
 from typing import List
 from src.domain.models import Country

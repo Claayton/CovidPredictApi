@@ -2,7 +2,7 @@
 from src.data.usecases.data_covid_information_colector import (
     DataCovidInformationColector,
 )
-from src.infra.consumer.tests.data_covid_consumer import DataCovidConsumerSpy
+from src.infra.tests.data_covid_consumer import DataCovidConsumerSpy
 
 
 def test_find_country():

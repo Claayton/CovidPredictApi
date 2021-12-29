@@ -35,9 +35,9 @@ def test_get_countries():
     engine.execute(
         f"INSERT INTO countries (id, name) VALUES ('{country_id}', '{name}');"
     )
-    engine.execute("SELECT * FROM countries;")
+    engine.execute(f"SELECT * FROM countries WHERE name='{name}';")
 
-    query_country = country_repo.get_countries()
+    query_country = country_repo.get_countries(name=name)
 
     assert isinstance(query_country, list)
     assert query_country[-1].id == country_id

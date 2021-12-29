@@ -18,7 +18,7 @@ def test_register():
 
     assert country_repo.insert_country_params["name"] == attributes["name"]
 
-    assert response["sucess"] is True
+    assert response["success"] is True
     assert response["data"]
 
 
@@ -32,9 +32,7 @@ def test_register_fail():
 
     response = register_country.register(name=attributes["name"])
 
-    print(response)
-
     assert country_repo.insert_country_params == {}
 
-    assert response["sucess"] is False
+    assert response["success"] is False
     assert response["data"] is None

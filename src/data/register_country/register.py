@@ -24,4 +24,4 @@ class RegisterCountry(RegisterCountryInterface):
         if validate_entry:
             response = self.countries_repo.insert_country(name)
 
-        return {"sucess": validate_entry, "data": response}
+        return {"success": validate_entry, "data": response}

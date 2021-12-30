@@ -1,3 +1,4 @@
+"""Interface para a classe CovidCasesRepo"""
 from abc import ABC, abstractmethod
 from typing import List, Tuple
 from src.domain.models import CovidCases
@@ -17,6 +18,6 @@ class CovidCasesRepoInterface(ABC):
         raise Exception("Método não implementado")
 
     @abstractmethod
-    def get_data_by_country(self, country: str) -> List[Tuple]:
+    def get_data(self, country: str = None, data_date: str = None) -> List[Tuple]:
         """Método abstrato"""
         raise Exception("Método não implementado")

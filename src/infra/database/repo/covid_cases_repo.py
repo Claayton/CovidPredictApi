@@ -96,27 +96,64 @@ class CovidCasesRepo(CovidCasesRepoInterface):
             finally:
                 data_base.session.close()
 
-    def get_data_by_country(self, country: str) -> List[Tuple]:
+    def get_data(
+        self,
+        country: str = None,
+        data_date: str = None,
+    ) -> List[Tuple]:
         """
         Realiza a busca de todos os dados de casos de covid, buscando por país.
         :param country: País de referência para a busca.
+        :param data_date: Data de referência para a busca.
         :return: Uma lista com tuplas de todos os dados registrados do país.
         """
 
-        country_id = self.__find_country_id(country)
-
         try:
-            with DataBaseConnectionHandler() as data_base:
-                query_data = (
-                    data_base.session.query(
-                        CovidCasesModel.id,
-                        CovidCasesModel.date,
-                        CovidCasesModel.new_cases,
+
+            query_data = None
+
+            if country and not data_date:
+
+                country_id = self.__find_country_id(country)
+
+                with DataBaseConnectionHandler() as data_base:
+                    data = (
+                        data_base.session.query(CovidCasesModel)
+                        .filter(CovidCasesModel.country_id == country_id)
+                        .all()
                     )
-                    .filter(CovidCasesModel.country_id == country_id)
-                    .all()
-                )
+                    query_data = [data]
+
+            elif not country and data_date:
+
+                data_date = date.fromisoformat(data_date)
+
+                with DataBaseConnectionHandler() as data_base:
+                    data = (
+                        data_base.session.query(CovidCasesModel)
+                        .filter(CovidCasesModel.date == data_date)
+                        .all()
+                    )
+                    query_data = [data]
+
+            elif country and data_date:
+
+                country_id = self.__find_country_id(country)
+                data_date = date.fromisoformat(data_date)
+
+                with DataBaseConnectionHandler() as data_base:
+                    data = (
+                        data_base.session.query(CovidCasesModel)
+                        .filter(
+                            CovidCasesModel.country_id == country_id,
+                            CovidCasesModel.date == data_date,
+                        )
+                        .all()
+                    )
+                    query_data = [data]
+
             return query_data
+
         except:
             data_base.session.rollback()
             raise

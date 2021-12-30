@@ -1,6 +1,7 @@
 """Diretório de testes para a classe CovidCasesRepo"""
 from datetime import date
 from faker import Faker
+from src.infra.database.entities import CovidCases as CovidCasesModel
 from src.infra.database.config import DataBaseConnectionHandler
 from .covid_cases_repo import CovidCasesRepo
 
@@ -59,13 +60,15 @@ def test_update_cases():
     engine.execute(f"DELETE FROM covid_cases WHERE id='{cases_id}';")
 
 
-def test_get_data_by_country():
-    """Testando o método get_data_by_country"""
+def test_get_data():
+    """Testando o método get_data"""
 
     cases_id = faker.random_number(digits=5)
-    data_date = faker.date()
+    data_date = "2021-12-25"
     new_cases = faker.random_number(digits=5)
     country = "BRA"
+
+    data = CovidCasesModel(date=data_date, new_cases=new_cases, country_id=1)
 
     engine = data_base_connection_handler.get_engine()
     engine.execute(
@@ -73,9 +76,14 @@ def test_get_data_by_country():
           VALUES ('{cases_id}', '{data_date}', '{new_cases}', '{1}');"
     )
 
-    query_covid_cases = covid_cases_repo.get_data_by_country(country=country)
+    query_covid_cases1 = covid_cases_repo.get_data(data_date=data_date)
+    query_covid_cases2 = covid_cases_repo.get_data(country=country)
+    query_covid_cases3 = covid_cases_repo.get_data(country=country, data_date=data_date)
 
-    assert isinstance(query_covid_cases, list)
-    assert isinstance(query_covid_cases[0][0], int)
-    assert isinstance(query_covid_cases[0][1], date)
-    assert isinstance(query_covid_cases[0][2], int)
+    assert str(data) == str(query_covid_cases1[0][0])
+    assert data.country_id == query_covid_cases2[0][0].country_id
+    assert str(data) == str(query_covid_cases3[0][0])
+
+    assert isinstance(query_covid_cases1[0][0].date, date)
+    assert isinstance(query_covid_cases2[0][0].country_id, int)
+    assert isinstance(query_covid_cases3[0][0].new_cases, int)

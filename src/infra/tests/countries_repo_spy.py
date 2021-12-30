@@ -9,6 +9,7 @@ class CountryRepoSpy:
 
     def __init__(self) -> None:
         self.insert_country_params = {}
+        self.get_countries_params = {}
 
     def insert_country(self, name: str) -> Country:
         """Mock para insert_country"""
@@ -17,8 +18,8 @@ class CountryRepoSpy:
 
         return mock_countries()
 
-    @classmethod
-    def get_countries(cls) -> List[Country]:
+    def get_countries(self, name: str = None) -> List[Country]:
         """Mock para get_countries"""
 
+        self.get_countries_params["name"] = name
         return [mock_countries()]

@@ -13,6 +13,6 @@ class CountryRepoInterface(ABC):
         raise Exception("Método não implementado")
 
     @abstractmethod
-    def get_countries(self) -> List[Country]:
+    def get_countries(self, name: str = None) -> List[Country]:
         """Método abstrato"""
         raise Exception("Método não implementado")

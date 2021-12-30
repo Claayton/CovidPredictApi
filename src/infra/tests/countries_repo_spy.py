@@ -21,5 +21,5 @@ class CountryRepoSpy:
     def get_countries(self, name: str = None) -> List[Country]:
         """Mock para get_countries"""
 
-        self.get_countries_params = {"name": name}
+        self.get_countries_params["name"] = name
         return [mock_countries()]

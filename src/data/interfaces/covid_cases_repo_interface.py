@@ -8,7 +8,9 @@ class CovidCasesRepoInterface(ABC):
     """Interface para CovidCasesRepo"""
 
     @abstractmethod
-    def insert_data(self, data_date: str, new_cases: int, country: str) -> CovidCases:
+    def insert_data(
+        self, data_date: str, new_cases: int, country_id: int
+    ) -> CovidCases:
         """Método abstrato"""
         raise Exception("Método não implementado")
 

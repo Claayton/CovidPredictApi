@@ -33,7 +33,9 @@ class CovidCasesRepo(CovidCasesRepoInterface):
             finally:
                 data_base.session.close()
 
-    def insert_data(self, data_date: str, new_cases: int, country: str) -> CovidCases:
+    def insert_data(
+        self, data_date: str, new_cases: int, country_id: int
+    ) -> CovidCases:
         """
         Realiza a inserção de dados diários para a tabela CovidCases.
         :param data_date: Data de referência dos casos no formato string ('aaaa-mm-dd').
@@ -43,7 +45,6 @@ class CovidCasesRepo(CovidCasesRepoInterface):
         """
 
         data_date = date.fromisoformat(data_date)
-        country_id = self.__find_country_id(country)
 
         with DataBaseConnectionHandler() as data_base:
             try:

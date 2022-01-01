@@ -11,12 +11,14 @@ class CovidCasesRepoSpy:
         self.insert_data_params = {}
         self.get_covid_cases_params = {}
 
-    def insert_data(self, data_date: str, new_cases: int, country: str) -> CovidCases:
+    def insert_data(
+        self, data_date: str, new_cases: int, country_id: int
+    ) -> CovidCases:
         """Mock para insert_data"""
 
         self.insert_data_params["data_date"] = data_date
         self.insert_data_params["new_cases"] = new_cases
-        self.insert_data_params["country"] = country
+        self.insert_data_params["country_id"] = country_id
 
         return mock_covid_cases()
 

@@ -15,9 +15,9 @@ def test_insert_data():
 
     data_date = faker.date()
     new_cases = faker.random_number(digits=5)
-    country = "BRA"
+    country_id = 1
 
-    new_covid_case = covid_cases_repo.insert_data(data_date, new_cases, country)
+    new_covid_case = covid_cases_repo.insert_data(data_date, new_cases, country_id)
     engine = data_base_connection_handler.get_engine()
     query_covid_cases = engine.execute(
         f"SELECT * FROM covid_cases WHERE id='{new_covid_case.id}';"

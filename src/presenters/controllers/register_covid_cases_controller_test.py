@@ -25,7 +25,6 @@ def test_route():
     response = register_covid_cases_route.route(
         http_request=HttpRequest(body=attibutes)
     )
-    print(response)
 
     assert register_covid_cases_usecase.register_params["date"] == attibutes["date"]
     assert (
@@ -57,7 +56,6 @@ def test_route_fail_422():
     response = register_covid_cases_route.route(
         http_request=HttpRequest(body=attibutes)
     )
-    print(response)
 
     assert register_covid_cases_usecase.register_params["date"] == attibutes["date"]
     assert (
@@ -81,7 +79,6 @@ def test_route_fail_400():
     )
 
     response = register_covid_cases_route.route(http_request=HttpRequest())
-    print(response)
 
     assert register_covid_cases_usecase.register_params == {}
 

@@ -1,5 +1,5 @@
 """Testes relacionados a dominios e casos de uso"""
-from src.data.usecases.data_covid_list_colector import DataCovidListColector
+from src.data.colector.data_covid_list_colector import DataCovidListColector
 from src.infra.tests.data_covid_consumer import DataCovidConsumerSpy
 
 

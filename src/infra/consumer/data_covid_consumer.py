@@ -88,7 +88,7 @@ class DataCovidConsumer(DataCovidConsumerInterface):
 
     # def register_data_from_brazil(self):
     #     """
-    #     Registra os dados do brasil relacionados ao COvid-19,
+    #     Registra os dados do brasil relacionados ao Covid-19,
     #     no banco de dados.
     #     """
 

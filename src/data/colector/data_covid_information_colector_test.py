@@ -1,5 +1,5 @@
 """Testes para data_covid_information_colector"""
-from src.data.usecases.data_covid_information_colector import (
+from src.data.colector.data_covid_information_colector import (
     DataCovidInformationColector,
 )
 from src.infra.tests.data_covid_consumer import DataCovidConsumerSpy

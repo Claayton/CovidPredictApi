@@ -3,7 +3,7 @@ from src.infra.consumer.data_covid_consumer import DataCovidConsumer
 from src.data.usecases.data_covid_information_colector import (
     DataCovidInformationColector,
 )
-from src.presenters.controllers.data_covid_information_colector_controller import (
+from src.presenters.controllers.consumer.data_covid_information_colector_controller import (
     DataCovidInformationColectorController,
 )
 from src import config

@@ -1,3 +1,3 @@
 """Diretório de inicialização do módulo"""
-from .data_brazil import CovidBrazil
-from .data_world import CovidWorld
+from .covid_cases import CovidCases
+from .countries import Country

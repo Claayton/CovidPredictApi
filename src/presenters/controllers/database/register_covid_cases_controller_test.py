@@ -3,7 +3,7 @@ from faker import Faker
 from src.data.tests import RegisterCovidCasesSpy
 from src.infra.tests import CovidCasesRepoSpy
 from src.presenters.helpers import HttpRequest
-from .. import RegisterCoviCasesController
+from . import RegisterCoviCasesController
 
 faker = Faker()
 

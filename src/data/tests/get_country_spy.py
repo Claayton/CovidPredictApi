@@ -1,4 +1,4 @@
-"""Classe Spy para GetUser"""
+"""Classe Spy para GetCountry"""
 from typing import Dict, List
 from src.domain.models import Country
 from src.domain.tests import mock_countries

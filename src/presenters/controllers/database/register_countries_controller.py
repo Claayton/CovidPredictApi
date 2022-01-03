@@ -22,7 +22,7 @@ class RegisterCountryController:
             if "name" in body_params:
                 name = http_request.body["name"]
 
-                response = self.register_country_usecase.register(name=name)
+                response = self.register_country_usecase.register_country(name=name)
 
             else:
                 response = {"success": False, "data": None}

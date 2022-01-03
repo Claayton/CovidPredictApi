@@ -16,7 +16,7 @@ def test_find_country():
 
     response = data_covid_information_colector.find_country(country, time)
 
-    assert api_consumer.get_data_covid_information_attributes["country"] == country
+    assert api_consumer.get_data_covid_by_country_attributes["country"] == country
     assert isinstance(response, dict)
     assert "new_cases_real" in response["data"][0]
     assert "predicted_evolution" in response["data"][0]

@@ -27,7 +27,7 @@ class DataCovidInformationColector(DataCovidInformationColectorInterface):
         return formated_response
 
     def __search_country(self, country: str) -> Dict:
-        api_response = self.__api_consumer.get_data_covid_information(country)
+        api_response = self.__api_consumer.get_data_covid_by_country(country)
 
         return api_response.response
 

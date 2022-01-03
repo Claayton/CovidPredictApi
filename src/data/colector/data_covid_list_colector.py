@@ -12,7 +12,7 @@ class DataCovidListColector(DataCovidListColectorInterface):
         self.__api_consumer = api_consumer
 
     def list(self) -> List[Dict]:
-        api_response = self.__api_consumer.get_data_covid()
+        api_response = self.__api_consumer.get_all_data_covid()
         data_covid_formated_list = self.__format_api_response(api_response.response)
         return data_covid_formated_list
 

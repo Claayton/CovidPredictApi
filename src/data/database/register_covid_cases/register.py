@@ -2,7 +2,7 @@
 from typing import Type, Dict
 from src.domain.usecases import RegisterCovidCasesInterface
 from src.data.interfaces import CovidCasesRepoInterface as CovidCasesRepo
-from src.data.get_countries import GetCountry
+from src.data.database.get_countries import GetCountry
 from src.domain.models import CovidCases
 
 

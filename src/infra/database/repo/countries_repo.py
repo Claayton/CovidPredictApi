@@ -1,5 +1,6 @@
 """Diretório de manipulação de dados"""
 from typing import List
+from sqlalchemy.exc import IntegrityError
 from src.data.interfaces import CountryRepoInterface
 from src.infra.database.config import DataBaseConnectionHandler
 from src.infra.database.entities import Country as CountryModel
@@ -21,12 +22,18 @@ class CountryRepo(CountryRepoInterface):
             try:
                 new_country = CountryModel(name=name)
                 data_base.session.add(new_country)
-                data_base.session.commit()
+                data_base.session.flush()
 
-                return Country(id=new_country.id, name=new_country.name)
-            except:
+            except IntegrityError:
                 data_base.session.rollback()
-                raise
+                existing = (
+                    data_base.session.query(CountryModel).filter_by(name=name).one()
+                )
+                if not existing:
+                    raise
+            else:
+                data_base.session.commit()
+                return Country(id=new_country.id, name=new_country.name)
             finally:
                 data_base.session.close()
 

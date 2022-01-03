@@ -66,7 +66,7 @@ def test_get_data():
     cases_id = faker.random_number(digits=5)
     data_date = "2021-12-25"
     new_cases = faker.random_number(digits=5)
-    country = "BRA"
+    country = "AFG"
 
     data = CovidCasesModel(date=data_date, new_cases=new_cases, country_id=1)
 
@@ -78,6 +78,7 @@ def test_get_data():
 
     query_covid_cases1 = covid_cases_repo.get_data(data_date=data_date)
     query_covid_cases2 = covid_cases_repo.get_data(country=country)
+    print(query_covid_cases2)
     query_covid_cases3 = covid_cases_repo.get_data(country=country, data_date=data_date)
 
     assert str(data) == str(query_covid_cases1[0][0])

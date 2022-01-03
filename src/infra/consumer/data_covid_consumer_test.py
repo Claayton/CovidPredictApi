@@ -76,12 +76,11 @@ def test_get_all_data_covid_http_error(requests_mock):
         assert (error.status_code < 200) or (error.status_code > 299)
 
 
-def test_get_data_covid_information(requests_mock):
-    """Testando o metodo get_data_covid_information"""
+def test_get_data_covid_by_country(requests_mock):
+    """Testando o método test_get_data_covid_by_country"""
 
     country = "BRA"
     url = config.SEARCH_URL
-    data_covid_consumer = DataCovidConsumer(url)
 
     requests_mock.get(
         url=config.SEARCH_URL,
@@ -100,27 +99,33 @@ def test_get_data_covid_information(requests_mock):
         },
     )
 
-    data_covid_information = data_covid_consumer.get_data_covid_information(country)
+    data_covid_consumer = DataCovidConsumer(url)
+    data_covid_by_country_response = data_covid_consumer.get_data_covid_by_country(
+        country=country
+    )
 
-    assert data_covid_information.request.method == "GET"
-    assert data_covid_information.request.url == config.SEARCH_URL
-    assert data_covid_information.status_code == 200
+    assert data_covid_by_country_response.request.method == "GET"
+    assert data_covid_by_country_response.request.url == url
 
-    assert "new_cases" in data_covid_information.response[0]
+    assert data_covid_by_country_response.status_code == 200
+    assert isinstance(data_covid_by_country_response.response, list)
+    assert isinstance(data_covid_by_country_response.response[0], dict)
+    assert "new_cases" in data_covid_by_country_response.response[0]
 
 
-def test_get_data_covid_information_error(requests_mock):
-    """Testando o metodo get_data_covid_information in error"""
+def test_get_data_covid_by_country_http_error(requests_mock):
+    """Testando o erro no método get_data_covid_by_country"""
 
     country = "BRA"
     url = f"{config.SEARCH_URL}CASCAVEL"
+
+    requests_mock.get(url=url, status_code=404, json={"error": "deu ruim"})
+
     data_covid_consumer = DataCovidConsumer(url)
 
-    requests_mock.get(url=url, status_code=404, json={"details": "something"})
-
     try:
-        data_covid_consumer.get_data_covid_information(country)
+        data_covid_consumer.get_data_covid_by_country(country)
         assert True is False
     except HttpRequestError as error:
         assert error.message is not None
-        assert error.status_code is not None
+        assert (error.status_code < 200) or (error.status_code > 299)

@@ -1,30 +1,51 @@
-"""Script de pesquisa e registro de dados na API"""
-# from datetime import date
-from typing import Dict, Tuple, Type
+"""Diretório para a classe DataCovidConsumer"""
+from typing import Dict, List, Tuple, Type
 from collections import namedtuple
-import requests
-from requests import Request
-
-# from src.database.tables import CovidBrazil, CovidWorld, session
+from requests import Request, Session
 from src.errors import HttpRequestError
 from src.data.interfaces.data_covid_consumer import DataCovidConsumerInterface
 
 
 class DataCovidConsumer(DataCovidConsumerInterface):
     """
-    Classe responsável pelo consumo da API de dados do covid,
-    utilizando requisições http.
+    Classe responsável pelo consumo da API de dados do covid utilizando requisições http.
     """
 
     def __init__(self, url: str) -> None:
-        self.get_data_covid_response = namedtuple(
+        self.url = url
+        self.get_countries_response = namedtuple(
+            "GET_Countries", "status_code request response"
+        )
+        self.get_covid_cases_response = namedtuple(
             "GET_Dados_covid", "status_code request response"
         )
-        self.get_data_covid_information_response = namedtuple(
+        self.get_covid_cases_by_country_response = namedtuple(
             "GET_Dados_covid_Info", "status_code request response"
         )
-        self.url = url
-        # create_database_if_not_exist('app/database/datacovid.db')
+
+    def get_countries(self) -> Tuple[int, Type[Request], List]:
+        """
+        Realiza a requisição para a API de dados covid.
+        :return: Uma lista com todos os países encontrados na resposta da API.
+        """
+
+        request = Request(method="GET", url=self.url)
+        request_prepared = request.prepare()
+
+        response = self.__send_http_request(request_prepared)
+        status_code = response.status_code
+        data = response.json()
+
+        countries = []
+
+        for country in data:
+            countries.append(country)
+
+        if (status_code < 200) or (status_code > 299):
+            raise HttpRequestError(message=response, status_code=status_code)
+        return self.get_countries_response(
+            status_code=status_code, request=request, response=countries
+        )
 
     def get_data_covid(self) -> Tuple[int, Type[Request], Dict]:
         """
@@ -32,18 +53,15 @@ class DataCovidConsumer(DataCovidConsumerInterface):
         :return: Uma tupla com os atributos: (status_code, request, response).
         """
 
-        request = requests.Request(
-            method="GET",
-            url=self.url,
-        )
+        request = Request(method="GET", url=self.url)
         request_prepared = request.prepare()
 
         response = self.__send_http_request(request_prepared)
         status_code = response.status_code
 
-        if not ((status_code >= 200) and (status_code <= 299)):
+        if (status_code < 200) or (status_code > 299):
             raise HttpRequestError(message=response, status_code=status_code)
-        return self.get_data_covid_response(
+        return self.get_covid_cases_response(
             status_code=status_code, request=request, response=response.json()
         )
 
@@ -57,7 +75,7 @@ class DataCovidConsumer(DataCovidConsumerInterface):
         :return: Uma tupla com seus atributos (status_code, request, response).
         """
 
-        request = requests.Request(
+        request = Request(
             method="GET",
             url=f"{self.url}",
         )
@@ -66,9 +84,9 @@ class DataCovidConsumer(DataCovidConsumerInterface):
         response = self.__send_http_request(request_prepared)
         status_code = response.status_code
 
-        if not ((status_code >= 200) and (status_code <= 299)):
+        if 200 > status_code > 299:
             raise HttpRequestError(message=response, status_code=status_code)
-        return self.get_data_covid_information_response(
+        return self.get_covid_cases_by_country_response(
             status_code=status_code,
             request=request,
             response=response.json()[country]["data"],
@@ -82,7 +100,7 @@ class DataCovidConsumer(DataCovidConsumerInterface):
         :return: A resposta da requisição http.
         """
 
-        http_session = requests.Session()
+        http_session = Session()
         response = http_session.send(request_prepared)
         return response
 

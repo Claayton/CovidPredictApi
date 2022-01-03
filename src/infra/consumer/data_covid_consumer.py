@@ -16,7 +16,7 @@ class DataCovidConsumer(DataCovidConsumerInterface):
         self.get_countries_response = namedtuple(
             "GET_Countries", "status_code request response"
         )
-        self.get_covid_cases_response = namedtuple(
+        self.get_all_data_covid_response = namedtuple(
             "GET_Dados_covid", "status_code request response"
         )
         self.get_covid_cases_by_country_response = namedtuple(
@@ -25,8 +25,11 @@ class DataCovidConsumer(DataCovidConsumerInterface):
 
     def get_countries(self) -> Tuple[int, Type[Request], List]:
         """
-        Realiza a requisição para a API de dados covid.
-        :return: Uma lista com todos os países encontrados na resposta da API.
+        Realiza a requisição para a API de dados do covid.
+        :return: Uma tupla nomeada com os atributos:
+            status_code: O status da resposta,
+            request: A requisição http enviada,
+            response: Uma lista com todos os países encontrados na resposta da API.
         """
 
         request = Request(method="GET", url=self.url)
@@ -47,10 +50,13 @@ class DataCovidConsumer(DataCovidConsumerInterface):
             status_code=status_code, request=request, response=countries
         )
 
-    def get_data_covid(self) -> Tuple[int, Type[Request], Dict]:
+    def get_all_data_covid(self) -> Tuple[int, Type[Request], Dict]:
         """
         Realiza a requisição para a API de dados do covid.
-        :return: Uma tupla com os atributos: (status_code, request, response).
+        :return: Uma tupla nomeada com os atributos:
+            status_code: O status da resposta,
+            request: A requisição http enviada,
+            response: Um dicionário contendo todos os dados sobre o covid no mundo.
         """
 
         request = Request(method="GET", url=self.url)
@@ -58,11 +64,12 @@ class DataCovidConsumer(DataCovidConsumerInterface):
 
         response = self.__send_http_request(request_prepared)
         status_code = response.status_code
+        data = response.json()
 
         if (status_code < 200) or (status_code > 299):
             raise HttpRequestError(message=response, status_code=status_code)
-        return self.get_covid_cases_response(
-            status_code=status_code, request=request, response=response.json()
+        return self.get_all_data_covid_response(
+            status_code=status_code, request=request, response=data
         )
 
     def get_data_covid_information(

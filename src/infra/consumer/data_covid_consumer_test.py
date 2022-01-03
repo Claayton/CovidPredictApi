@@ -40,40 +40,40 @@ def test_get_countries_http_error(requests_mock):
         assert (error.status_code < 200) or (error.status_code > 299)
 
 
-def test_get_data_covid(requests_mock):
-    """Test if the search data by country is working"""
+def test_get_all_data_covid(requests_mock):
+    """Testando o método get_all_data_covid"""
 
     url = config.SEARCH_URL
-    country = ["BRA"]
 
     requests_mock.get(
-        url=url, status_code=200, json={"some": "thing", country[0]: {"data": [{}]}}
+        url=url, status_code=200, json={"BRA": {"data": [{}]}, "USA": {"data": [{}]}}
     )
 
     data_covid_consumer = DataCovidConsumer(url)
-    get_data_covid_response = data_covid_consumer.get_data_covid()
+    get_all_data_covid_response = data_covid_consumer.get_all_data_covid()
 
-    assert get_data_covid_response.request.method == "GET"
-    assert get_data_covid_response.request.url == url
+    assert get_all_data_covid_response.request.method == "GET"
+    assert get_all_data_covid_response.request.url == url
 
-    assert get_data_covid_response.status_code == 200
-    assert isinstance(get_data_covid_response.response["BRA"]["data"], list)
+    assert get_all_data_covid_response.status_code == 200
+    assert isinstance(get_all_data_covid_response.response, dict)
 
 
-def test_get_data_covid_http_error(requests_mock):
-    """Teste de erro em get_data_covid"""
+def test_get_all_data_covid_http_error(requests_mock):
+    """Testando o erro no método get_all_data_covid"""
 
     url = f"{config.SEARCH_URL}CASCAVEL"
 
-    requests_mock.get(url=url, status_code=404, json={"details": "somenthing"})
+    requests_mock.get(url=url, status_code=404, json={"error": "deu ruim"})
 
     data_covid_consumer = DataCovidConsumer(url)
+
     try:
-        data_covid_consumer.get_data_covid()
+        data_covid_consumer.get_all_data_covid()
         assert True is False
     except HttpRequestError as error:
         assert error.message is not None
-        assert error.status_code is not None
+        assert (error.status_code < 200) or (error.status_code > 299)
 
 
 def test_get_data_covid_information(requests_mock):

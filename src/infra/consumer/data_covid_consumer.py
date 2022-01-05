@@ -65,12 +65,19 @@ class DataCovidConsumer(DataCovidConsumerInterface):
 
         response = self.__send_http_request(request_prepared)
         status_code = response.status_code
-        data = response.json()
+        response_json = response.json()
+        response_data = {}
+
+        try:
+            for country in response_json:
+                response_data[country] = response_json[country]["data"]
+        except TypeError:
+            raise HttpRequestError(message=response, status_code=status_code)
 
         if (status_code < 200) or (status_code > 299):
             raise HttpRequestError(message=response, status_code=status_code)
         return self.get_all_data_covid_response(
-            status_code=status_code, request=request, response=data
+            status_code=status_code, request=request, response=response_data
         )
 
     def get_data_covid_by_country(

@@ -8,4 +8,8 @@ faker = Faker()
 def mock_countries() -> Country:
     """Mock Country"""
 
-    return Country(id=faker.random_number(digits=5), name=faker.name())
+    return [
+        Country(id=faker.random_number(digits=5), name="BRA"),
+        Country(id=faker.random_number(digits=5), name="USA"),
+        Country(id=faker.random_number(digits=5), name="ARG"),
+    ]

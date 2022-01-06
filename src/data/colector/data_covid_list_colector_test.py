@@ -10,7 +10,7 @@ def test_list():
     api_consumer = DataCovidConsumerSpy()
     data_covid_list_colector = DataCovidListColector(api_consumer)
 
-    country = ["BRA"]
+    country = "BRA"
     response = data_covid_list_colector.list()
 
     assert api_consumer.get_all_data_covid_attributes == {"country": country}

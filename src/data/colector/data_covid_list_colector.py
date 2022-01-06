@@ -23,7 +23,7 @@ class DataCovidListColector(DataCovidListColectorInterface):
         data_covid_country = []
         for country in ALL_COUNTRIES:
             try:
-                data_by_country = api_response[country]["data"]
+                data_by_country = api_response[country]
 
                 for index, day in enumerate(data_by_country):
                     try:

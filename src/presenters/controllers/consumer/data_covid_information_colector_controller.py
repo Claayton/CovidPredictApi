@@ -1,8 +1,8 @@
 """Diretório controlador"""
 from typing import Dict, Type
 from src.presenters.interface.controllers import ControllersInterfaceInfo
-from src.domain.usecases.data_covid_information_colector import (
-    DataCovidInformationColectorInterface,
+from src.domain.usecases.covid_cases_colector_interface import (
+    CovidCasesColectorInterface,
 )
 
 
@@ -11,7 +11,7 @@ class DataCovidInformationColectorController(ControllersInterfaceInfo):
 
     def __init__(
         self,
-        data_covid_information_colector: Type[DataCovidInformationColectorInterface],
+        data_covid_information_colector: Type[CovidCasesColectorInterface],
     ) -> None:
         self.__use_case = data_covid_information_colector
 

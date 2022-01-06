@@ -11,38 +11,33 @@ def mock_data_covid() -> Dict:
     Mock de dados do covid
     :return: Um dicionario com as informações do covid
     """
-    return [
-        {
-            "id": 1,
-            "date": fake.date(),
-            "new_cases": fake.random_int(),
-            "country": "BRA",
-        },
-        {
-            "id": 2,
-            "date": fake.date(),
-            "new_cases": fake.random_int(),
-            "country": "BRA",
-        },
-        {
-            "id": 3,
-            "date": fake.date(),
-            "new_cases": fake.random_int(),
-            "country": "BRA",
-        },
-        {
-            "id": 4,
-            "date": fake.date(),
-            "new_cases": fake.random_int(),
-            "country": "BRA",
-        },
-        {
-            "id": 5,
-            "date": fake.date(),
-            "new_cases": fake.random_int(),
-            "country": "BRA",
-        },
-    ]
+
+    return {
+        "BRA": [
+            {
+                "id": 1,
+                "date": fake.date(),
+                "new_cases": fake.random_int(),
+                "country": "BRA",
+            }
+        ],
+        "USA": [
+            {
+                "id": 2,
+                "date": fake.date(),
+                "new_cases": fake.random_int(),
+                "country": "USA",
+            }
+        ],
+        "ARG": [
+            {
+                "id": 3,
+                "date": fake.date(),
+                "new_cases": fake.random_int(),
+                "country": "ARG",
+            }
+        ],
+    }
 
 
 class DataCovidConsumerSpy:
@@ -71,13 +66,11 @@ class DataCovidConsumerSpy:
     def get_all_data_covid(self) -> any:
         """Mock para get_all_data_covid"""
 
-        country = ["BRA"]
+        country = "BRA"
 
         self.get_all_data_covid_attributes["country"] = country
         return self.get_all_data_covid_response(
-            status_code=200,
-            request=None,
-            response={country[0]: {"data": [mock_data_covid()[0]]}},
+            status_code=200, request=None, response=mock_data_covid()
         )
 
     def get_data_covid_by_country(self, country: str) -> any:
@@ -87,5 +80,5 @@ class DataCovidConsumerSpy:
 
         self.get_data_covid_by_country_attributes["country"] = country
         return self.get_data_covid_by_country_response(
-            status_code=200, request=None, response=mock_data_covid()
+            status_code=200, request=None, response=mock_data_covid()[country]
         )

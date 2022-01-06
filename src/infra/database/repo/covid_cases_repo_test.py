@@ -78,7 +78,6 @@ def test_get_data():
 
     query_covid_cases1 = covid_cases_repo.get_data(data_date=data_date)
     query_covid_cases2 = covid_cases_repo.get_data(country=country)
-    print(query_covid_cases2)
     query_covid_cases3 = covid_cases_repo.get_data(country=country, data_date=data_date)
 
     assert str(data) == str(query_covid_cases1[0][0])

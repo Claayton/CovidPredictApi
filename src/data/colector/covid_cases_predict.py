@@ -4,12 +4,12 @@ from datetime import datetime, timedelta
 import pandas as pd
 from numpy import mean
 from src.domain.usecases import (
-    CovidCasePredictInterface,
+    CovidCasesPredictInterface,
     GetCovidCasesInterface as GetCovidCases,
 )
 
 
-class CovidCasesPredict(CovidCasePredictInterface):
+class CovidCasesPredict(CovidCasesPredictInterface):
     """Casos de uso para DataCovidListColector"""
 
     def __init__(
@@ -31,7 +31,6 @@ class CovidCasesPredict(CovidCasePredictInterface):
         covid_data = self.__format_data_covid(country, days)
 
         data_frame = pd.DataFrame(covid_data)
-        print(data_frame)
 
         data_values = data_frame.values
         window = 3
@@ -100,7 +99,8 @@ class CovidCasesPredict(CovidCasePredictInterface):
 
         return covid_data_plus_days
 
-    def __add_days_to_data_frame(self, data_covid: List[Dict], days: int) -> List[Dict]:
+    @classmethod
+    def __add_days_to_data_frame(cls, data_covid: List[Dict], days: int) -> List[Dict]:
         """
         Adiciona o número de dias que serão previstos à base de dados real.
         :return: A nova base de dados, atualizada com os novos dias.

@@ -87,3 +87,5 @@ def test_get_data():
     assert isinstance(query_covid_cases1[0][0].date, date)
     assert isinstance(query_covid_cases2[0][0].country_id, int)
     assert isinstance(query_covid_cases3[0][0].new_cases, int)
+
+    engine.execute(f"DELETE FROM covid_cases WHERE id='{cases_id}';")

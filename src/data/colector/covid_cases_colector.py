@@ -17,11 +17,11 @@ class CovidCasesColector(CovidCasesColectorInterface):
         self.__api_consumer = api_consumer
         self.__get_countries = get_countries
 
-    def covid_cases_country(self, country: str, days: int) -> List[Dict]:
+    def covid_cases_country(self, country: str, days: int = 0) -> List[Dict]:
         """
         Realiza o tratamento dos dados do covid por país recebidos do consumer.
         :param country: O país de referência que deverá ser tratado os dados.
-               days: A quantidade de dias futuros que devem ser previstos.
+        :param days: A quantidade de dias futuros que devem ser previstos.
         :return: Os dados do covid19 ja tratados e com uma previsão para os próximos dias.
         """
 
@@ -45,7 +45,7 @@ class CovidCasesColector(CovidCasesColectorInterface):
         :return: Os dados do covid19 ja tratados e com uma previsão para os próximos dias.
         """
 
-        countries = self.__get_countries.all_countries()["data"][0]
+        countries = self.__get_countries.all_countries()["data"]
         api_response = self.__api_consumer.get_all_data_covid().response
 
         countries_data = []

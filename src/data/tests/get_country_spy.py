@@ -23,7 +23,7 @@ class GetCountrySpy:
         validate_entry = isinstance(name, str)
 
         if validate_entry:
-            response = [mock_countries()]
+            response = [mock_countries()[0]]
 
         return {"success": validate_entry, "data": response}
 
@@ -34,7 +34,7 @@ class GetCountrySpy:
         """
 
         self.all_countries_params = {}
-        response = [mock_countries()]
+        response = mock_countries()
 
         if response is not None:
             validate_entry = True

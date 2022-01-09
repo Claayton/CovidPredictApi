@@ -25,7 +25,7 @@ class GetCovidCasesSpy:
         validate_entry = isinstance(country, str)
 
         if validate_entry:
-            response = [mock_covid_cases()]
+            response = mock_covid_cases()
 
         return {"success": validate_entry, "data": response}
 
@@ -42,7 +42,7 @@ class GetCovidCasesSpy:
         validate_entry = isinstance(data_date, str)
 
         if validate_entry:
-            response = [mock_covid_cases()]
+            response = mock_covid_cases()
 
         return {"success": validate_entry, "data": response}
 
@@ -63,6 +63,6 @@ class GetCovidCasesSpy:
         validate_entry = isinstance(data_date, str) and isinstance(country, str)
 
         if validate_entry:
-            response = [mock_covid_cases()]
+            response = mock_covid_cases()
 
         return {"success": validate_entry, "data": response}

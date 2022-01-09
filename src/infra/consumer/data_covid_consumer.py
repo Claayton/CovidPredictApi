@@ -71,8 +71,8 @@ class DataCovidConsumer(DataCovidConsumerInterface):
         try:
             for country in response_json:
                 response_data[country] = response_json[country]["data"]
-        except TypeError:
-            raise HttpRequestError(message=response, status_code=status_code)
+        except TypeError as error:
+            raise HttpRequestError(message=response, status_code=status_code) from error
 
         if (status_code < 200) or (status_code > 299):
             raise HttpRequestError(message=response, status_code=status_code)

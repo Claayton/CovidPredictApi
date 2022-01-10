@@ -36,18 +36,3 @@ def test_handler_fail_422():
 
     assert response.status_code == 422
     assert "error" in response.body
-
-
-def test_handler_fail_400():
-    """Testando o erro 400 no método handler (sem um parametro de query)"""
-
-    get_countries_usecase = GetCountrySpy(CountryRepoSpy())
-    get_countries_controller = GetCountryController(get_countries_usecase)
-    http_request = HttpRequest()
-
-    response = get_countries_controller.handler(http_request)
-
-    assert get_countries_usecase.by_name_params == {}
-
-    assert response.status_code == 400
-    assert "error" in response.body

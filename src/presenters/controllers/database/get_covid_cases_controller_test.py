@@ -95,18 +95,3 @@ def test_handler_fail_422():
 
     assert response.status_code == 422
     assert "error" in response.body
-
-
-def test_handler_fail_400():
-    """Testando o erro 400 no método handler (sem um parametro de query)"""
-
-    get_covid_cases_usecase = GetCovidCasesSpy(CovidCasesRepoSpy())
-    get_covid_cases_controller = GetCovidCasesController(get_covid_cases_usecase)
-    http_request = HttpRequest()
-
-    response = get_covid_cases_controller.handler(http_request)
-
-    assert get_covid_cases_usecase.by_country_and_by_date_params == {}
-
-    assert response.status_code == 400
-    assert "error" in response.body

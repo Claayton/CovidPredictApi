@@ -1,5 +1,7 @@
 """Controllers para GetCovidCases"""
-from typing import Type
+from typing import Type, List
+from datetime import date
+from src.domain.models.covid_cases import CovidCases
 from src.domain.usecases import GetCovidCasesInterface as GetCovidCases
 from src.presenters.helpers import HttpRequest, HttpResponse
 from src.errors import HttpErrors
@@ -29,27 +31,52 @@ class GetCovidCasesController:
             elif ("date" in query_string_params) and (
                 "country" not in query_string_params
             ):
+
                 date = http_request.query["date"]
                 response = self.get_covid_cases_usecase.by_date(data_date=date)
 
             elif ("date" not in query_string_params) and (
                 "country" in query_string_params
             ):
+
                 country = http_request.query["country"]
                 response = self.get_covid_cases_usecase.by_country(country=country)
 
-            else:
-                response = {"success": False, "data": None}
+            if response["success"] is True:
+                return self.__formated_response(response["data"])
 
-            if response["success"] is False:
-                http_error = HttpErrors.error_422()
-                return HttpResponse(
-                    status_code=http_error["status_code"], body=http_error["body"]
-                )
+            http_error = HttpErrors.error_422()
 
-            return HttpResponse(status_code=200, body=response["data"])
+            return HttpResponse(
+                status_code=http_error["status_code"], body=http_error["body"]
+            )
+
+        response = self.get_covid_cases_usecase.by_country(country="WORLD")
+
+        if response["success"] is True:
+            return self.__formated_response(response["data"])
 
         http_error = HttpErrors.error_400()
         return HttpResponse(
             status_code=http_error["status_code"], body=http_error["body"]
         )
+
+    @classmethod
+    def __formated_response(
+        cls, usecase_response: List[CovidCases]
+    ) -> List[CovidCases]:
+
+        response = []
+
+        for data in usecase_response:
+
+            response.append(
+                {
+                    "id": data.id,
+                    "date": date.isoformat(data.date),
+                    "new_cases": data.new_cases,
+                    "country_id": data.country_id,
+                }
+            )
+
+        return HttpResponse(status_code=200, body=response)

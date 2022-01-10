@@ -106,7 +106,7 @@ class CovidCasesPredict(CovidCasesPredictInterface):
         :return: A nova base de dados, atualizada com os novos dias.
         """
 
-        current_day = datetime.strptime(data_covid[-1]["date"], "%Y-%m-%d")
+        current_day = data_covid[-1]["date"]
         today = datetime.today()
         count = 0
 

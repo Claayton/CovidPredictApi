@@ -58,7 +58,7 @@ class CountryRepo(CountryRepoInterface):
 
                 with DataBaseConnectionHandler() as data_base:
                     data = data_base.session.query(CountryModel).all()
-                    query_data = [data]
+                    query_data = data
             return query_data
 
         except:

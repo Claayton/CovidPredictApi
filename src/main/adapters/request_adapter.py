@@ -1,6 +1,7 @@
 """Diretório Adaptador de requisições"""
 from typing import Callable
 from fastapi import Request as RequestFastApi
+from src.presenters.helpers import HttpRequest
 
 
 async def request_adapter(request: RequestFastApi, callback: Callable):
@@ -12,7 +13,7 @@ async def request_adapter(request: RequestFastApi, callback: Callable):
     except:
         pass
 
-    http_request = {"query_params": request.query_params, "body": body}
+    http_request = HttpRequest(body=body, query=request.query_params)
 
     try:
         http_response = callback(http_request)

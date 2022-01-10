@@ -1,1 +1,2 @@
-from .data_covid_routes import data_covid_routes
+"""Diretório de inicialização do módulo routes"""
+from .get_countries_route import countries_routes

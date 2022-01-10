@@ -1,7 +1,7 @@
 """Diretório de instância do app"""
 from fastapi import FastAPI
-from src.main.routes import data_covid_routes
+from src.main.routes import countries_routes
 
 app = FastAPI()
 
-app.include_router(data_covid_routes)
+app.include_router(countries_routes)

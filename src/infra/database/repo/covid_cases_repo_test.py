@@ -80,12 +80,12 @@ def test_get_data():
     query_covid_cases2 = covid_cases_repo.get_data(country=country)
     query_covid_cases3 = covid_cases_repo.get_data(country=country, data_date=data_date)
 
-    assert str(data) == str(query_covid_cases1[0][0])
-    assert data.country_id == query_covid_cases2[0][0].country_id
-    assert str(data) == str(query_covid_cases3[0][0])
+    assert str(data) == str(query_covid_cases1[0])
+    assert data.country_id == query_covid_cases2[0].country_id
+    assert str(data) == str(query_covid_cases3[0])
 
-    assert isinstance(query_covid_cases1[0][0].date, date)
-    assert isinstance(query_covid_cases2[0][0].country_id, int)
-    assert isinstance(query_covid_cases3[0][0].new_cases, int)
+    assert isinstance(query_covid_cases1[0].date, date)
+    assert isinstance(query_covid_cases2[0].country_id, int)
+    assert isinstance(query_covid_cases3[0].new_cases, int)
 
     engine.execute(f"DELETE FROM covid_cases WHERE id='{cases_id}';")

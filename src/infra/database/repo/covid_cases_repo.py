@@ -1,6 +1,7 @@
 """Diretório de manipulação de dados"""
 from datetime import date
 from typing import Tuple, List
+from sqlalchemy.orm.exc import NoResultFound
 from src.data.interfaces import CovidCasesRepoInterface
 from src.infra.database.config import DataBaseConnectionHandler
 from src.infra.database.entities import CovidCases as CovidCasesModel
@@ -123,7 +124,7 @@ class CovidCasesRepo(CovidCasesRepoInterface):
                         .filter(CovidCasesModel.country_id == country_id)
                         .all()
                     )
-                    query_data = [data]
+                    query_data = data
 
             elif not country and data_date:
 
@@ -135,7 +136,7 @@ class CovidCasesRepo(CovidCasesRepoInterface):
                         .filter(CovidCasesModel.date == data_date)
                         .all()
                     )
-                    query_data = [data]
+                    query_data = data
 
             elif country and data_date:
 
@@ -151,12 +152,20 @@ class CovidCasesRepo(CovidCasesRepoInterface):
                         )
                         .all()
                     )
-                    query_data = [data]
+                    query_data = data
+
+            else:
+
+                with DataBaseConnectionHandler() as data_base:
+                    data = data_base.session.query(CovidCasesModel).all()
+                    query_data = data
 
             return query_data
 
-        except:
+        except NoResultFound:
+            return []
+        except Exception as error:
             data_base.session.rollback()
-            raise
+            raise error
         finally:
             data_base.session.close()

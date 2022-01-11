@@ -10,7 +10,7 @@ async def request_adapter(request: RequestFastApi, callback: Callable):
     body = None
     try:
         body = await request.json()
-    except:
+    except:  # pylint: disable=W0702
         pass
 
     http_request = HttpRequest(body=body, query=request.query_params)

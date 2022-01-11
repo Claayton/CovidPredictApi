@@ -15,10 +15,10 @@ async def get_countries(request: RequestFastApi):
 
     try:
         get_from_country_validator(request)
-    except:
+    except Exception as error:  # pylint: disable=W0703
         http_error = HttpErrors.error_400()
         return JSONResponse(
-            status_code=http_error["status_code"], content=http_error["body"]
+            status_code=http_error["status_code"], content={"error": str(error)}
         )
 
     controller = get_countries_composer()

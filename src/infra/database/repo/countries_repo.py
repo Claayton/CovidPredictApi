@@ -61,8 +61,8 @@ class CountryRepo(CountryRepoInterface):
                     query_data = data
             return query_data
 
-        except:
+        except Exception as error:
             data_base.session.rollback()
-            raise
+            raise error
         finally:
             data_base.session.close()

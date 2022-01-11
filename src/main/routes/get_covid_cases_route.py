@@ -17,14 +17,13 @@ async def get_data_covid_from_country(request: RequestFastApi):
 
     try:
         get_covid_cases_validator(request)
-    except:
+    except Exception as error:  # pylint: disable=W0703
         http_error = HttpErrors.error_400()
         return JSONResponse(
-            status_code=http_error["status_code"], content=http_error["body"]
+            status_code=http_error["status_code"], content={"error": str(error)}
         )
 
     controller = get_covid_cases_composer()
     response = await request_adapter(request, controller.handler)
-    print(response)
 
     return JSONResponse(status_code=response.status_code, content=response.body)

@@ -7,11 +7,13 @@ class CovidCasesColectorInterface(ABC):
     """Coletor de Interface de informações do dados covid"""
 
     @abstractmethod
-    def covid_cases_country(self, country: str, days: int) -> List[Dict]:
+    def covid_cases_country(
+        self, country: str, days: int = 0
+    ) -> Dict[bool, List[Dict]]:
         """Deve ser implementado"""
         raise Exception("Must implement find_country method")
 
     @abstractmethod
-    def covid_cases_world(self, days: int) -> List[Dict]:
+    def covid_cases_world(self, days: int) -> Dict[bool, List[Dict]]:
         """Deve ser implementado"""
         raise Exception("Must implement find_country method")

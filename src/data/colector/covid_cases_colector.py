@@ -17,7 +17,9 @@ class CovidCasesColector(CovidCasesColectorInterface):
         self.__api_consumer = api_consumer
         self.__get_countries = get_countries
 
-    def covid_cases_country(self, country: str, days: int = 0) -> List[Dict]:
+    def covid_cases_country(
+        self, country: str, days: int = 0
+    ) -> Dict[bool, List[Dict]]:
         """
         Realiza o tratamento dos dados do covid por país recebidos do consumer.
         :param country: O país de referência que deverá ser tratado os dados.
@@ -30,15 +32,15 @@ class CovidCasesColector(CovidCasesColectorInterface):
         if not country_exist["success"]:
             http_error = HttpErrors.error_422()
 
-            return [http_error]
+            return {"success": False, "data": http_error}
 
         api_response = self.__api_consumer.get_data_covid_by_country(country).response
 
         country_data_response = self.__separete_data(api_response, days, country)
 
-        return country_data_response
+        return {"success": True, "data": country_data_response}
 
-    def covid_cases_world(self, days: int) -> List[Dict]:
+    def covid_cases_world(self, days: int) -> Dict[bool, List[Dict]]:
         """
         Realiza o tratamento dos dados do covid do mundo inteiro recebidos do consumer.
         :param days: A quantidade de dias futuros que devem ser previstos.
@@ -59,7 +61,7 @@ class CovidCasesColector(CovidCasesColectorInterface):
 
             world_data_response = self.__world_data_sum(countries_data, days)
 
-        return world_data_response
+        return {"success": True, "data": world_data_response}
 
     @classmethod
     def __world_data_sum(cls, countries_data: List[List], days: int) -> List[Dict]:

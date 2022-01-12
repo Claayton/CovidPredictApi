@@ -45,7 +45,7 @@ class RegisterCovidCases(RegisterCovidCasesInterface):
                 country=country
             )
 
-            for day in data_covid:
+            for day in data_covid["data"]:
 
                 response = self.__covid_cases_repo.insert_data(
                     data_date=day["date"],

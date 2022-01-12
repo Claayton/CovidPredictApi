@@ -1,21 +1,20 @@
-"""Caso de uso para CovidCasesColector"""
+"""Classe Spy para CovidCasesColector"""
 from typing import List, Type, Dict
-from src.data.interfaces import DataCovidConsumerInterface as DataCovidConsumer
 from src.errors import HttpErrors
 from src.domain.usecases import (
     CovidCasesColectorInterface,
     GetCountriesInterface as GetCountries,
 )
+from src.infra.tests import mock_data_covid
 
 
-class CovidCasesColector(CovidCasesColectorInterface):
-    """Caso de uso para CovidCasesColector"""
+class CovidCasesColectorSpy(CovidCasesColectorInterface):
+    """Spy para CovidCasesColector"""
 
-    def __init__(
-        self, api_consumer: Type[DataCovidConsumer], get_countries: Type[GetCountries]
-    ) -> None:
-        self.__api_consumer = api_consumer
+    def __init__(self, get_countries: Type[GetCountries]) -> None:
         self.__get_countries = get_countries
+        self.covid_cases_country_attributes = {}
+        self.covid_cases_world_attributes = {}
 
     def covid_cases_country(
         self, country: str, days: int = 0
@@ -34,7 +33,9 @@ class CovidCasesColector(CovidCasesColectorInterface):
 
             return {"success": False, "data": http_error}
 
-        api_response = self.__api_consumer.get_data_covid_by_country(country).response
+        self.covid_cases_country_attributes["country"] = country
+
+        api_response = mock_data_covid()["BRA"]
 
         country_data_response = self.__separete_data(api_response, days, country)
 
@@ -48,7 +49,10 @@ class CovidCasesColector(CovidCasesColectorInterface):
         """
 
         countries = self.__get_countries.all_countries()["data"]
-        api_response = self.__api_consumer.get_all_data_covid().response
+
+        self.covid_cases_world_attributes["countries"] = countries
+
+        api_response = mock_data_covid()
 
         countries_data = []
 

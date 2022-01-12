@@ -20,10 +20,11 @@ def test_covid_cases_country():
 
     assert api_consumer.get_data_covid_by_country_attributes["country"] == country
 
-    assert isinstance(response, list)
-    assert isinstance(response[0], dict)
-    assert "new_cases" in response[0]
-    assert "date" in response[0]
+    assert isinstance(response, dict)
+    assert isinstance(response["data"], list)
+    assert isinstance(response["data"][0], dict)
+    assert "new_cases" in response["data"][0]
+    assert "date" in response["data"][0]
 
 
 def test_covid_cases_country_error():
@@ -41,9 +42,8 @@ def test_covid_cases_country_error():
 
     assert api_consumer.get_data_covid_by_country_attributes == {}
 
-    assert "error" in response[0]["body"]
-    assert "success" not in response[0]["body"]
-    assert "data" not in response[0]["body"]
+    assert response["success"] is False
+    assert "error" in response["data"]["body"]
 
 
 def test_covid_cases_world():
@@ -58,7 +58,7 @@ def test_covid_cases_world():
 
     response = covid_cases_colector.covid_cases_world(days)
 
-    assert isinstance(response, list)
-    assert isinstance(response[0], dict)
-    assert "new_cases" in response[0]
-    assert "date" in response[0]
+    assert isinstance(response["data"], list)
+    assert isinstance(response["data"][0], dict)
+    assert "new_cases" in response["data"][0]
+    assert "date" in response["data"][0]

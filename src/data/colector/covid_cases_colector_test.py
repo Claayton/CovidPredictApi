@@ -1,6 +1,6 @@
 """Testes para a classe CovidCasesColector"""
 from src.data.colector import CovidCasesColector
-from src.infra.tests.data_covid_consumer import DataCovidConsumerSpy
+from src.infra.tests.data_covid_consumer_spy import DataCovidConsumerSpy
 from src.data.tests import GetCountrySpy
 from src.infra.database.repo import CountryRepo
 

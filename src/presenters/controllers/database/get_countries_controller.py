@@ -4,9 +4,10 @@ from src.domain.usecases import GetCountriesInterface as GetCountries
 from src.domain.models import Country
 from src.presenters.helpers import HttpRequest, HttpResponse
 from src.errors import HttpErrors
+from src.presenters.interface import ControllerInterface
 
 
-class GetCountryController:
+class GetCountryController(ControllerInterface):
     """Classe que define controller para o caso de uso: GetCountry"""
 
     def __init__(self, get_countries_usecase: Type[GetCountries]) -> None:

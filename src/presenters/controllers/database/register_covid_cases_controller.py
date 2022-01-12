@@ -3,15 +3,16 @@ from typing import Type
 from src.domain.usecases import RegisterCovidCasesInterface as RegisterCovidCases
 from src.presenters.helpers import HttpRequest, HttpResponse
 from src.errors import HttpErrors
+from src.presenters.interface import ControllerInterface
 
 
-class RegisterCoviCasesController:
+class RegisterCoviCasesController(ControllerInterface):
     """Classe para definir rotas para o caso de uso RegisterCoviCases"""
 
     def __init__(self, register_covid_cases_usecase: Type[RegisterCovidCases]) -> None:
         self.register_covid_cases_usecase = register_covid_cases_usecase
 
-    def route(self, http_request: Type[HttpRequest]) -> HttpResponse:
+    def handler(self, http_request: Type[HttpRequest]) -> HttpResponse:
         """Método para chamar o caso de uso"""
 
         response = None

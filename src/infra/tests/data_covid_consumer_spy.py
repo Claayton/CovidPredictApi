@@ -1,43 +1,6 @@
 """Diretório de mocks de dados"""
-from typing import Dict
 from collections import namedtuple
-from faker import Faker
-
-fake = Faker()
-
-
-def mock_data_covid() -> Dict:
-    """
-    Mock de dados do covid
-    :return: Um dicionario com as informações do covid
-    """
-
-    return {
-        "BRA": [
-            {
-                "id": 1,
-                "date": fake.date(),
-                "new_cases": fake.random_int(),
-                "country": "BRA",
-            }
-        ],
-        "USA": [
-            {
-                "id": 2,
-                "date": fake.date(),
-                "new_cases": fake.random_int(),
-                "country": "USA",
-            }
-        ],
-        "ARG": [
-            {
-                "id": 3,
-                "date": fake.date(),
-                "new_cases": fake.random_int(),
-                "country": "ARG",
-            }
-        ],
-    }
+from .mock_data_covid import mock_data_covid
 
 
 class DataCovidConsumerSpy:

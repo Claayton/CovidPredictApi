@@ -1,6 +1,6 @@
 """Diretório controlador"""
 from typing import Dict, Type
-from src.presenters.interface.controllers import ControllersInterfaceList
+from src.presenters.interface.controllers_interface import ControllersInterfaceList
 from src.domain.usecases.covid_cases_predict_interface import (
     CovidCasesPredictInterface as CovidCasesPredict,
 )

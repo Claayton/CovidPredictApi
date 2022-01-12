@@ -22,18 +22,18 @@ class GetCovidCasesController:
             query_string_params = http_request.query.keys()
 
             if ("date" in query_string_params) and ("country" in query_string_params):
-                date = http_request.query["date"]
+                data_date = http_request.query["date"]
                 country = http_request.query["country"]
                 response = self.get_covid_cases_usecase.by_country_and_by_date(
-                    country=country, data_date=date
+                    country=country, data_date=data_date
                 )
 
             elif ("date" in query_string_params) and (
                 "country" not in query_string_params
             ):
 
-                date = http_request.query["date"]
-                response = self.get_covid_cases_usecase.by_date(data_date=date)
+                data_date = http_request.query["date"]
+                response = self.get_covid_cases_usecase.by_date(data_date=data_date)
 
             elif ("date" not in query_string_params) and (
                 "country" in query_string_params
@@ -66,17 +66,24 @@ class GetCovidCasesController:
         cls, usecase_response: List[CovidCases]
     ) -> List[CovidCases]:
 
-        response = []
+        if usecase_response is not None:
 
-        for data in usecase_response:
+            response = []
 
-            response.append(
-                {
-                    "id": data.id,
-                    "date": date.isoformat(data.date),
-                    "new_cases": data.new_cases,
-                    "country_id": data.country_id,
-                }
-            )
+            for data in usecase_response:
 
-        return HttpResponse(status_code=200, body=response)
+                response.append(
+                    {
+                        "id": data.id,
+                        "date": date.isoformat(data.date),
+                        "new_cases": data.new_cases,
+                        "country_id": data.country_id,
+                    }
+                )
+
+            return HttpResponse(status_code=200, body=response)
+
+        http_error = HttpErrors.error_400()
+        return HttpResponse(
+            status_code=http_error["status_code"], body=http_error["body"]
+        )

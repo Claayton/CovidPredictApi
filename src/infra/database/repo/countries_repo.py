@@ -65,4 +65,7 @@ class CountryRepo(CountryRepoInterface):
             data_base.session.rollback()
             raise error
         finally:
-            data_base.session.close()
+            try:
+                data_base.session.close()
+            except UnboundLocalError:
+                pass

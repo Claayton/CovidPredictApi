@@ -115,8 +115,10 @@ class CovidCasesRepo(CovidCasesRepoInterface):
             query_data = None
 
             if country and not data_date:
-
-                country_id = self.__find_country_id(country)
+                try:
+                    country_id = self.__find_country_id(country)
+                except Exception as error:
+                    raise NoResultFound from error
 
                 with DataBaseConnectionHandler() as data_base:
                     data = (
@@ -127,8 +129,10 @@ class CovidCasesRepo(CovidCasesRepoInterface):
                     query_data = data
 
             elif not country and data_date:
-
-                data_date = date.fromisoformat(data_date)
+                try:
+                    data_date = date.fromisoformat(data_date)
+                except Exception as error:
+                    raise NoResultFound from error
 
                 with DataBaseConnectionHandler() as data_base:
                     data = (
@@ -139,9 +143,11 @@ class CovidCasesRepo(CovidCasesRepoInterface):
                     query_data = data
 
             elif country and data_date:
-
-                country_id = self.__find_country_id(country)
-                data_date = date.fromisoformat(data_date)
+                try:
+                    country_id = self.__find_country_id(country)
+                    data_date = date.fromisoformat(data_date)
+                except Exception as error:
+                    raise NoResultFound from error
 
                 with DataBaseConnectionHandler() as data_base:
                     data = (
@@ -163,9 +169,12 @@ class CovidCasesRepo(CovidCasesRepoInterface):
             return query_data
 
         except NoResultFound:
-            return []
+            return None
         except Exception as error:
             data_base.session.rollback()
             raise error
         finally:
-            data_base.session.close()
+            try:
+                data_base.session.close()
+            except UnboundLocalError:
+                pass

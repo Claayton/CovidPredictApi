@@ -50,10 +50,20 @@ def test_get_data_covid_from_country_with_query():
 def test_get_data_covid_from_country_error_400():
     """Testando o erro 400 (BadRequest) na rota get_data_covid_from_country"""
 
-    url = "/api/covid_cases/?h2n3=true"
+    url = "/api/covid_cases/"
 
-    response = client.get(url)
+    response1 = client.get(f"{url}?h2n3=true")
+    response2 = client.get(f"{url}?country=CASCAVEL")
+    response3 = client.get(f"{url}?date=margarina")
 
-    assert response.status_code == 400
-    assert isinstance(response.json(), dict)
-    assert "error" in response.json()
+    assert response1.status_code == 400
+    assert isinstance(response1.json(), dict)
+    assert "error" in response1.json()
+
+    assert isinstance(response2.json(), dict)
+    assert "error" in response2.json()
+    assert response2.status_code == 400
+
+    assert response3.status_code == 400
+    assert isinstance(response3.json(), dict)
+    assert "error" in response3.json()

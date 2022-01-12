@@ -5,9 +5,10 @@ from src.domain.models.covid_cases import CovidCases
 from src.domain.usecases import GetCovidCasesInterface as GetCovidCases
 from src.presenters.helpers import HttpRequest, HttpResponse
 from src.errors import HttpErrors
+from src.presenters.interface import ControllerInterface
 
 
-class GetCovidCasesController:
+class GetCovidCasesController(ControllerInterface):
     """Classe que define controller para o caso de uso: GetCovidCases"""
 
     def __init__(self, get_covid_cases_usecase: Type[GetCovidCases]) -> None:

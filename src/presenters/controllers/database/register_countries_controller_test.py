@@ -18,7 +18,9 @@ def test_route():
 
     attibutes = {"name": faker.name()}
 
-    response = register_countries_route.route(http_request=HttpRequest(body=attibutes))
+    response = register_countries_route.handler(
+        http_request=HttpRequest(body=attibutes)
+    )
 
     assert register_countries_usecase.name_params["name"] == attibutes["name"]
 
@@ -36,7 +38,9 @@ def test_route_fail_422():
 
     attibutes = {"name": faker.random_number(digits=2)}
 
-    response = register_countries_route.route(http_request=HttpRequest(body=attibutes))
+    response = register_countries_route.handler(
+        http_request=HttpRequest(body=attibutes)
+    )
 
     assert register_countries_usecase.name_params["name"] == attibutes["name"]
 
@@ -52,7 +56,7 @@ def test_route_fail_400():
     register_countries_usecase = RegisterCountrySpy(countries_repo, data_covid_consumer)
     register_countries_route = RegisterCountryController(register_countries_usecase)
 
-    response = register_countries_route.route(http_request=HttpRequest())
+    response = register_countries_route.handler(http_request=HttpRequest())
 
     assert register_countries_usecase.name_params == {}
 

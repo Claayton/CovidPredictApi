@@ -22,7 +22,7 @@ def test_route():
         "country": faker.name(),
     }
 
-    response = register_covid_cases_route.route(
+    response = register_covid_cases_route.handler(
         http_request=HttpRequest(body=attibutes)
     )
 
@@ -53,7 +53,7 @@ def test_route_fail_422():
         "country": faker.random_number(digits=3),
     }
 
-    response = register_covid_cases_route.route(
+    response = register_covid_cases_route.handler(
         http_request=HttpRequest(body=attibutes)
     )
 
@@ -78,7 +78,7 @@ def test_route_fail_400():
         register_covid_cases_usecase
     )
 
-    response = register_covid_cases_route.route(http_request=HttpRequest())
+    response = register_covid_cases_route.handler(http_request=HttpRequest())
 
     assert register_covid_cases_usecase.register_params == {}
 

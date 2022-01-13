@@ -18,12 +18,14 @@ class CovidCasesPredict(CovidCasesPredictInterface):
     ) -> None:
         self.__get_covid_cases = get_covid_cases
 
-    def covid_evolution_predict(self, country: str, days: int) -> List[Dict]:
+    def covid_evolution_predict(
+        self, country: str, days: int
+    ) -> Dict[bool, List[Dict]]:
         """
         Realiza a previsão de casos de covid nos proximos dias,
         com base na média de casos dos últimos 3 dias.
-        :params country: País de referência para a previsão, (WORLD para dados mundiais).
-                  :days: Dias no futuro que deve ser realizada a previsão.
+        :param country: País de referência para a previsão, (WORLD para dados mundiais).
+        :param days: Dias no futuro que deve ser realizada a previsão.
         :return: Uma lista com dados de previsão para cada dia,
         baseado na quantidade de dias escolhido a partir da data atual.
         """
@@ -43,40 +45,46 @@ class CovidCasesPredict(CovidCasesPredictInterface):
 
         for index, value in enumerate(test):
 
-            length = len(history)
-            average_of_previous_days = mean(
-                [history[i] for i in range(length - window, length)]
-            )
+            if index >= window:
 
-            # Adiciona 10% ou subtrai 15% ao suposto valor real de casos previstos,
-            # Dependendo da diferença entre o ultimo e penúltimo dos 7 dias anteriores.
-            if difference > 0:
-                hope = average_of_previous_days + (average_of_previous_days * 10 / 100)
-            else:
-                hope = average_of_previous_days - (average_of_previous_days * 15 / 100)
+                length = len(history)
+                average_of_previous_days = mean(
+                    [history[i] for i in range(length - window, length)]
+                )
 
-            real_value = value
-            if value == -666:
-                real_value = hope
+                # Adiciona 10% ou subtrai 15% ao suposto valor real de casos previstos,
+                # Dependendo da diferença entre o ultimo e penúltimo dos 7 dias anteriores.
+                if difference > 0:
+                    hope = average_of_previous_days + (
+                        average_of_previous_days * 10 / 100
+                    )
+                else:
+                    hope = average_of_previous_days - (
+                        average_of_previous_days * 15 / 100
+                    )
 
-            previous_days = [history[i] for i in range(length - window, length)]
-            difference = previous_days[-1] - previous_days[-2]
+                real_value = value
+                if value == -666:
+                    real_value = hope
 
-            predicted.append(average_of_previous_days)
-            history.append(real_value)
+                previous_days = [history[i] for i in range(length - window, length)]
+                difference = previous_days[-1] - previous_days[-2]
 
-            # if datetime.strptime(data_values[index][1], "%Y-%m-%d") >= datetime.today():
-            predicted_evolution.append(
-                {
-                    "id": data_values[index][1],
-                    "date": data_values[index][0],
-                    "new_cases_real": real_value,
-                    "predicted_evolution": average_of_previous_days,
-                    "country": country,
-                }
-            )
+                predicted.append(average_of_previous_days)
+                history.append(real_value)
 
-        return predicted_evolution
+                # if datetime.strptime(data_values[index][1], "%Y-%m-%d") >= datetime.today():
+                predicted_evolution.append(
+                    {
+                        "id": data_values[index][0],
+                        "date": data_values[index][1],
+                        "new_cases_real": real_value,
+                        "predicted_evolution": average_of_previous_days,
+                        "country": country,
+                    }
+                )
+
+        return {"success": True, "data": predicted_evolution}
 
     def __format_data_covid(self, country: str, days: int) -> Dict:
 
@@ -108,7 +116,7 @@ class CovidCasesPredict(CovidCasesPredictInterface):
 
         current_day = data_covid[-1]["date"]
         today = datetime.today()
-        count = 0
+        count = 1
 
         # Completa os dias até a data atual com previsões caso os dados da API estejam incompletos
         while current_day < today:
@@ -123,8 +131,8 @@ class CovidCasesPredict(CovidCasesPredictInterface):
             )
 
         # Completa os dias somando o numero de dias escolhido para prever
-        # +6 pq o sistema precisa dessa folga para realizar a previsão
-        while count < days + 6:
+        while count < days:
+            count += 1
             current_day += timedelta(days=1)
             data_covid.append(
                 {
@@ -134,6 +142,5 @@ class CovidCasesPredict(CovidCasesPredictInterface):
                     "country_id": data_covid[0]["country_id"],
                 }
             )
-            count += 1
 
         return data_covid

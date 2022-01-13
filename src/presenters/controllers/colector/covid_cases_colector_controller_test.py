@@ -102,7 +102,7 @@ def test_handler_erro_422():
 
 
 def test_handler_erro_400():
-    """Testando o erro 422 (BadRequest) no método handler"""
+    """Testando o erro 400 (BadRequest) no método handler"""
 
     countries_repo = CountryRepoSpy()
     get_countries = GetCountrySpy(countries_repo)

@@ -17,6 +17,9 @@ def test_covid_evolution_predict():
     response = covid_cases_predict.covid_evolution_predict(country, days)
 
     assert get_covid_cases.by_country_params == {"country": country}
-    assert isinstance(response, list)
-    assert "country" in response[0]
-    assert "new_cases_real" in response[0]
+
+    assert response["success"] is True
+    assert isinstance(response, dict)
+    assert isinstance(response["data"], list)
+    assert "country" in response["data"][0]
+    assert "new_cases_real" in response["data"][0]

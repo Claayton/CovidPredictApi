@@ -1,3 +1,3 @@
 """Diretório de inicialização do módulo controllers/consumer"""
 from .covid_cases_colector_controller import CovidCasesColectorController
-from .data_covid_list_colector_controller import DataCovidListColectorController
+from .covid_cases_predict_controller import CovidCasesPredictController

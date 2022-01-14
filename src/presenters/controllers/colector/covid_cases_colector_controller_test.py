@@ -80,27 +80,6 @@ def test_handler_with_days_query():
     assert response.body
 
 
-def test_handler_erro_422():
-    """Testando o erro 422 (query inválida) no método handler"""
-
-    countries_repo = CountryRepoSpy()
-    get_countries = GetCountrySpy(countries_repo)
-    covid_cases_colector_usecase = CovidCasesColectorSpy(get_countries)
-    covid_cases_colector_controller = CovidCasesColectorController(
-        covid_cases_colector_usecase
-    )
-
-    http_request = HttpRequest(
-        query={"country": faker.random_number(digits=1), "days": faker.name()}
-    )
-
-    response = covid_cases_colector_controller.handler(http_request)
-
-    assert covid_cases_colector_usecase.covid_cases_country_attributes == {}
-    assert response.status_code == 422
-    assert "error" in response.body
-
-
 def test_handler_erro_400():
     """Testando o erro 400 (BadRequest) no método handler"""
 

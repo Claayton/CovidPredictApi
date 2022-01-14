@@ -39,12 +39,9 @@ class CovidCasesColectorController(ControllerInterface):
                 response = self.__use_case.covid_cases_world(days=days)
 
             if response["success"] is True:
-                return HttpResponse(status_code=200, body={"success": True})
-
-            http_error = HttpErrors.error_422()
-            return HttpResponse(
-                status_code=http_error["status_code"], body=http_error["body"]
-            )
+                return HttpResponse(
+                    status_code=200, body={"success": True, "data": response["data"]}
+                )
 
         http_error = HttpErrors.error_400()
         return HttpResponse(

@@ -4,7 +4,7 @@ from datetime import date
 from src.domain.models.covid_cases import CovidCases
 from src.domain.usecases import GetCovidCasesInterface as GetCovidCases
 from src.presenters.helpers import HttpRequest, HttpResponse
-from src.errors import HttpErrors
+from src.errors import HttpBadRequestError, HttpUnprocessableEntityError
 from src.presenters.interface import ControllerInterface
 
 
@@ -43,24 +43,19 @@ class GetCovidCasesController(ControllerInterface):
                 country = http_request.query["country"]
                 response = self.get_covid_cases_usecase.by_country(country=country)
 
-            if response["success"] is True:
-                return self.__formated_response(response["data"])
+            if response["success"] is False:
+                raise HttpUnprocessableEntityError(message="Invalid country or date!")
 
-            http_error = HttpErrors.error_422()
-
-            return HttpResponse(
-                status_code=http_error["status_code"], body=http_error["body"]
-            )
+            return self.__formated_response(response["data"])
 
         response = self.get_covid_cases_usecase.by_country(country="WORLD")
 
-        if response["success"] is True:
-            return self.__formated_response(response["data"])
+        if response["success"] is False:
+            raise HttpBadRequestError(
+                message="This request need 1 of 2 query-params: (country: str) or (date: str(aaaa-mm-dd))"
+            )
 
-        http_error = HttpErrors.error_400()
-        return HttpResponse(
-            status_code=http_error["status_code"], body=http_error["body"]
-        )
+        return self.__formated_response(response["data"])
 
     @classmethod
     def __formated_response(
@@ -84,7 +79,4 @@ class GetCovidCasesController(ControllerInterface):
 
             return HttpResponse(status_code=200, body=response)
 
-        http_error = HttpErrors.error_400()
-        return HttpResponse(
-            status_code=http_error["status_code"], body=http_error["body"]
-        )
+        raise HttpUnprocessableEntityError()

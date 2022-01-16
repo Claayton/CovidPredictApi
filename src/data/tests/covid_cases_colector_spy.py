@@ -1,6 +1,6 @@
 """Classe Spy para CovidCasesColector"""
 from typing import List, Type, Dict
-from src.errors import HttpErrors
+from src.errors import HttpUnprocessableEntityError
 from src.domain.usecases import (
     CovidCasesColectorInterface,
     GetCountriesInterface as GetCountries,
@@ -29,7 +29,7 @@ class CovidCasesColectorSpy(CovidCasesColectorInterface):
         country_exist = self.__get_countries.by_name(name=country)
 
         if not country_exist["success"]:
-            http_error = HttpErrors.error_422()
+            http_error = HttpUnprocessableEntityError(message="Invalid Country!")
 
             return {"success": False, "data": http_error}
 

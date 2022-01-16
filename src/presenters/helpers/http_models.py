@@ -21,7 +21,7 @@ class HttpRequest:
 class HttpResponse:
     """Representação de resposetas"""
 
-    def __init__(self, status_code: int, body: any) -> None:
+    def __init__(self, status_code: int, body: Dict) -> None:
         self.status_code = status_code
         self.body = body
 

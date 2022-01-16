@@ -2,6 +2,7 @@
 from cerberus import Validator
 from src.data.database.get_countries import GetCountry
 from src.infra.database.repo import CountryRepo
+from src.errors import HttpUnprocessableEntityError
 
 countries_repo = CountryRepo()
 get_countries = GetCountry(countries_repo)
@@ -15,6 +16,7 @@ for data in get_countries_response["data"]:
 
 def get_from_country_validator(request: any) -> None:
     """Validor de parâmtros da url"""
+
     querry_param_validator = Validator(
         {"name": {"type": "string", "allowed": all_countries}}
     )
@@ -22,4 +24,4 @@ def get_from_country_validator(request: any) -> None:
     response = querry_param_validator.validate(request.query_params)
 
     if response is False:
-        raise Exception(querry_param_validator.errors)
+        raise HttpUnprocessableEntityError(message=querry_param_validator.errors)

@@ -3,7 +3,7 @@ from json.decoder import JSONDecodeError
 from typing import Dict, List, Tuple, Type
 from collections import namedtuple
 from requests import Request, Session
-from src.errors import HttpRequestError, HttpErrors
+from src.errors import HttpRequestError, HttpUnprocessableEntityError
 from src.data.interfaces.data_covid_consumer import DataCovidConsumerInterface
 
 
@@ -102,9 +102,9 @@ class DataCovidConsumer(DataCovidConsumerInterface):
         try:
             data = response.json()[country]["data"]
         except (KeyError, JSONDecodeError):
-            http_error = HttpErrors.error_422()
-            status_code = http_error["status_code"]
-            data = http_error["body"]
+            http_error = HttpUnprocessableEntityError(message="Invalid Country!")
+            status_code = http_error.status_code
+            data = http_error.message
 
         if (status_code < 200) or (status_code > 299):
             raise HttpRequestError(message=response, status_code=status_code)

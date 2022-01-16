@@ -67,31 +67,3 @@ def test_handler_by_date():
 
     assert response.status_code == 200
     assert "error" not in response.body
-
-
-def test_handler_fail_422():
-    """Testando o erro 422 no método handler (com parâmtros errados)"""
-
-    get_covid_cases_usecase = GetCovidCasesSpy(CovidCasesRepoSpy())
-    get_covid_cases_controller = GetCovidCasesController(get_covid_cases_usecase)
-    http_request = HttpRequest(
-        query={
-            "date": faker.random_number(digits=3),
-            "new_cases": faker.name(),
-            "country": faker.random_number(digits=3),
-        }
-    )
-
-    response = get_covid_cases_controller.handler(http_request)
-
-    assert (
-        get_covid_cases_usecase.by_country_and_by_date_params["date"]
-        == http_request.query["date"]
-    )
-    assert (
-        get_covid_cases_usecase.by_country_and_by_date_params["country"]
-        == http_request.query["country"]
-    )
-
-    assert response.status_code == 422
-    assert "error" in response.body

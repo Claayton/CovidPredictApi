@@ -1,7 +1,7 @@
 """Caso de uso para CovidCasesColector"""
 from typing import List, Type, Dict
 from src.data.interfaces import DataCovidConsumerInterface as DataCovidConsumer
-from src.errors import HttpErrors
+from src.errors import HttpUnprocessableEntityError
 from src.domain.usecases import (
     CovidCasesColectorInterface,
     GetCountriesInterface as GetCountries,
@@ -30,64 +30,15 @@ class CovidCasesColector(CovidCasesColectorInterface):
         country_exist = self.__get_countries.by_name(name=country)
 
         if not country_exist["success"]:
-            http_error = HttpErrors.error_422()
+            http_error = HttpUnprocessableEntityError(message="Invalid Country!")
 
-            return {"success": False, "data": http_error}
+            return {"success": False, "data": {"error": http_error}}
 
         api_response = self.__api_consumer.get_data_covid_by_country(country).response
 
         country_data_response = self.__separete_data(api_response, days, country)
 
         return {"success": True, "data": country_data_response}
-
-    def covid_cases_world(self, days: int) -> Dict[bool, List[Dict]]:
-        """
-        Realiza o tratamento dos dados do covid do mundo inteiro recebidos do consumer.
-        :param days: A quantidade de dias futuros que devem ser previstos.
-        :return: Os dados do covid19 ja tratados e com uma previsão para os próximos dias.
-        """
-
-        countries = self.__get_countries.all_countries()["data"]
-        api_response = self.__api_consumer.get_all_data_covid().response
-
-        countries_data = []
-
-        for country in countries:
-
-            country_data = api_response[country.name]
-            each_country = self.__separete_data(country_data, days, country)
-
-            countries_data.append(each_country)
-
-            world_data_response = self.__world_data_sum(countries_data, days)
-
-        return {"success": True, "data": world_data_response}
-
-    @classmethod
-    def __world_data_sum(cls, countries_data: List[List], days: int) -> List[Dict]:
-
-        world_data_response = []
-
-        for country in countries_data:
-            for index, day in enumerate(country):
-
-                date = day["date"]
-                new_cases = day["new_cases"]
-
-                if date == day["date"]:
-                    new_cases += new_cases
-
-                world_data_response.append(
-                    {
-                        "id": index,
-                        "date": date,
-                        "new_cases": new_cases,
-                        "country": "WORLD",
-                        "days": days,
-                    }
-                )
-
-        return world_data_response
 
     @classmethod
     def __separete_data(
@@ -101,7 +52,7 @@ class CovidCasesColector(CovidCasesColectorInterface):
             try:
                 separate_data.append(
                     {
-                        "id": index,
+                        "id": index + 1,
                         "date": day["date"],
                         "new_cases": day["new_cases"],
                         "country": country,

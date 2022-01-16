@@ -12,8 +12,3 @@ class CovidCasesColectorInterface(ABC):
     ) -> Dict[bool, List[Dict]]:
         """Deve ser implementado"""
         raise Exception("Must implement find_country method")
-
-    @abstractmethod
-    def covid_cases_world(self, days: int) -> Dict[bool, List[Dict]]:
-        """Deve ser implementado"""
-        raise Exception("Must implement find_country method")

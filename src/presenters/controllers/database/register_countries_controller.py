@@ -2,7 +2,7 @@
 from typing import Type
 from src.domain.usecases import RegisterCountryInterface as RegisterCountry
 from src.presenters.helpers import HttpRequest, HttpResponse
-from src.errors import HttpErrors
+from src.errors import HttpUnprocessableEntityError, HttpBadRequestError
 from src.presenters.interface import ControllerInterface
 
 
@@ -20,21 +20,14 @@ class RegisterCountryController(ControllerInterface):
         if http_request.body:
             body_params = http_request.body.keys()
 
-            if "name" in body_params:
-                name = http_request.body["name"]
-
-                response = self.register_country_usecase.register_country(name=name)
-
-            else:
-                response = {"success": False, "data": None}
-
-            if response["success"] is False:
-                http_error = HttpErrors.error_422()
-                return HttpResponse(
-                    status_code=http_error["status_code"], body=http_error["body"]
+            if "name" not in body_params:
+                raise HttpUnprocessableEntityError(
+                    message="This request need the name query-param"
                 )
+            name = http_request.body["name"]
+
+            response = self.register_country_usecase.register_country(name=name)
+
             return HttpResponse(status_code=200, body=response["data"])
-        http_error = HttpErrors.error_400()
-        return HttpResponse(
-            status_code=http_error["status_code"], body=http_error["body"]
-        )
+
+        raise HttpBadRequestError(message="This request need the name query-param")

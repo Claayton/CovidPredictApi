@@ -2,7 +2,7 @@
 from typing import Type
 from src.presenters.helpers import HttpRequest, HttpResponse
 from src.presenters.interface import ControllerInterface
-from src.errors import HttpErrors
+from src.errors import HttpBadRequestError
 from src.domain.usecases import CovidCasesColectorInterface
 
 
@@ -22,28 +22,22 @@ class CovidCasesColectorController(ControllerInterface):
         country = None
         days = 0
 
-        if http_request.query:
-            query_string_params = http_request.query.keys()
+        query_string_params = http_request.query.keys()
 
-            if "country" in query_string_params:
-                country = http_request.query["country"]
-            if "days" in query_string_params:
-                days = http_request.query["days"]
+        if "country" not in query_string_params:
+            raise HttpBadRequestError(
+                message="This request need the country query-param"
+            )
 
-            if country:
-                response = self.__use_case.covid_cases_country(
-                    country=country, days=days
-                )
+        country = http_request.query["country"]
+        if "days" in query_string_params:
+            days = http_request.query["days"]
 
-            else:
-                response = self.__use_case.covid_cases_world(days=days)
+        response = self.__use_case.covid_cases_country(country=country, days=days)
 
-            if response["success"] is True:
-                return HttpResponse(
-                    status_code=200, body={"success": True, "data": response["data"]}
-                )
+        if response["success"] is False:
+            raise HttpBadRequestError(message=response["data"]["error"])
 
-        http_error = HttpErrors.error_400()
         return HttpResponse(
-            status_code=http_error["status_code"], body=http_error["body"]
+            status_code=200, body={"success": True, "data": response["data"]}
         )

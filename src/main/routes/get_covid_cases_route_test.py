@@ -47,8 +47,8 @@ def test_get_data_covid_from_country_with_query():
     assert "new_cases" in response3.json()[0]
 
 
-def test_get_data_covid_from_country_error_400():
-    """Testando o erro 400 (BadRequest) na rota get_data_covid_from_country"""
+def test_get_data_covid_from_country_error_422():
+    """Testando o erro 422 (Unprocessable Entity) na rota get_data_covid_from_country"""
 
     url = "/api/covid_cases/"
 
@@ -56,14 +56,14 @@ def test_get_data_covid_from_country_error_400():
     response2 = client.get(f"{url}?country=CASCAVEL")
     response3 = client.get(f"{url}?date=margarina")
 
-    assert response1.status_code == 400
+    assert response1.status_code == 422
+    assert response2.status_code == 422
+    assert response3.status_code == 422
+
     assert isinstance(response1.json(), dict)
-    assert "error" in response1.json()
-
     assert isinstance(response2.json(), dict)
-    assert "error" in response2.json()
-    assert response2.status_code == 400
-
-    assert response3.status_code == 400
     assert isinstance(response3.json(), dict)
+
+    assert "error" in response1.json()
+    assert "error" in response2.json()
     assert "error" in response3.json()

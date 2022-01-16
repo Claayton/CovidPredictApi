@@ -2,7 +2,7 @@
 from typing import Type
 from src.domain.usecases import RegisterCovidCasesInterface as RegisterCovidCases
 from src.presenters.helpers import HttpRequest, HttpResponse
-from src.errors import HttpErrors
+from src.errors import HttpUnprocessableEntityError, HttpBadRequestError
 from src.presenters.interface import ControllerInterface
 
 
@@ -33,16 +33,15 @@ class RegisterCoviCasesController(ControllerInterface):
                     date=date, new_cases=new_cases, country=country
                 )
 
-            else:
-                response = {"success": False, "data": None}
+                return HttpResponse(status_code=200, body=response["data"])
 
-            if response["success"] is False:
-                http_error = HttpErrors.error_422()
-                return HttpResponse(
-                    status_code=http_error["status_code"], body=http_error["body"]
-                )
-            return HttpResponse(status_code=200, body=response["data"])
-        http_error = HttpErrors.error_400()
-        return HttpResponse(
-            status_code=http_error["status_code"], body=http_error["body"]
+            raise HttpUnprocessableEntityError(
+                message="""
+                This request need 3 query-params: (date: str(aaaa-mm-dd)), (new_cases: int), (country: str)
+                """
+            )
+        raise HttpBadRequestError(
+            message="""
+            "This request need 3 query-params: (date: str(aaaa-mm-dd)), (new_cases: int), (country: str)
+            """
         )

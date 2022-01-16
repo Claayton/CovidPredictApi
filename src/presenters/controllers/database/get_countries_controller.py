@@ -3,7 +3,7 @@ from typing import Type, List
 from src.domain.usecases import GetCountriesInterface as GetCountries
 from src.domain.models import Country
 from src.presenters.helpers import HttpRequest, HttpResponse
-from src.errors import HttpErrors
+from src.errors import HttpUnprocessableEntityError, HttpBadRequestError
 from src.presenters.interface import ControllerInterface
 
 
@@ -25,23 +25,17 @@ class GetCountryController(ControllerInterface):
                 country_name = http_request.query["name"]
                 response = self.get_countries_usecase.by_name(name=country_name)
 
-                if response["success"] is True:
-                    return self.__formated_response(response["data"])
+                if response["success"] is False:
+                    raise HttpUnprocessableEntityError(message="Invalid Country!")
 
-                http_error = HttpErrors.error_422()
-                return HttpResponse(
-                    status_code=http_error["status_code"], body=http_error["body"]
-                )
+                return self.__formated_response(response["data"])
 
         response = self.get_countries_usecase.all_countries()
 
-        if response["success"] is True:
-            return self.__formated_response(response["data"])
+        if response["success"] is False:
+            raise HttpBadRequestError()
 
-        http_error = HttpErrors.error_400()
-        return HttpResponse(
-            status_code=http_error["status_code"], body=http_error["body"]
-        )
+        return self.__formated_response(response["data"])
 
     @classmethod
     def __formated_response(cls, usecase_response: List[Country]) -> List[Country]:

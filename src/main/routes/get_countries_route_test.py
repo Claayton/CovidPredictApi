@@ -34,14 +34,14 @@ def test_get_countries_with_query():
     assert "name" in response.json()[0]
 
 
-def test_get_countries_error_400():
-    """Testando o erro 400 (BadRequest) na rota get_countries"""
+def test_get_countries_error_422():
+    """Testando o erro 422 (Unprocessable Entity) na rota get_countries"""
 
     attributes = {"country": "CASCAVEL"}
     url = f"/api/countries/?name={attributes['country']}"
 
     response = client.get(url)
 
-    assert response.status_code == 400
+    assert response.status_code == 422
     assert isinstance(response.json(), dict)
     assert "error" in response.json()

@@ -15,8 +15,5 @@ async def request_adapter(request: RequestFastApi, callback: Callable):
 
     http_request = HttpRequest(body=body, query=request.query_params)
 
-    try:
-        http_response = callback(http_request)
-    except TypeError:
-        http_response = callback()
+    http_response = callback(http_request)
     return http_response

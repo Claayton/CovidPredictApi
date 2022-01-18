@@ -9,7 +9,7 @@ class GetCovidCases(GetCovidCasesInterface):
     """Classe para definir o caso de uso GetCovidCases"""
 
     def __init__(self, covid_cases_repo: Type[CovidCasesRepo]) -> None:
-        self.covid_cases_repo = covid_cases_repo
+        self.__covid_cases_repo = covid_cases_repo
 
     def by_country(self, country: str) -> Dict[bool, List[CovidCases]]:
         """
@@ -22,7 +22,7 @@ class GetCovidCases(GetCovidCasesInterface):
         validate_entry = isinstance(country, str)
 
         if validate_entry:
-            response = self.covid_cases_repo.get_data(country=country)
+            response = self.__covid_cases_repo.get_data(country=country)
 
         return {"success": validate_entry, "data": response}
 
@@ -37,7 +37,7 @@ class GetCovidCases(GetCovidCasesInterface):
         validate_entry = isinstance(data_date, str)
 
         if validate_entry:
-            response = self.covid_cases_repo.get_data(data_date=data_date)
+            response = self.__covid_cases_repo.get_data(data_date=data_date)
 
         return {"success": validate_entry, "data": response}
 
@@ -55,7 +55,7 @@ class GetCovidCases(GetCovidCasesInterface):
         validate_entry = isinstance(data_date, str) and isinstance(country, str)
 
         if validate_entry:
-            response = self.covid_cases_repo.get_data(
+            response = self.__covid_cases_repo.get_data(
                 country=country, data_date=data_date
             )
 

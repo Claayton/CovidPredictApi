@@ -14,6 +14,12 @@ class GetCountriesInterface(ABC):
         raise Exception("Deve ser implementado o método by_name")
 
     @abstractmethod
+    def by_id(self, country_id: int) -> Dict[bool, List[Country]]:
+        """Caso de uso específico"""
+
+        raise Exception("Deve ser implementado o método by_name")
+
+    @abstractmethod
     def all_countries(self) -> Dict[bool, List[Country]]:
         """Caso de uso específico"""
 

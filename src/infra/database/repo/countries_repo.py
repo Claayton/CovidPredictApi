@@ -38,10 +38,11 @@ class CountryRepo(CountryRepoInterface):
                 data_base.session.close()
 
     @classmethod
-    def get_countries(cls, name: str = None) -> List[Country]:
+    def get_countries(cls, name: str = None, country_id: int = None) -> List[Country]:
         """
         Realiza a busca dos países cadastrados no banco de dados.
         :param name: Abreviação do nome do país.
+        :param country_id: Id do país ja cadastrado no banco de dados
         :return: Uma lista com todos países cadastrados.
         """
 
@@ -49,16 +50,29 @@ class CountryRepo(CountryRepoInterface):
             query_data = None
 
             if name:
+
                 with DataBaseConnectionHandler() as data_base:
                     data = (
                         data_base.session.query(CountryModel).filter_by(name=name).one()
                     )
                     query_data = [data]
+
+            elif country_id:
+
+                with DataBaseConnectionHandler() as data_base:
+                    data = (
+                        data_base.session.query(CountryModel)
+                        .filter_by(id=country_id)
+                        .one()
+                    )
+                    query_data = [data]
+
             else:
 
                 with DataBaseConnectionHandler() as data_base:
                     data = data_base.session.query(CountryModel).all()
                     query_data = data
+
             return query_data
 
         except Exception as error:

@@ -37,9 +37,12 @@ def test_get_countries():
     )
     engine.execute(f"SELECT * FROM countries WHERE name='{name}';")
 
-    query_country = country_repo.get_countries(name=name)
+    query_country1 = country_repo.get_countries(name=name)
+    query_country2 = country_repo.get_countries(country_id=country_id)
 
-    assert isinstance(query_country, list)
-    assert query_country[-1].id == country_id
+    assert isinstance(query_country1, list)
+    assert isinstance(query_country2, list)
+    assert query_country1[-1].id == country_id
+    assert query_country2[-1].id == country_id
 
     engine.execute(f"DELETE FROM countries WHERE id='{country_id}';")

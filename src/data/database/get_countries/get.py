@@ -9,7 +9,7 @@ class GetCountry(GetCountriesInterface):
     """Classe para definir o caso de uso Get Country"""
 
     def __init__(self, countries_repo: Type[CountryRepo]) -> None:
-        self.countries_repo = countries_repo
+        self.__countries_repo = countries_repo
 
     def by_name(self, name: str) -> Dict[bool, List[Country]]:
         """
@@ -22,7 +22,21 @@ class GetCountry(GetCountriesInterface):
         validate_entry = isinstance(name, str)
 
         if validate_entry:
-            response = self.countries_repo.get_countries(name=name)
+            response = self.__countries_repo.get_countries(name=name)
+
+        return {"success": validate_entry, "data": response}
+
+    def by_id(self, country_id: int) -> Dict[bool, List[Country]]:
+        """
+        Realiza a busca do país pelo id.
+        :param country_id: id do país cadastrado no banco de dados.
+        :return: Um dicionário com as informações do processo.
+        """
+        response = None
+        validate_entry = isinstance(country_id, int)
+
+        if validate_entry:
+            response = self.__countries_repo.get_countries(country_id=country_id)
 
         return {"success": validate_entry, "data": response}
 
@@ -32,7 +46,7 @@ class GetCountry(GetCountriesInterface):
         :return: Um dicionário com as informações do processo.
         """
 
-        response = self.countries_repo.get_countries()
+        response = self.__countries_repo.get_countries()
         if response is not None:
             validate_entry = True
 

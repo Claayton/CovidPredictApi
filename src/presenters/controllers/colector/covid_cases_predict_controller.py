@@ -27,11 +27,8 @@ class CovidCasesPredictController(ControllerInterface):
                 or "days" not in query_string_params
             ):
 
-                http_error = HttpUnprocessableEntityError(
+                raise HttpUnprocessableEntityError(
                     message="This request need 2 query-params: (country: str) and (days: int)"
-                )
-                return HttpResponse(
-                    status_code=http_error.status_code, body=http_error.message
                 )
 
             country = http_request.query["country"]
@@ -44,7 +41,6 @@ class CovidCasesPredictController(ControllerInterface):
             if response["success"] is True:
                 return HttpResponse(status_code=200, body=response)
 
-        http_error = HttpBadRequestError(
+        raise HttpBadRequestError(
             message="This request need 2 query-params: (country: str) and (days: int)"
         )
-        return HttpResponse(status_code=http_error.status_code, body=http_error.message)

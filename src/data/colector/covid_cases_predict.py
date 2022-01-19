@@ -10,7 +10,7 @@ from src.domain.usecases import (
 
 
 class CovidCasesPredict(CovidCasesPredictInterface):
-    """Casos de uso para DataCovidListColector"""
+    """Caso de uso para Previsão de casos de covid19"""
 
     def __init__(
         self,
@@ -53,7 +53,7 @@ class CovidCasesPredict(CovidCasesPredictInterface):
                 )
 
                 # Adiciona 10% ou subtrai 15% ao suposto valor real de casos previstos,
-                # Dependendo da diferença entre o ultimo e penúltimo dos 7 dias anteriores.
+                # Dependendo da diferença entre o ultimo e penúltimo dos 3 dias anteriores.
                 if difference > 0:
                     hope = average_of_previous_days + (
                         average_of_previous_days * 10 / 100
@@ -97,7 +97,7 @@ class CovidCasesPredict(CovidCasesPredictInterface):
             response.append(
                 {
                     "id": data.id,
-                    "date": data.date,
+                    "date": str(data.date).split()[0],
                     "new_cases": data.new_cases,
                     "country_id": data.country_id,
                 }
@@ -114,33 +114,38 @@ class CovidCasesPredict(CovidCasesPredictInterface):
         :return: A nova base de dados, atualizada com os novos dias.
         """
 
-        current_day = data_covid[-1]["date"]
+        unformat_current_day = str(data_covid[-1]["date"]).split()[0]
+        current_day = datetime.strptime(unformat_current_day, "%Y-%m-%d")
         today = datetime.today()
         count = 1
+        index = 0
 
-        # Completa os dias até a data atual com previsões caso os dados da API estejam incompletos
-        while current_day < today:
+        # Completa os dias até a data atual + 3 (window de previsão),
+        # Com previsões caso os dados da API estejam incompletos.
+        while current_day < today + timedelta(days=3):
             current_day += timedelta(days=1)
             data_covid.append(
                 {
-                    "id": data_covid[0]["id"],
+                    "id": index,
                     "date": str(current_day).split()[0],
                     "new_cases": -666,
                     "country_id": data_covid[0]["country_id"],
                 }
             )
+            index += 1
 
         # Completa os dias somando o numero de dias escolhido para prever
-        while count < days:
+        while int(count) < int(days):
             count += 1
             current_day += timedelta(days=1)
             data_covid.append(
                 {
-                    "id": data_covid[0]["id"],
+                    "id": index,
                     "date": str(current_day).split()[0],
                     "new_cases": -666,
                     "country_id": data_covid[0]["country_id"],
                 }
             )
+            index += 1
 
         return data_covid

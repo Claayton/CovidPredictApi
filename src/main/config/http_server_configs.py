@@ -4,6 +4,7 @@ from src.main.routes import (
     countries_routes,
     covid_cases_routes,
     covid_cases_colector_routes,
+    covid_cases_predict_routes,
 )
 
 
@@ -15,5 +16,6 @@ def create_app() -> FastAPI:
     app.include_router(countries_routes)
     app.include_router(covid_cases_routes)
     app.include_router(covid_cases_colector_routes)
+    app.include_router(covid_cases_predict_routes)
 
     return app

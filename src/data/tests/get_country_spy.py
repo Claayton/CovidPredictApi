@@ -10,6 +10,7 @@ class GetCountrySpy:
     def __init__(self, countries_repo: any) -> None:
         self.countries_repo = countries_repo
         self.by_name_params = {}
+        self.by_id_params = {}
         self.all_countries_params = {}
 
     def by_name(self, name: str) -> Dict[bool, List[Country]]:
@@ -21,6 +22,21 @@ class GetCountrySpy:
         self.by_name_params["name"] = name
         response = None
         validate_entry = isinstance(name, str)
+
+        if validate_entry:
+            response = [mock_countries()[0]]
+
+        return {"success": validate_entry, "data": response}
+
+    def by_id(self, country_id: int) -> Dict[bool, List[Country]]:
+        """
+        Realiza a busca do país pelo id.
+        :param country_id: id do país cadastrado no banco de dados.
+        :return: Um dicionário com as informações do processo.
+        """
+        self.by_id_params["country_id"] = country_id
+        response = None
+        validate_entry = isinstance(country_id, int)
 
         if validate_entry:
             response = [mock_countries()[0]]

@@ -60,7 +60,9 @@ class GetCovidCasesController(ControllerInterface):
 
         if response["success"] is False:
             raise HttpBadRequestError(
-                message="This request need 1 of 2 query-params: (country: str) or (date: str(aaaa-mm-dd))"
+                message="""
+                This request need 1 of 2 query-params: (country: str) or (date: str(aaaa-mm-dd))
+                """
             )
 
         return self.__formated_response(response["data"])

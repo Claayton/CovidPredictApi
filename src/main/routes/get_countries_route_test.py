@@ -13,10 +13,10 @@ def test_get_countries_no_query():
     response = client.get(url)
 
     assert response.status_code == 200
-    assert isinstance(response.json(), list)
-    assert isinstance(response.json()[0], dict)
-    assert "id" in response.json()[0]
-    assert "name" in response.json()[0]
+    assert isinstance(response.json(), dict)
+    assert isinstance(response.json()["data"], list)
+    assert "id" in response.json()["data"][0]
+    assert "name" in response.json()["data"][0]
 
 
 def test_get_countries_with_query():
@@ -28,10 +28,10 @@ def test_get_countries_with_query():
     response = client.get(url)
 
     assert response.status_code == 200
-    assert isinstance(response.json(), list)
-    assert isinstance(response.json()[0], dict)
-    assert "id" in response.json()[0]
-    assert "name" in response.json()[0]
+    assert isinstance(response.json(), dict)
+    assert isinstance(response.json()["data"], list)
+    assert "id" in response.json()["data"][0]
+    assert "name" in response.json()["data"][0]
 
 
 def test_get_countries_error_422():
@@ -44,4 +44,4 @@ def test_get_countries_error_422():
 
     assert response.status_code == 422
     assert isinstance(response.json(), dict)
-    assert "error" in response.json()
+    assert "error" in response.json()["data"]

@@ -39,7 +39,7 @@ class CovidCasesPredictController(ControllerInterface):
             )
 
             if response["success"] is True:
-                return HttpResponse(status_code=200, body=response)
+                return HttpResponse(status_code=200, body=response["data"])
 
         raise HttpBadRequestError(
             message="This request need 2 query-params: (country: str) and (days: int)"

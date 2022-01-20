@@ -13,10 +13,10 @@ def test_get_data_covid_from_country_no_query():
     response = client.get(url)
 
     assert response.status_code == 200
-    assert isinstance(response.json(), list)
-    assert isinstance(response.json()[0], dict)
-    assert "date" in response.json()[0]
-    assert "new_cases" in response.json()[0]
+    assert isinstance(response.json(), dict)
+    assert isinstance(response.json()["data"], list)
+    assert "date" in response.json()["data"][0]
+    assert "new_cases" in response.json()["data"][0]
 
 
 def test_get_data_covid_from_country_with_query():
@@ -29,22 +29,24 @@ def test_get_data_covid_from_country_with_query():
     response3 = client.get(f"{url}?date=2021-12-31&country=WORLD")
 
     assert response1.status_code == 200
-    assert isinstance(response1.json(), list)
-    assert isinstance(response1.json()[0], dict)
-    assert "date" in response1.json()[0]
-    assert "new_cases" in response1.json()[0]
-
     assert response2.status_code == 200
-    assert isinstance(response2.json(), list)
-    assert isinstance(response2.json()[0], dict)
-    assert "date" in response2.json()[0]
-    assert "new_cases" in response2.json()[0]
-
     assert response3.status_code == 200
-    assert isinstance(response3.json(), list)
-    assert isinstance(response3.json()[0], dict)
-    assert "date" in response3.json()[0]
-    assert "new_cases" in response3.json()[0]
+
+    assert isinstance(response1.json(), dict)
+    assert isinstance(response2.json(), dict)
+    assert isinstance(response3.json(), dict)
+
+    assert isinstance(response1.json()["data"], list)
+    assert isinstance(response2.json()["data"], list)
+    assert isinstance(response3.json()["data"], list)
+
+    assert "date" in response1.json()["data"][0]
+    assert "date" in response2.json()["data"][0]
+    assert "date" in response3.json()["data"][0]
+
+    assert "new_cases" in response1.json()["data"][0]
+    assert "new_cases" in response2.json()["data"][0]
+    assert "new_cases" in response3.json()["data"][0]
 
 
 def test_get_data_covid_from_country_error_422():
@@ -64,6 +66,6 @@ def test_get_data_covid_from_country_error_422():
     assert isinstance(response2.json(), dict)
     assert isinstance(response3.json(), dict)
 
-    assert "error" in response1.json()
-    assert "error" in response2.json()
-    assert "error" in response3.json()
+    assert "error" in response1.json()["data"]
+    assert "error" in response2.json()["data"]
+    assert "error" in response3.json()["data"]

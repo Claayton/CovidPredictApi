@@ -14,7 +14,6 @@ def test_colector():
 
     assert response.status_code == 200
     assert isinstance(response.json(), dict)
-    assert response.json()["success"] is True
     assert isinstance(response.json()["data"], list)
     assert "new_cases" in response.json()["data"][0]
     assert "country" in response.json()["data"][0]
@@ -28,4 +27,4 @@ def test_colector_error_400():
     response = client.get(url)
 
     assert response.status_code == 400
-    assert "error" in response.json()
+    assert "error" in response.json()["data"]

@@ -25,4 +25,6 @@ async def get_data_covid_from_country(request: RequestFastApi):
     except Exception as error:  # pylint: disable=W0703
         response = handler_errors(error)
 
-    return JSONResponse(status_code=response.status_code, content=response.body)
+    return JSONResponse(
+        status_code=response.status_code, content={"data": response.body}
+    )

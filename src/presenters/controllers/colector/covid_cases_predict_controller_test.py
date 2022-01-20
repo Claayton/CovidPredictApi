@@ -24,7 +24,6 @@ def test_handler_full_query():
     response = covid_cases_predict_controller.handler(http_request)
 
     assert response.status_code == 200
-    assert response.body["success"] is True
-    assert "date" in response.body["data"][0]
-    assert "new_cases_real" in response.body["data"][0]
-    assert "predicted_evolution" in response.body["data"][0]
+    assert "date" in response.body[0]
+    assert "new_cases_real" in response.body[0]
+    assert "predicted_evolution" in response.body[0]

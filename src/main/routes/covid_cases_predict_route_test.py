@@ -14,7 +14,6 @@ def test_predict():
 
     assert response.status_code == 200
     assert isinstance(response.json(), dict)
-    assert response.json()["success"] is True
     assert isinstance(response.json()["data"], list)
     assert "new_cases_real" in response.json()["data"][0]
     assert "country" in response.json()["data"][0]
@@ -37,8 +36,8 @@ def test_predict_error_422():
     assert response4.status_code == 422
     assert response5.status_code == 422
 
-    assert "error" in response1.json()
-    assert "error" in response2.json()
-    assert "error" in response3.json()
-    assert "error" in response4.json()
-    assert "error" in response5.json()
+    assert "error" in response1.json()["data"]
+    assert "error" in response2.json()["data"]
+    assert "error" in response3.json()["data"]
+    assert "error" in response4.json()["data"]
+    assert "error" in response5.json()["data"]

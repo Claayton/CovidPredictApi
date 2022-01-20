@@ -38,6 +38,4 @@ class CovidCasesColectorController(ControllerInterface):
         if response["success"] is False:
             raise HttpBadRequestError(message=response["data"]["error"])
 
-        return HttpResponse(
-            status_code=200, body={"success": True, "data": response["data"]}
-        )
+        return HttpResponse(status_code=200, body=response["data"])

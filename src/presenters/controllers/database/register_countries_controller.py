@@ -22,7 +22,7 @@ class RegisterCountryController(ControllerInterface):
 
             if "name" not in body_params:
                 raise HttpUnprocessableEntityError(
-                    message="This request need the name query-param"
+                    message="This request need the name body-param"
                 )
             name = http_request.body["name"]
 
@@ -30,4 +30,4 @@ class RegisterCountryController(ControllerInterface):
 
             return HttpResponse(status_code=200, body=response["data"])
 
-        raise HttpBadRequestError(message="This request need the name query-param")
+        raise HttpBadRequestError(message="This request need the name body-param")

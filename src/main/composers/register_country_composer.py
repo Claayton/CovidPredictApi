@@ -7,7 +7,7 @@ from src.presenters.controllers.database import RegisterCountryController
 from src.config import SEARCH_URL
 
 
-def register_countries_composer():
+def register_country_composer():
     """Composer"""
 
     countries_repo = CountryRepo()

@@ -1,16 +1,16 @@
-"""Controler para RegisterCovidCases"""
+"""Controler para RegisterCovidCase"""
 from typing import Type
-from src.domain.usecases import RegisterCovidCasesInterface as RegisterCovidCases
 from src.presenters.helpers import HttpRequest, HttpResponse
 from src.errors import HttpUnprocessableEntityError, HttpBadRequestError
 from src.presenters.interface import ControllerInterface
+from src.domain.usecases import RegisterCovidCasesInterface as RegisterCovidCases
 
 
-class RegisterCoviCasesController(ControllerInterface):
-    """Classe para definir rotas para o caso de uso RegisterCoviCases"""
+class RegisterCovidCaseController(ControllerInterface):
+    """Classe para definir rotas para o caso de uso RegisterCovidCase"""
 
     def __init__(self, register_covid_cases_usecase: Type[RegisterCovidCases]) -> None:
-        self.register_covid_cases_usecase = register_covid_cases_usecase
+        self.__register_covid_cases_usecase = register_covid_cases_usecase
 
     def handler(self, http_request: Type[HttpRequest]) -> HttpResponse:
         """Método para chamar o caso de uso"""
@@ -29,7 +29,7 @@ class RegisterCoviCasesController(ControllerInterface):
                 new_cases = http_request.body["new_cases"]
                 country = http_request.body["country"]
 
-                response = self.register_covid_cases_usecase.register(
+                response = self.__register_covid_cases_usecase.register(
                     date=date, new_cases=new_cases, country=country
                 )
 

@@ -1,9 +1,9 @@
-"""Testes para a classe RegisterCovidCasesController"""
+"""Testes para a classe RegisterCovidCaseController"""
 from faker import Faker
 from src.data.tests import RegisterCovidCasesSpy
 from src.infra.tests import CovidCasesRepoSpy
 from src.presenters.helpers import HttpRequest
-from . import RegisterCoviCasesController
+from . import RegisterCovidCaseController
 
 faker = Faker()
 
@@ -12,7 +12,7 @@ def test_route():
     """Testando o método route"""
 
     register_covid_cases_usecase = RegisterCovidCasesSpy(CovidCasesRepoSpy(), None)
-    register_covid_cases_route = RegisterCoviCasesController(
+    register_covid_cases_route = RegisterCovidCaseController(
         register_covid_cases_usecase
     )
 

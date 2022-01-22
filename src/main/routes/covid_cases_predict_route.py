@@ -6,10 +6,10 @@ from src.main.adapters.request_adapter import request_adapter
 from src.main.composers import covid_cases_predict_composer
 from src.validators import covid_cases_predict_validator
 
-covid_cases_predict_routes = APIRouter()
+covid_cases_predict_routes = APIRouter(prefix="/api/predict")
 
 
-@covid_cases_predict_routes.get("/api/predict/")
+@covid_cases_predict_routes.get("/")
 async def predict(request: RequestFastApi):
     """Rota para buscar os dados de covid no mundo e registrar no DB."""
 

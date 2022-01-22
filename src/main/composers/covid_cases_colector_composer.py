@@ -1,4 +1,6 @@
 """Diretório de composer para o caso de uso CovidCasesColector"""
+from typing import Type
+from src.data.interfaces.data_covid_consumer import DataCovidConsumerInterface
 from src.infra.consumer import DataCovidConsumer
 from src.infra.database.repo import CountryRepo
 from src.data.colector import CovidCasesColector
@@ -7,13 +9,14 @@ from src.presenters.controllers.colector import CovidCasesColectorController
 from src.config import SEARCH_URL
 
 
-def covid_cases_colector_composer():
+def covid_cases_colector_composer(
+    infra: Type[DataCovidConsumerInterface] = DataCovidConsumer(SEARCH_URL),
+):
     """Composer"""
 
     countries_repo = CountryRepo()
     get_countries = GetCountry(countries_repo)
 
-    infra = DataCovidConsumer(SEARCH_URL)
     usecase = CovidCasesColector(infra, get_countries)
     controller = CovidCasesColectorController(usecase)
 

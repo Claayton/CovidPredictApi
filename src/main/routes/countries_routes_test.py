@@ -51,11 +51,11 @@ def test_get_countries_error_422():
     assert "error" in response.json()["data"]
 
 
-def test_register_countries():
-    """testando a rota register_countries"""
+def test_register_country():
+    """Testando a rota register_country"""
 
     attributes = {"name": faker.name().upper()}
-    url = "/api/countries/"
+    url = "/api/countries/single/"
 
     response = client.post(url=url, json=attributes)
 
@@ -67,12 +67,12 @@ def test_register_countries():
     engine.execute(f"DELETE FROM countries WHERE name='{attributes['name']}';")
 
 
-def test_register_countries_error_422():
-    """testando o erro 422 (Unprocessable Entity) na rota register_countries"""
+def test_register_country_error_422():
+    """Testando o erro 422 (Unprocessable Entity) na rota register_country"""
 
-    url = "/api/countries/"
+    url = "/api/countries/single/"
 
-    response1 = client.post(url=url, json={"name": 25})
+    response1 = client.post(url=url, json={"name": 25.5698})
     response2 = client.post(url=url, json={"name": "brasil"})
     response3 = client.post(url=url, json={"country": "BRA"})
 
@@ -85,10 +85,10 @@ def test_register_countries_error_422():
     assert "error" in response3.json()["data"]
 
 
-def test_register_countries_error_400():
-    """testando o erro 400 (Bad Request!) na rota register_countries"""
+def test_register_country_error_400():
+    """Testando o erro 400 (Bad Request!) na rota register_country"""
 
-    url = "/api/countries/"
+    url = "/api/countries/single/"
 
     response = client.post(url=url)
 

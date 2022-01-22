@@ -3,4 +3,5 @@ from .get_countries_composer import get_countries_composer
 from .get_covid_cases_composer import get_covid_cases_composer
 from .covid_cases_colector_composer import covid_cases_colector_composer
 from .covid_cases_predict_composer import covid_cases_predict_composer
+from .register_country_composer import register_country_composer
 from .register_countries_composer import register_countries_composer

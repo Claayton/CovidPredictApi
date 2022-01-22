@@ -8,8 +8,8 @@ from . import RegisterCountryController
 faker = Faker()
 
 
-def test_route():
-    """Testando o método route"""
+def test_handler():
+    """Testando o método handler"""
 
     countries_repo = CountryRepoSpy()
     data_covid_consumer = DataCovidConsumerSpy()

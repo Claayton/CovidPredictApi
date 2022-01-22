@@ -27,7 +27,7 @@ def get_from_country_validator(request: any) -> None:
         raise HttpUnprocessableEntityError(message=querry_param_validator.errors)
 
 
-async def register_countries_validator(request: any) -> None:
+async def register_country_validator(request: any) -> None:
     """Validador de parâmetros de body"""
 
     body = None

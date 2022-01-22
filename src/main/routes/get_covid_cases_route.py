@@ -8,10 +8,10 @@ from src.main.composers.get_covid_cases_composer import (
     get_covid_cases_composer,
 )
 
-covid_cases_routes = APIRouter()
+covid_cases_routes = APIRouter(prefix="/api/covid_cases")
 
 
-@covid_cases_routes.get("/api/covid_cases/")
+@covid_cases_routes.get("/")
 async def get_data_covid_from_country(request: RequestFastApi):
     """Rota para buscar os casos de covid cadastrados no sistema"""
 

@@ -11,3 +11,8 @@ class RegisterCovidCasesInterface(ABC):
     def register_covid_cases_by_country(self, country: str) -> Dict[bool, CovidCases]:
         """Deve ser implementado"""
         raise Exception("Deve ser implementado: register")
+
+    @abstractmethod
+    def register_all_covid_cases(self) -> Dict[bool, CovidCases]:
+        """Deve ser implementado"""
+        raise Exception("Deve ser implementado: register")

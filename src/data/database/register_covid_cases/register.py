@@ -55,3 +55,34 @@ class RegisterCovidCases(RegisterCovidCasesInterface):
                 full_response.append(response)
 
         return {"success": checker, "data": full_response}
+
+    def register_all_covid_cases(self) -> Dict[bool, CovidCases]:
+        """
+        Registro de dados de todos casos de covid19 vindos da API, no banco de dados.
+        :return: Um dicionário com as informações do processo.
+        """
+
+        countries = self.__get_countries.all_countries()["data"]
+        response = []
+
+        for country in countries:
+
+            try:
+
+                data_covid = self.__covid_cases_colector.covid_cases_country(
+                    country=country.name
+                )
+
+                for day in data_covid["data"]:
+
+                    response = self.__covid_cases_repo.insert_data(
+                        data_date=day["date"],
+                        new_cases=day["new_cases"],
+                        country_id=country.id,
+                    )
+                    response.append(response)
+
+            except Exception as error:
+                raise error
+
+        return {"success": True, "data": response}

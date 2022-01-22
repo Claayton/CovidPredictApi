@@ -9,8 +9,9 @@ def test_colector():
     """Testando a rota colector"""
 
     url = "/api/colector/?country=BRA"
+    headers = {"X-Test": "true"}
 
-    response = client.get(url)
+    response = client.get(url=url, headers=headers)
 
     assert response.status_code == 200
     assert isinstance(response.json(), dict)
@@ -23,8 +24,9 @@ def test_colector_error_400():
     """Testando o erro 400 (BadRequest) na rota colector"""
 
     url = "/api/colector/"
+    headers = {"X-Test": "true"}
 
-    response = client.get(url)
+    response = client.get(url=url, headers=headers)
 
     assert response.status_code == 400
     assert "error" in response.json()["data"]

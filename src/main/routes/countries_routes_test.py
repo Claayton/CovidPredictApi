@@ -95,3 +95,16 @@ def test_register_country_error_400():
 
     assert response.status_code == 400
     assert "error" in response.json()["data"]
+
+
+def test_register_countries():
+    """Testando a rota register_countries"""
+
+    url = "/api/countries/"
+    headers = {"X-Test": "true"}
+
+    response = client.post(url=url, headers=headers)
+
+    assert response.status_code == 200
+    assert "data" in response.json()
+    assert "error" not in response.json()

@@ -3,7 +3,7 @@ from fastapi import APIRouter, Request as RequestFastApi
 from fastapi.responses import JSONResponse
 from src.main.adapters.request_adapter import request_adapter
 from src.presenters.errors.error_controller import handler_errors
-from src.infra.tests import CountryRepoSpy
+from src.infra.tests import CountryRepoSpy, DataCovidConsumerSpy
 from src.main.composers import (
     get_countries_composer,
     register_country_composer,
@@ -56,7 +56,9 @@ async def register_countries(request: RequestFastApi):
 
         if middleware_testing(request):
 
-            controller = register_countries_composer(infra_repository=CountryRepoSpy())
+            controller = register_countries_composer(
+                infra_repository=CountryRepoSpy(), infra_consumer=DataCovidConsumerSpy()
+            )
 
         else:
 

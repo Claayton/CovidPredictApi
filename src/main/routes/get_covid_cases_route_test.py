@@ -5,8 +5,8 @@ from .get_covid_cases_route import covid_cases_routes
 client = TestClient(covid_cases_routes)
 
 
-def test_get_data_covid_from_country_no_query():
-    """Testando a rota get_data_covid_from_country sem utilizar parâmetro de query no url"""
+def test_get_covid_cases_no_query():
+    """Testando a rota get_covid_cases sem utilizar parâmetro de query no url"""
 
     url = "/api/covid_cases/"
 
@@ -19,8 +19,8 @@ def test_get_data_covid_from_country_no_query():
     assert "new_cases" in response.json()["data"][0]
 
 
-def test_get_data_covid_from_country_with_query():
-    """Testando a rota get_data_covid_from_country utilizando parâmetros de query no url"""
+def test_get_covid_cases_with_query():
+    """Testando a rota get_covid_cases utilizando parâmetros de query no url"""
 
     url = "/api/covid_cases/"
 
@@ -49,8 +49,8 @@ def test_get_data_covid_from_country_with_query():
     assert "new_cases" in response3.json()["data"][0]
 
 
-def test_get_data_covid_from_country_error_422():
-    """Testando o erro 422 (Unprocessable Entity) na rota get_data_covid_from_country"""
+def test_get_covid_cases_error_422():
+    """Testando o erro 422 (Unprocessable Entity) na rota get_covid_cases"""
 
     url = "/api/covid_cases/"
 

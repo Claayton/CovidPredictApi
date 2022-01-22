@@ -7,7 +7,7 @@ from src.presenters.controllers.database import GetCovidCasesController
 
 
 def get_covid_cases_composer():
-    """Composer"""
+    """Composer para get_covid_cases_route"""
 
     countries_repo = CountryRepo()
     get_countries = GetCountry(countries_repo)

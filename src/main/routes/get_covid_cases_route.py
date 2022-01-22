@@ -12,8 +12,8 @@ covid_cases_routes = APIRouter(prefix="/api/covid_cases")
 
 
 @covid_cases_routes.get("/")
-async def get_data_covid_from_country(request: RequestFastApi):
-    """Rota para buscar os casos de covid cadastrados no sistema"""
+async def get_covid_cases(request: RequestFastApi):
+    """Rota para buscar os casos de covid cadastrados no banco de dados"""
 
     response = None
 

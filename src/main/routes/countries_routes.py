@@ -11,7 +11,7 @@ from src.main.composers import (
 )
 from src.validators.countries_validator import (
     get_from_country_validator,
-    register_countries_validator,
+    register_country_validator,
 )
 from .tests import middleware_testing
 
@@ -56,12 +56,10 @@ async def register_countries(request: RequestFastApi):
 
         if middleware_testing(request):
 
-            await register_countries_validator(request)
             controller = register_countries_composer(infra_repository=CountryRepoSpy())
 
         else:
 
-            await register_countries_validator(request)
             controller = register_countries_composer()
 
         response = await request_adapter(request, controller.handler)
@@ -84,12 +82,12 @@ async def register_country(request: RequestFastApi):
 
         if middleware_testing(request):
 
-            await register_countries_validator(request)
+            await register_country_validator(request)
             controller = register_country_composer(infra_repository=CountryRepoSpy())
 
         else:
 
-            await register_countries_validator(request)
+            await register_country_validator(request)
             controller = register_country_composer()
 
         response = await request_adapter(request, controller.handler)

@@ -1,6 +1,6 @@
 """Controler para RegisterCountries"""
 from typing import Type
-from src.domain.usecases import RegisterCountryInterface as RegisterCountry
+from src.domain.usecases import RegisterCountriesInterface as RegisterCountries
 from src.presenters.helpers import HttpRequest, HttpResponse
 from src.presenters.interface import ControllerInterface
 
@@ -8,7 +8,7 @@ from src.presenters.interface import ControllerInterface
 class RegisterCountriesController(ControllerInterface):
     """Classe para definir rotas para o caso de uso RegisterCountries"""
 
-    def __init__(self, register_country_usecase: Type[RegisterCountry]) -> None:
+    def __init__(self, register_country_usecase: Type[RegisterCountries]) -> None:
         self.register_country_usecase = register_country_usecase
 
     def handler(self, http_request: Type[HttpRequest]) -> HttpResponse:

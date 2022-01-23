@@ -2,7 +2,7 @@
 from cerberus import Validator
 from src.data.database.get_countries import GetCountry
 from src.infra.database.repo import CountryRepo
-from src.errors import HttpUnprocessableEntityError, HttpBadRequestError
+from src.errors import HttpUnprocessableEntityError
 
 countries_repo = CountryRepo()
 get_countries = GetCountry(countries_repo)
@@ -25,26 +25,3 @@ def get_from_country_validator(request: any) -> None:
 
     if response is False:
         raise HttpUnprocessableEntityError(message=querry_param_validator.errors)
-
-
-async def register_country_validator(request: any) -> None:
-    """Validador de parâmetros de body"""
-
-    body = None
-
-    try:
-
-        body = await request.json()
-
-    except Exception:  # pylint: disable=W0703
-        pass
-
-    body_validator = Validator({"name": {"type": "string", "required": True}})
-
-    if body is not None:
-        response = body_validator.validate(body)
-    else:
-        raise HttpBadRequestError(message="This request need a name body-param")
-
-    if response is False:
-        raise HttpUnprocessableEntityError(message=body_validator.errors)

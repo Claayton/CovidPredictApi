@@ -46,7 +46,14 @@ class RegisterCovidCases(RegisterCovidCasesInterface):
                         new_cases=day["new_cases"],
                         country_id=country.id,
                     )
-                    response.append(insertion)
+                    response.append(
+                        {
+                            "id": insertion.id,
+                            "date": str(insertion.date).split()[0],
+                            "new_cases": insertion.new_cases,
+                            "country_id": insertion.country_id,
+                        }
+                    )
 
             except Exception as error:
                 raise error

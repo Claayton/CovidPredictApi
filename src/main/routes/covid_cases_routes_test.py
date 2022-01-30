@@ -71,6 +71,24 @@ def test_get_covid_cases_error_422():
     assert "error" in response3.json()["data"]
 
 
+def test_register_covid_cases():
+    """Testando a rota register_covid_cases"""
+
+    url = "/api/covid_cases/"
+    headers = {"X-Test": "true"}
+
+    response = client.post(url=url, headers=headers)
+
+    assert response.status_code == 200
+    assert isinstance(response.json(), dict)
+    assert isinstance(response.json()["data"], list)
+    assert "date" in response.json()["data"][0]
+    assert "new_cases" in response.json()["data"][0]
+    assert response.status_code == 200
+    assert "data" in response.json()
+    assert "error" not in response.json()
+
+
 def test_predict():
     """Testando a rota predict"""
 

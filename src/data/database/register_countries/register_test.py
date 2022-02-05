@@ -1,4 +1,4 @@
-"""Diretório de testes para a classe RegisterCountries"""
+"""Testes para a classe RegisterCountries"""
 from faker import Faker
 from src.infra.tests import CountryRepoSpy, DataCovidConsumerSpy
 from src.data.tests import GetCountrySpy
@@ -19,7 +19,9 @@ def test_register_countries():
 
     response = register_countries.register_countries()
 
+    # Testando a entrada:
     assert countries_repo.insert_country_params is not None
 
+    # Testando a saída:
     assert response["success"] is True
     assert response["data"] is not None

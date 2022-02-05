@@ -13,7 +13,7 @@ from src.data.interfaces import (
 
 
 class RegisterCountries(RegisterCountriesInterface):
-    """Classe para definir o caso de uso: RegisterCountry"""
+    """Classe para realizar o registro de novos países no banco de dados"""
 
     def __init__(
         self,

@@ -30,6 +30,14 @@ class CovidCasesPredict(CovidCasesPredictInterface):
         baseado na quantidade de dias escolhido a partir da data atual.
         """
 
+        if not isinstance(country, str) or not isinstance(days, int):
+            return {
+                "success": False,
+                "data": {
+                    "error": "Country value must be an integer, and days must be a string"
+                },
+            }
+
         covid_data = self.__format_data_covid(country, days)
 
         data_frame = pd.DataFrame(covid_data)

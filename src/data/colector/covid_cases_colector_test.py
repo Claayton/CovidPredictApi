@@ -48,9 +48,10 @@ def test_covid_cases_country_error():
     api_consumer_attributes = api_consumer.get_data_covid_by_country_attributes
 
     # Teste de entrada:
-    # Testando se os atributos enviados para a api_consumer são os mesmos enviados para o método.
+    # Testando se os atributos enviados para a api_consumer é igual a {},
+    # pois os attributos enviado são inválidos.
     assert api_consumer_attributes == {}
 
-    # Testando a saída
+    # Testando a saída:
     assert response["success"] is False
     assert "error" in response["data"]

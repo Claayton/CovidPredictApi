@@ -1,6 +1,5 @@
 """Testes para a classe CovidCasesColector"""
 from src.infra.tests.data_covid_consumer_spy import DataCovidConsumerSpy
-from src.infra.database.repo import CountryRepo
 from src.data.colector import CovidCasesColector
 from src.data.tests import GetCountrySpy
 
@@ -9,8 +8,7 @@ def test_covid_cases_country():
     """Testando o método covid_cases_country"""
 
     api_consumer = DataCovidConsumerSpy()
-    countries_repo = CountryRepo()
-    get_countries = GetCountrySpy(countries_repo)
+    get_countries = GetCountrySpy(None)
     covid_cases_colector = CovidCasesColector(api_consumer, get_countries)
 
     attribute = {"country": "BRA"}
@@ -40,8 +38,7 @@ def test_covid_cases_country_error():
     """
 
     api_consumer = DataCovidConsumerSpy()
-    countries_repo = CountryRepo()
-    get_countries = GetCountrySpy(countries_repo)
+    get_countries = GetCountrySpy(None)
     covid_cases_colector = CovidCasesColector(api_consumer, get_countries)
 
     attributes = {"country": 5}

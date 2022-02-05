@@ -29,7 +29,8 @@ class RegisterCovidCases(RegisterCovidCasesInterface):
         """
 
         countries = self.__get_countries.all_countries()["data"]
-        response = []
+        country_response = []
+        response = {}
 
         for country in countries:
 
@@ -46,7 +47,7 @@ class RegisterCovidCases(RegisterCovidCasesInterface):
                         new_cases=day["new_cases"],
                         country_id=country.id,
                     )
-                    response.append(
+                    country_response.append(
                         {
                             "id": insertion.id,
                             "date": str(insertion.date).split()[0],
@@ -57,5 +58,7 @@ class RegisterCovidCases(RegisterCovidCasesInterface):
 
             except Exception as error:
                 raise error
+
+            response[country.name] = country_response
 
         return {"success": True, "data": response}

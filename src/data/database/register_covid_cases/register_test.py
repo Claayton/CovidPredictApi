@@ -9,7 +9,7 @@ faker = Faker()
 
 
 def test_register_covid_cases():
-    """Testando o método register_all_covid_cases"""
+    """Testando o método register_covid_cases"""
 
     covid_cases_repo = CovidCasesRepoSpy()
     get_countries = GetCountrySpy(None)
@@ -21,6 +21,7 @@ def test_register_covid_cases():
 
     response = register_covid_cases.register_covid_cases()
 
+    # Testando a saída:
     assert response["success"] is True
     assert response["data"] is not None
     assert "error" not in response

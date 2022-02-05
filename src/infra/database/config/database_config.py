@@ -6,8 +6,8 @@ from sqlalchemy.orm import sessionmaker
 class DataBaseConnectionHandler:
     """Conexão de banco de dados com SQLAlchemy"""
 
-    def __init__(self) -> None:
-        self.__connection_string = "sqlite:///storage.db"
+    def __init__(self, connection_string: str) -> None:
+        self.__connection_string = connection_string
         self.session = None
 
     def get_engine(self):

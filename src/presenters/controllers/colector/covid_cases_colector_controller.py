@@ -2,7 +2,7 @@
 from typing import Type
 from src.presenters.helpers import HttpRequest, HttpResponse
 from src.presenters.interface import ControllerInterface
-from src.errors import HttpBadRequestError
+from src.errors import HttpBadRequestError, HttpUnprocessableEntityError
 from src.domain.usecases import CovidCasesColectorInterface
 
 
@@ -20,7 +20,6 @@ class CovidCasesColectorController(ControllerInterface):
 
         response = None
         country = None
-        days = 0
 
         query_string_params = http_request.query.keys()
 
@@ -30,10 +29,17 @@ class CovidCasesColectorController(ControllerInterface):
             )
 
         country = http_request.query["country"]
-        if "days" in query_string_params:
-            days = http_request.query["days"]
 
-        response = self.__use_case.covid_cases_country(country=country, days=days)
+        try:
+            int(http_request.query["country"])
+        except Exception:  # pylint: disable=W0703
+            pass
+        else:
+            raise HttpUnprocessableEntityError(
+                message="The country parameter cannot be an integer type"
+            )
+
+        response = self.__use_case.covid_cases_country(country=country)
 
         if response["success"] is False:
             raise HttpBadRequestError(message=response["data"]["error"])

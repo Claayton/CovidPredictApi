@@ -1,6 +1,6 @@
 """Controllers para GetCovidCases"""
 from typing import Type, List
-from datetime import date
+from datetime import date, datetime
 from src.domain.models.covid_cases import CovidCases
 from src.presenters.helpers import HttpRequest, HttpResponse
 from src.errors import HttpBadRequestError, HttpUnprocessableEntityError
@@ -29,6 +29,17 @@ class GetCovidCasesController(ControllerInterface):
 
         if http_request.query:
             query_string_params = http_request.query.keys()
+
+            if "date" in query_string_params:
+
+                data_date = http_request.query["date"]
+
+                try:
+                    datetime.strptime(data_date, "%Y-%m-%d")
+                except ValueError as error:
+                    raise HttpUnprocessableEntityError(message=str(error)) from error
+                except Exception as error:
+                    raise HttpBadRequestError(message=str(error)) from error
 
             if ("date" in query_string_params) and ("country" in query_string_params):
                 data_date = http_request.query["date"]

@@ -17,9 +17,7 @@ class CovidCasesColector(CovidCasesColectorInterface):
         self.__api_consumer = api_consumer
         self.__get_countries = get_countries
 
-    def covid_cases_country(
-        self, country: str, days: int = 0
-    ) -> Dict[bool, List[Dict]]:
+    def covid_cases_country(self, country: str) -> Dict[bool, List[Dict]]:
         """
         Realiza o tratamento dos dados do covid por país recebidos do consumer.
         :param country: O país de referência que deverá ser tratado os dados.
@@ -36,14 +34,12 @@ class CovidCasesColector(CovidCasesColectorInterface):
 
         api_response = self.__api_consumer.get_data_covid_by_country(country).response
 
-        country_data_response = self.__separete_data(api_response, days, country)
+        country_data_response = self.__separete_data(api_response, country)
 
         return {"success": True, "data": country_data_response}
 
     @classmethod
-    def __separete_data(
-        cls, data_days: List[Dict], days: int, country: str = None
-    ) -> List[Dict]:
+    def __separete_data(cls, data_days: List[Dict], country: str = None) -> List[Dict]:
 
         separate_data = []
 
@@ -56,7 +52,6 @@ class CovidCasesColector(CovidCasesColectorInterface):
                         "date": day["date"],
                         "new_cases": day["new_cases"],
                         "country": country,
-                        "days": days,
                     }
                 )
             except KeyError:

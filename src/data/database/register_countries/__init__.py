@@ -1,2 +1,2 @@
 """Diretório de inicialização para o módulo register_countries"""
-from .register import RegisterCountry
+from .register import RegisterCountries

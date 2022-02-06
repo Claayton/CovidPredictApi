@@ -16,15 +16,17 @@ def test_get_countries(requests_mock):
     data_covid_consumer = DataCovidConsumer(url)
     get_countries_response = data_covid_consumer.get_countries()
 
+    # Testando os requests:
     assert get_countries_response.request.method == "GET"
     assert get_countries_response.request.url == url
 
+    # Testando os responses:
     assert get_countries_response.status_code == 200
     assert isinstance(get_countries_response.response, list)
 
 
 def test_get_countries_http_error(requests_mock):
-    """Testando o erro no método get_countries"""
+    """Testando o erro no método get_countries."""
 
     url = config.SEARCH_URL
 
@@ -52,9 +54,11 @@ def test_get_all_data_covid(requests_mock):
     data_covid_consumer = DataCovidConsumer(url)
     get_all_data_covid_response = data_covid_consumer.get_all_data_covid()
 
+    # Testando o request:
     assert get_all_data_covid_response.request.method == "GET"
     assert get_all_data_covid_response.request.url == url
 
+    # Testando o response:
     assert get_all_data_covid_response.status_code == 200
     assert isinstance(get_all_data_covid_response.response, dict)
 
@@ -104,9 +108,11 @@ def test_get_data_covid_by_country(requests_mock):
         country=country
     )
 
+    # Testando o request:
     assert data_covid_by_country_response.request.method == "GET"
     assert data_covid_by_country_response.request.url == url
 
+    # Testando o response:
     assert data_covid_by_country_response.status_code == 200
     assert isinstance(data_covid_by_country_response.response, list)
     assert isinstance(data_covid_by_country_response.response[0], dict)

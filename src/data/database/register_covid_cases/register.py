@@ -1,5 +1,5 @@
 """Diretório do caso de uso RegisterCovidCases"""
-from typing import List, Type, Dict
+from typing import Type, Dict
 from src.data.database.get_countries import GetCountry
 from src.domain.models import CovidCases
 from src.data.interfaces import CovidCasesRepoInterface as CovidCasesRepo
@@ -17,41 +17,48 @@ class RegisterCovidCases(RegisterCovidCasesInterface):
         covid_cases_colector: Type[CovidCasesColector],
         covid_cases_repo: Type[CovidCasesRepo],
         get_countries: Type[GetCountry],
-    ) -> None:
+    ) -> Dict[bool, CovidCases]:
         self.__covid_cases_colector = covid_cases_colector
         self.__covid_cases_repo = covid_cases_repo
         self.__get_countries = get_countries
 
-    def register_covid_cases_by_country(
-        self, country: str
-    ) -> Dict[bool, List[CovidCases]]:
+    def register_covid_cases(self) -> Dict[bool, CovidCases]:
         """
-        Registro de dados de casos de covid19 no banco de dados.
-        :param country: Abreviação do nome do país de referência.
+        Registro de dados de todos casos de covid19 vindos da API, no banco de dados.
         :return: Um dicionário com as informações do processo.
         """
 
-        full_response = []
-        response = None
+        countries = self.__get_countries.all_countries()["data"]
+        country_response = []
+        response = {}
 
-        validate_entry = isinstance(country, str)
-        if validate_entry:
-            country_id = self.__get_countries.by_name(name=country)["data"][0].id
+        for country in countries:
 
-        checker = (validate_entry) and (country_id is not None)
-        if checker:
+            try:
 
-            data_covid = self.__covid_cases_colector.covid_cases_country(
-                country=country
-            )
-
-            for day in data_covid["data"]:
-
-                response = self.__covid_cases_repo.insert_data(
-                    data_date=day["date"],
-                    new_cases=day["new_cases"],
-                    country_id=country_id,
+                data_covid = self.__covid_cases_colector.covid_cases_country(
+                    country=country.name
                 )
-                full_response.append(response)
 
-        return {"success": checker, "data": full_response}
+                for day in data_covid["data"]:
+
+                    insertion = self.__covid_cases_repo.insert_data(
+                        data_date=day["date"],
+                        new_cases=day["new_cases"],
+                        country_id=country.id,
+                    )
+                    country_response.append(
+                        {
+                            "id": insertion.id,
+                            "date": str(insertion.date).split()[0],
+                            "new_cases": insertion.new_cases,
+                            "country_id": insertion.country_id,
+                        }
+                    )
+
+            except Exception as error:
+                raise error
+
+            response[country.name] = country_response
+
+        return {"success": True, "data": response}

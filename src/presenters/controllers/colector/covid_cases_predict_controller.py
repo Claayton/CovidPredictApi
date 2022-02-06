@@ -32,7 +32,7 @@ class CovidCasesPredictController(ControllerInterface):
                 )
 
             country = http_request.query["country"]
-            days = http_request.query["days"]
+            days = int(http_request.query["days"])
 
             response = self.__use_case.covid_evolution_predict(
                 country=country, days=days
@@ -42,5 +42,5 @@ class CovidCasesPredictController(ControllerInterface):
                 return HttpResponse(status_code=200, body=response["data"])
 
         raise HttpBadRequestError(
-            message="This request need 2 query-params: (country: str) and (days: int)"
+            message="Something went wrong in the controller, contact the admin! "
         )

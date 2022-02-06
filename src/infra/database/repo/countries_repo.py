@@ -1,28 +1,36 @@
 """Diretório de manipulação de dados"""
 from typing import List
+from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy.exc import IntegrityError
 from src.data.interfaces import CountryRepoInterface
 from src.infra.database.config import DataBaseConnectionHandler
 from src.infra.database.entities import Country as CountryModel
 from src.domain.models import Country
+from src import config
 
 
 class CountryRepo(CountryRepoInterface):
     """Manipulação de dados da tabela Country"""
 
-    @classmethod
-    def insert_country(cls, name: str) -> Country:
+    def __init__(self, connection_string: str = config.CONNECTION_STRING) -> None:
+        self.__connection_string = connection_string
+
+    def insert_country(self, name: str) -> Country:
         """
         Realiza a inserção de um novo país na tabela Country.
         :param name: Nome ou abreviação do nome do país.
         :return: Uma tupla nomeada com os todos os dados do novo país cadastrado.
         """
 
-        with DataBaseConnectionHandler() as data_base:
+        insert_data = None
+
+        with DataBaseConnectionHandler(self.__connection_string) as data_base:
             try:
                 new_country = CountryModel(name=name)
                 data_base.session.add(new_country)
                 data_base.session.flush()
+
+                insert_data = Country(id=new_country.id, name=new_country.name)
 
             except IntegrityError:
                 data_base.session.rollback()
@@ -33,17 +41,20 @@ class CountryRepo(CountryRepoInterface):
                     raise
             else:
                 data_base.session.commit()
-                return Country(id=new_country.id, name=new_country.name)
+                insert_data = Country(id=new_country.id, name=new_country.name)
             finally:
                 data_base.session.close()
 
-    @classmethod
-    def get_countries(cls, name: str = None, country_id: int = None) -> List[Country]:
+        return insert_data
+
+    def get_countries(self, name: str = None, country_id: int = None) -> List[Country]:
         """
         Realiza a busca dos países cadastrados no banco de dados.
+        Os dados podem ser especificados pelo name ou pelo country_id.
+        Caso nenhum dos parâmetros sejam passados, o sistema retornará todos os dados cadastrados.
         :param name: Abreviação do nome do país.
         :param country_id: Id do país ja cadastrado no banco de dados
-        :return: Uma lista com todos países cadastrados.
+        :return: Uma lista com os dados de países requeridos.
         """
 
         try:
@@ -51,7 +62,7 @@ class CountryRepo(CountryRepoInterface):
 
             if name:
 
-                with DataBaseConnectionHandler() as data_base:
+                with DataBaseConnectionHandler(self.__connection_string) as data_base:
                     data = (
                         data_base.session.query(CountryModel).filter_by(name=name).one()
                     )
@@ -59,7 +70,7 @@ class CountryRepo(CountryRepoInterface):
 
             elif country_id:
 
-                with DataBaseConnectionHandler() as data_base:
+                with DataBaseConnectionHandler(self.__connection_string) as data_base:
                     data = (
                         data_base.session.query(CountryModel)
                         .filter_by(id=country_id)
@@ -69,12 +80,14 @@ class CountryRepo(CountryRepoInterface):
 
             else:
 
-                with DataBaseConnectionHandler() as data_base:
+                with DataBaseConnectionHandler(self.__connection_string) as data_base:
                     data = data_base.session.query(CountryModel).all()
                     query_data = data
 
             return query_data
 
+        except NoResultFound:
+            return None
         except Exception as error:
             data_base.session.rollback()
             raise error

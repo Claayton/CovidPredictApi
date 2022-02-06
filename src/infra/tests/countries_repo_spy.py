@@ -24,4 +24,4 @@ class CountryRepoSpy:
         self.get_countries_params["name"] = name
         self.get_countries_params["country_id"] = country_id
 
-        return [mock_countries()]
+        return mock_countries()

@@ -2,9 +2,8 @@
 from typing import Type, Dict, List
 from xmlrpc.client import Boolean
 from src.domain.models import Country
-from src.errors import HttpUnprocessableEntityError, HttpBadRequestError
 from src.domain.usecases import (
-    RegisterCountryInterface,
+    RegisterCountriesInterface,
     GetCountriesInterface as GetCountry,
 )
 from src.data.interfaces import (
@@ -13,8 +12,8 @@ from src.data.interfaces import (
 )
 
 
-class RegisterCountry(RegisterCountryInterface):
-    """Classe para definir o caso de uso: RegisterCountry"""
+class RegisterCountries(RegisterCountriesInterface):
+    """Classe para realizar o registro de novos países no banco de dados"""
 
     def __init__(
         self,
@@ -25,28 +24,6 @@ class RegisterCountry(RegisterCountryInterface):
         self.__countries_repo = countries_repo
         self.__data_covid_consumer = data_covid_consumer
         self.__get_countries = get_countries
-
-    def register_country(self, name: str) -> Dict[bool, Country]:
-        """
-        Registro de um país no banco de dados.
-        :param name: Abreviação do nome do país em maiúsculo para o cadastro.
-        :return: Um dicionário com as informações do processo.
-        """
-
-        response = None
-        validate_entry = isinstance(name, str) and name.isupper()
-
-        if self.__registered_country(country_name=name):
-            raise HttpBadRequestError(message="country already registered")
-
-        if not validate_entry:
-            raise HttpUnprocessableEntityError(
-                message="'name' must be string and capitalized"
-            )
-
-        response = self.__countries_repo.insert_country(name)
-
-        return {"success": validate_entry, "data": response}
 
     def register_countries(self) -> Dict[bool, List[Country]]:
         """

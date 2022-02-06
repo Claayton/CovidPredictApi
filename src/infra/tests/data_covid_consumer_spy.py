@@ -32,6 +32,7 @@ class DataCovidConsumerSpy:
         country = "BRA"
 
         self.get_all_data_covid_attributes["country"] = country
+
         return self.get_all_data_covid_response(
             status_code=200, request=None, response=mock_data_covid()
         )
@@ -42,6 +43,7 @@ class DataCovidConsumerSpy:
         country = "BRA"
 
         self.get_data_covid_by_country_attributes["country"] = country
+
         return self.get_data_covid_by_country_response(
             status_code=200, request=None, response=mock_data_covid()[country]
         )

@@ -1,7 +1,7 @@
 """Spy para a classe RegisterCountry"""
 from typing import Type, Dict, List
 from src.domain.models import Country
-from src.domain.usecases import RegisterCountryInterface
+from src.domain.usecases import RegisterCountriesInterface
 from src.domain.tests import mock_countries
 from src.data.interfaces import (
     CountryRepoInterface as CountryRepo,
@@ -9,7 +9,7 @@ from src.data.interfaces import (
 )
 
 
-class RegisterCountrySpy(RegisterCountryInterface):
+class RegisterCountriesSpy(RegisterCountriesInterface):
     """Classe para definir o Spy para o caso de uso: RegisterCountry"""
 
     def __init__(
@@ -20,23 +20,6 @@ class RegisterCountrySpy(RegisterCountryInterface):
         self.name_params = {}
         self.countries_repo = countries_repo
         self.data_covid_consumer = data_covid_consumer
-
-    def register_country(self, name: str) -> Dict[bool, Country]:
-        """
-        Registro de países no banco de dados.
-        :param name: Abreviação do nome do país cadastrado.
-        :return: Um dicionário com as informações do processo.
-        """
-
-        self.name_params["name"] = name
-
-        response = None
-        validate_entry = isinstance(name, str)
-
-        if validate_entry:
-            response = mock_countries()
-
-        return {"success": validate_entry, "data": response}
 
     def register_countries(self) -> Dict[bool, List[Country]]:
         """
@@ -49,7 +32,8 @@ class RegisterCountrySpy(RegisterCountryInterface):
         validate_entry = isinstance(countries, list)
 
         if validate_entry:
-            for country in countries:
+            for country in countries:  # pylint: disable=unused-variable
+
                 insersion = mock_countries()
                 response.append(insersion)
 

@@ -1,6 +1,6 @@
 """Diretório de mocks para tests"""
-from faker import Faker
 from datetime import datetime
+from faker import Faker
 from src.domain.models import CovidCases
 
 faker = Faker()

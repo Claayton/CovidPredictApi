@@ -1,13 +1,14 @@
-"""Diretório de testes para a classe CovidCasesRepo"""
+"""Testes para a classe CovidCasesRepo"""
 from datetime import date
 from faker import Faker
 from src.infra.database.entities import CovidCases as CovidCasesModel
 from src.infra.database.config import DataBaseConnectionHandler
+from src import config
 from .covid_cases_repo import CovidCasesRepo
 
 faker = Faker()
-covid_cases_repo = CovidCasesRepo()
-data_base_connection_handler = DataBaseConnectionHandler()
+covid_cases_repo = CovidCasesRepo(config.CONNECTION_STRING_TESTS)
+data_base_connection_handler = DataBaseConnectionHandler(config.CONNECTION_STRING_TESTS)
 
 
 def test_insert_data():
@@ -60,32 +61,109 @@ def test_update_cases():
     engine.execute(f"DELETE FROM covid_cases WHERE id='{cases_id}';")
 
 
-def test_get_data():
-    """Testando o método get_data"""
+def test_get_data_by_data_date():
+    """
+    Testando o método get_data.
+    Utilizando o parâmetro data_date.
+    """
 
     cases_id = faker.random_number(digits=5)
     data_date = "2021-12-25"
     new_cases = faker.random_number(digits=5)
-    country = "AFG"
+    country = "TESTE"
+    country_id = 666666
 
-    data = CovidCasesModel(date=data_date, new_cases=new_cases, country_id=1)
+    data = CovidCasesModel(date=data_date, new_cases=new_cases, country_id=country_id)
 
     engine = data_base_connection_handler.get_engine()
     engine.execute(
+        f"INSERT INTO countries (id, name) VALUES ('{country_id}', '{country}');"
+    )
+    engine.execute(
         f"INSERT INTO covid_cases (id, date, new_cases, country_id)\
-          VALUES ('{cases_id}', '{data_date}', '{new_cases}', '{1}');"
+          VALUES ('{cases_id}', '{data_date}', '{new_cases}', '{country_id}');"
     )
 
-    query_covid_cases1 = covid_cases_repo.get_data(data_date=data_date)
-    query_covid_cases2 = covid_cases_repo.get_data(country=country)
-    query_covid_cases3 = covid_cases_repo.get_data(country=country, data_date=data_date)
+    query_covid_cases = covid_cases_repo.get_data(data_date=data_date)
 
-    assert str(data) == str(query_covid_cases1[0])
-    assert data.country_id == query_covid_cases2[0].country_id
-    assert str(data) == str(query_covid_cases3[0])
+    assert str(data) == str(query_covid_cases[0])
+    assert data.country_id == query_covid_cases[0].country_id
 
-    assert isinstance(query_covid_cases1[0].date, date)
-    assert isinstance(query_covid_cases2[0].country_id, int)
-    assert isinstance(query_covid_cases3[0].new_cases, int)
+    assert isinstance(query_covid_cases[0].date, date)
+    assert isinstance(query_covid_cases[0].country_id, int)
+    assert isinstance(query_covid_cases[0].new_cases, int)
 
     engine.execute(f"DELETE FROM covid_cases WHERE id='{cases_id}';")
+    engine.execute(f"DELETE FROM countries WHERE id='{country_id}';")
+
+
+def test_get_data_by_country():
+    """
+    Testando o método get_data.
+    Utilizando o parâmetro country.
+    """
+
+    cases_id = faker.random_number(digits=5)
+    data_date = "2021-12-25"
+    new_cases = faker.random_number(digits=5)
+    country = "TESTE"
+    country_id = 666666
+
+    data = CovidCasesModel(date=data_date, new_cases=new_cases, country_id=country_id)
+
+    engine = data_base_connection_handler.get_engine()
+    engine.execute(
+        f"INSERT INTO countries (id, name) VALUES ('{country_id}', '{country}');"
+    )
+    engine.execute(
+        f"INSERT INTO covid_cases (id, date, new_cases, country_id)\
+          VALUES ('{cases_id}', '{data_date}', '{new_cases}', '{country_id}');"
+    )
+
+    query_covid_cases = covid_cases_repo.get_data(country=country)
+
+    assert str(data) == str(query_covid_cases[0])
+    assert data.country_id == query_covid_cases[0].country_id
+
+    assert isinstance(query_covid_cases[0].date, date)
+    assert isinstance(query_covid_cases[0].country_id, int)
+    assert isinstance(query_covid_cases[0].new_cases, int)
+
+    engine.execute(f"DELETE FROM covid_cases WHERE id='{cases_id}';")
+    engine.execute(f"DELETE FROM countries WHERE id='{country_id}';")
+
+
+def test_get_data_by_data_date_and_by_country():
+    """
+    Testando o método get_data.
+    Utilizando tanto o parâmetro data_date, quanto o parâmetro country.
+    """
+
+    cases_id = faker.random_number(digits=5)
+    data_date = "2021-12-25"
+    new_cases = faker.random_number(digits=5)
+    country = "TESTE"
+    country_id = 666666
+
+    data = CovidCasesModel(date=data_date, new_cases=new_cases, country_id=country_id)
+
+    engine = data_base_connection_handler.get_engine()
+    engine.execute(
+        f"INSERT INTO countries (id, name) VALUES ('{country_id}', '{country}');"
+    )
+    engine.execute(
+        f"INSERT INTO covid_cases (id, date, new_cases, country_id)\
+          VALUES ('{cases_id}', '{data_date}', '{new_cases}', '{country_id}');"
+    )
+
+    query_covid_cases = covid_cases_repo.get_data(data_date=data_date, country=country)
+
+    assert str(data) == str(query_covid_cases[0])
+    assert data.country_id == query_covid_cases[0].country_id
+
+    assert isinstance(query_covid_cases[0].date, date)
+    assert isinstance(query_covid_cases[0].country_id, int)
+    assert isinstance(query_covid_cases[0].new_cases, int)
+
+    engine.execute(f"DELETE FROM covid_cases WHERE id='{cases_id}';")
+    engine.execute(f"DELETE FROM countries WHERE id='{country_id}';")

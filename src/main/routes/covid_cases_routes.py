@@ -23,9 +23,20 @@ async def get_covid_cases(request: RequestFastApi):
     response = None
 
     try:
+
         get_covid_cases_validator(request)
-        controller = get_covid_cases_composer()
-        response = await request_adapter(request, controller.handler)
+
+        if middleware_testing(request):
+
+            controller = get_covid_cases_composer(
+                infra=CovidCasesRepoSpy(), countries_repo=CountryRepoSpy()
+            )
+            response = await request_adapter(request, controller.handler)
+
+        else:
+
+            controller = get_covid_cases_composer()
+            response = await request_adapter(request, controller.handler)
 
     except Exception as error:  # pylint: disable=W0703
         response = handler_errors(error)
@@ -72,9 +83,18 @@ async def covid_cases_predict(request: RequestFastApi):
     response = None
 
     try:
+
         covid_cases_predict_validator(request)
-        controller = covid_cases_predict_composer()
-        response = await request_adapter(request, controller.handler)
+
+        if middleware_testing(request):
+
+            controller = covid_cases_predict_composer(infra=CovidCasesRepoSpy())
+            response = await request_adapter(request, controller.handler)
+
+        else:
+
+            controller = covid_cases_predict_composer()
+            response = await request_adapter(request, controller.handler)
 
     except Exception as error:  # pylint: disable=W0703
         response = handler_errors(error)
@@ -94,8 +114,10 @@ async def covid_cases_colector(request: RequestFastApi):
 
         if middleware_testing(request):
 
-            infra = DataCovidConsumerSpy()
-            controller = covid_cases_colector_composer(infra=infra)
+            controller = covid_cases_colector_composer(
+                infra=DataCovidConsumerSpy(), countries_repo=CountryRepoSpy()
+            )
+
         else:
 
             controller = covid_cases_colector_composer()

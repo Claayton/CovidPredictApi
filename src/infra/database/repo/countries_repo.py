@@ -1,5 +1,6 @@
 """Diretório de manipulação de dados"""
 from typing import List
+from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy.exc import IntegrityError
 from src.data.interfaces import CountryRepoInterface
 from src.infra.database.config import DataBaseConnectionHandler
@@ -85,6 +86,8 @@ class CountryRepo(CountryRepoInterface):
 
             return query_data
 
+        except NoResultFound:
+            return None
         except Exception as error:
             data_base.session.rollback()
             raise error

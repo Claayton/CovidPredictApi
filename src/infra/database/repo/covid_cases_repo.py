@@ -4,23 +4,28 @@ from typing import Tuple, List
 from sqlalchemy.orm.exc import NoResultFound
 from src.data.interfaces import CovidCasesRepoInterface
 from src.infra.database.config import DataBaseConnectionHandler
-from src.infra.database.entities import CovidCases as CovidCasesModel
+from src.infra.database.entities import (
+    CovidCases as CovidCasesModel,
+    Country as CountryModel,
+)
 from src.domain.models import CovidCases
-from src.infra.database.entities.countries import Country as CountryModel
+from src import config
 
 
 class CovidCasesRepo(CovidCasesRepoInterface):
     """Manipulação de dados da tabela CovidCases"""
 
-    @classmethod
-    def __find_country_id(cls, country: str) -> int:
+    def __init__(self, connection_string: str = config.CONNECTION_STRING) -> None:
+        self.__connection_string = connection_string
+
+    def __find_country_id(self, country: str) -> int:
         """
         Encontrar o id de um país cadastrado no banco de dados.
         :param country: País de referência para a busca no banco.
         :return: O id do país desejado que esta cadastrado no banco de dados.
         """
 
-        with DataBaseConnectionHandler() as data_base:
+        with DataBaseConnectionHandler(self.__connection_string) as data_base:
             try:
                 country_id = (
                     data_base.session.query(CountryModel)
@@ -47,7 +52,7 @@ class CovidCasesRepo(CovidCasesRepoInterface):
 
         data_date = date.fromisoformat(data_date)
 
-        with DataBaseConnectionHandler() as data_base:
+        with DataBaseConnectionHandler(self.__connection_string) as data_base:
             try:
                 new_data = CovidCasesModel(
                     date=data_date, new_cases=new_cases, country_id=country_id
@@ -61,14 +66,13 @@ class CovidCasesRepo(CovidCasesRepoInterface):
                     new_cases=new_data.new_cases,
                     country_id=new_data.country_id,
                 )
-            except:
+            except Exception as error:
                 data_base.session.rollback()
-                raise
+                raise error
             finally:
                 data_base.session.close()
 
-    @classmethod
-    def update_cases(cls, cases_id: int, new_cases: int) -> CovidCases:
+    def update_cases(self, cases_id: int, new_cases: int) -> CovidCases:
         """
         Realiza a atualização dos dados ja cadastrados no banco na tabela CovidCases.
         :param id: ID de referência para realizar a atualização de dados.
@@ -76,7 +80,7 @@ class CovidCasesRepo(CovidCasesRepoInterface):
         :return: Uma tupla nomeada com os todos os novos dados cadastrado.
         """
 
-        with DataBaseConnectionHandler() as data_base:
+        with DataBaseConnectionHandler(self.__connection_string) as data_base:
             try:
                 data_country = (
                     data_base.session.query(CovidCasesModel)
@@ -120,7 +124,7 @@ class CovidCasesRepo(CovidCasesRepoInterface):
                 except Exception as error:
                     raise NoResultFound from error
 
-                with DataBaseConnectionHandler() as data_base:
+                with DataBaseConnectionHandler(self.__connection_string) as data_base:
                     data = (
                         data_base.session.query(CovidCasesModel)
                         .filter(CovidCasesModel.country_id == country_id)
@@ -134,7 +138,7 @@ class CovidCasesRepo(CovidCasesRepoInterface):
                 except Exception as error:
                     raise NoResultFound from error
 
-                with DataBaseConnectionHandler() as data_base:
+                with DataBaseConnectionHandler(self.__connection_string) as data_base:
                     data = (
                         data_base.session.query(CovidCasesModel)
                         .filter(CovidCasesModel.date == data_date)
@@ -149,7 +153,7 @@ class CovidCasesRepo(CovidCasesRepoInterface):
                 except Exception as error:
                     raise NoResultFound from error
 
-                with DataBaseConnectionHandler() as data_base:
+                with DataBaseConnectionHandler(self.__connection_string) as data_base:
                     data = (
                         data_base.session.query(CovidCasesModel)
                         .filter(
@@ -162,7 +166,7 @@ class CovidCasesRepo(CovidCasesRepoInterface):
 
             else:
 
-                with DataBaseConnectionHandler() as data_base:
+                with DataBaseConnectionHandler(self.__connection_string) as data_base:
                     data = data_base.session.query(CovidCasesModel).all()
                     query_data = data
 

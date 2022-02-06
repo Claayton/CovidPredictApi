@@ -7,8 +7,11 @@ faker = Faker()
 client = TestClient(countries)
 
 
-def test_get_countries_no_query():
-    """Testando a rota get_countries sem utilizar parâmetro de query no url"""
+def test_get_countries_without_query_params():
+    """
+    Testando a rota get_countries.
+    Sem utilizar nenhum parâmetro de query no url.
+    """
 
     url = "/api/countries/"
     headers = {"X-Test": "true"}
@@ -22,10 +25,14 @@ def test_get_countries_no_query():
     assert "name" in response.json()["data"][0]
 
 
-def test_get_countries_with_query():
-    """Testando a rota get_countries utilizando um parâmetro de query no url"""
+def test_get_countries_with_query_params():
+    """
+    Testando a rota get_countries.
+    Utilizando um valor válido para o parâmetro de query 'country' no url.
+    """
 
     attributes = {"country": "BRA"}
+
     url = f"/api/countries/?name={attributes['country']}"
     headers = {"X-Test": "true"}
 
@@ -39,9 +46,13 @@ def test_get_countries_with_query():
 
 
 def test_get_countries_error_422():
-    """Testando o erro 422 (Unprocessable Entity) na rota get_countries"""
+    """
+    Testando o erro 422 (Unprocessable Entity) na rota get_countries.
+    Utilizando um valor inválido para o parâmetro de query 'country' no url.
+    """
 
     attributes = {"country": "Hogwarts"}
+
     url = f"/api/countries/?name={attributes['country']}"
     headers = {"X-Test": "true"}
 

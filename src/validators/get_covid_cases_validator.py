@@ -13,6 +13,9 @@ all_countries = []
 for data in get_countries_response["data"]:
     all_countries.append(data.name)
 
+if all_countries == []:
+    all_countries = ["BRA"]
+
 
 def get_covid_cases_validator(request: any) -> None:
     """Validor de parâmtros da url"""

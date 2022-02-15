@@ -45,9 +45,12 @@ class GetCountry(GetCountriesInterface):
         Realiza a busca de todos os países cadastrados.
         :return: Um dicionário com as informações do processo.
         """
+        validate_entry = True
 
         response = self.__countries_repo.get_countries()
-        if response is not None:
-            validate_entry = True
+
+        if response is None:
+
+            validate_entry = False
 
         return {"success": validate_entry, "data": response}

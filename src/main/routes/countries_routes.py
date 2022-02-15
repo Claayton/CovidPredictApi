@@ -8,7 +8,7 @@ from src.main.composers import get_countries_composer, register_countries_compos
 from src.validators.countries_validator import get_from_country_validator
 from .tests import middleware_testing
 
-countries = APIRouter(prefix="/api/countries")
+countries = APIRouter(prefix="/api/countries", tags=["countries"])
 
 
 @countries.get("/")

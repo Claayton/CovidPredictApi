@@ -16,7 +16,7 @@ from .tests import middleware_testing
 covid_cases = APIRouter(prefix="/api/covid_cases")
 
 
-@covid_cases.get("/")
+@covid_cases.get("/", tags=["covid_cases"])
 async def get_covid_cases(request: RequestFastApi):
     """Rota para buscar os casos de covid cadastrados no banco de dados"""
 
@@ -46,7 +46,7 @@ async def get_covid_cases(request: RequestFastApi):
     )
 
 
-@covid_cases.post("/")
+@covid_cases.post("/", tags=["covid_cases"])
 async def register_covid_cases(request: RequestFastApi):
     """Rota para registrar novos casos de covid vindos da API para o banco de dados"""
 
@@ -76,7 +76,7 @@ async def register_covid_cases(request: RequestFastApi):
     )
 
 
-@covid_cases.get("/predict")
+@covid_cases.get("/predict", tags=["predict"])
 async def covid_cases_predict(request: RequestFastApi):
     """Rota para buscar os dados de covid no mundo e registrar no DB."""
 
@@ -104,7 +104,7 @@ async def covid_cases_predict(request: RequestFastApi):
     )
 
 
-@covid_cases.get("/colector")
+@covid_cases.get("/colector", tags=["colector"])
 async def covid_cases_colector(request: RequestFastApi):
     """Rota para buscar os dados de covid no mundo e registrar no DB."""
 

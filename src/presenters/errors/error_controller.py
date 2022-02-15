@@ -4,6 +4,7 @@ from src.presenters.helpers.http_models import HttpResponse
 from src.errors import (
     HttpRequestError,
     HttpBadRequestError,
+    HttpNotFoundError,
     HttpUnprocessableEntityError,
 )
 
@@ -16,7 +17,13 @@ def handler_errors(error: Type[Exception]) -> Dict:
     """
 
     if isinstance(
-        error, (HttpRequestError, HttpBadRequestError, HttpUnprocessableEntityError)
+        error,
+        (
+            HttpRequestError,
+            HttpBadRequestError,
+            HttpNotFoundError,
+            HttpUnprocessableEntityError,
+        ),
     ):
         http_response = HttpResponse(
             status_code=error.status_code, body={"error": error.message}

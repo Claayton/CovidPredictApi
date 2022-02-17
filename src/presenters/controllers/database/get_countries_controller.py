@@ -6,7 +6,7 @@ from src.presenters.helpers import HttpRequest, HttpResponse
 from src.errors import (
     HttpUnprocessableEntityError,
     HttpBadRequestError,
-    HttpNotFoundError,
+    HttpRequestError,
 )
 from src.presenters.interface import ControllerInterface
 
@@ -46,7 +46,7 @@ class GetCountryController(ControllerInterface):
 
         if usecase_response == []:
 
-            raise HttpNotFoundError(message="No data found in the database.")
+            raise HttpRequestError(status_code=302, message="Found!")
 
         response = []
 

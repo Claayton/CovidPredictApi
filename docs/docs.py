@@ -16,7 +16,7 @@ tags_metadata = [
         "description": "Forecast of new cases of covid for the next few days. ",
     },
     {
-        "name": "colector",
+        "name": "colectors",
         "description": "It collects data from an external api,\
         and saves everything in the database for future searches.",
     },

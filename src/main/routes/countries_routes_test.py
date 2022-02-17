@@ -1,9 +1,7 @@
 """Testes para countries_routes"""
 from fastapi.testclient import TestClient
-from faker import Faker
 from .countries_routes import countries
 
-faker = Faker()
 client = TestClient(countries)
 
 
@@ -61,16 +59,3 @@ def test_get_countries_error_422():
     assert response.status_code == 422
     assert isinstance(response.json(), dict)
     assert "error" in response.json()["data"]
-
-
-def test_register_countries():
-    """Testando a rota register_countries"""
-
-    url = "/api/countries/"
-    headers = {"X-Test": "true"}
-
-    response = client.post(url=url, headers=headers)
-
-    assert response.status_code == 200
-    assert "data" in response.json()
-    assert "error" not in response.json()

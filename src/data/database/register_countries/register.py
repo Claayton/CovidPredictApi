@@ -44,6 +44,9 @@ class RegisterCountries(RegisterCountriesInterface):
                 insersion = self.__countries_repo.insert_country(country)
                 response.append(insersion)
 
+        world_insertion = self.__countries_repo.insert_country("WORLD")
+        response.append(world_insertion)
+
         return {"success": validate_entry, "data": response}
 
     def __registered_country(self, country_name: str) -> Boolean:

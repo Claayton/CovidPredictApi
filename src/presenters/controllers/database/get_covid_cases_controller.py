@@ -3,7 +3,11 @@ from typing import Type, List
 from datetime import date, datetime
 from src.domain.models.covid_cases import CovidCases
 from src.presenters.helpers import HttpRequest, HttpResponse
-from src.errors import HttpBadRequestError, HttpUnprocessableEntityError
+from src.errors import (
+    HttpBadRequestError,
+    HttpUnprocessableEntityError,
+    HttpRequestError,
+)
 from src.presenters.interface import ControllerInterface
 from src.domain.usecases import (
     GetCovidCasesInterface as GetCovidCases,
@@ -82,24 +86,24 @@ class GetCovidCasesController(ControllerInterface):
         self, usecase_response: List[CovidCases]
     ) -> List[CovidCases]:
 
-        if usecase_response is not None:
+        if usecase_response == []:
 
-            response = []
+            raise HttpRequestError(status_code=302, message="Found!")
 
-            for data in usecase_response:
+        response = []
 
-                response.append(
-                    {
-                        "id": data.id,
-                        "date": date.isoformat(data.date),
-                        "new_cases": data.new_cases,
-                        "country": self.__get_country_name(data.country_id),
-                    }
-                )
+        for data in usecase_response:
 
-            return HttpResponse(status_code=200, body=response)
+            response.append(
+                {
+                    "id": data.id,
+                    "date": date.isoformat(data.date),
+                    "new_cases": data.new_cases,
+                    "country": self.__get_country_name(data.country_id),
+                }
+            )
 
-        raise HttpUnprocessableEntityError()
+        return HttpResponse(status_code=200, body=response)
 
     def __get_country_name(self, country_id: int):
 

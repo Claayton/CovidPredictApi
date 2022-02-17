@@ -3,7 +3,11 @@ from typing import Type, List
 from src.domain.usecases import GetCountriesInterface as GetCountries
 from src.domain.models import Country
 from src.presenters.helpers import HttpRequest, HttpResponse
-from src.errors import HttpUnprocessableEntityError, HttpBadRequestError
+from src.errors import (
+    HttpUnprocessableEntityError,
+    HttpBadRequestError,
+    HttpRequestError,
+)
 from src.presenters.interface import ControllerInterface
 
 
@@ -39,6 +43,10 @@ class GetCountryController(ControllerInterface):
 
     @classmethod
     def __formated_response(cls, usecase_response: List[Country]) -> List[Country]:
+
+        if usecase_response == []:
+
+            raise HttpRequestError(status_code=302, message="Found!")
 
         response = []
 

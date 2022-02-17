@@ -1,6 +1,6 @@
 """Diretório de instância do app"""
 from fastapi import FastAPI
-from src.main.routes import countries, covid_cases
+from src.main.routes import countries, covid_cases, colectors
 from ..docs import tags_metadata
 
 
@@ -16,5 +16,6 @@ def create_app() -> FastAPI:
 
     app.include_router(countries)
     app.include_router(covid_cases)
+    app.include_router(colectors)
 
     return app

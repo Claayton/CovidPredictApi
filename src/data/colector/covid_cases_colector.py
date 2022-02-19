@@ -17,29 +17,39 @@ class CovidCasesColector(CovidCasesColectorInterface):
         self.__api_consumer = api_consumer
         self.__get_countries = get_countries
 
-    def covid_cases_country(self, country: str) -> Dict[bool, List[Dict]]:
+    def covid_cases_colector(self, country: str = None) -> Dict[bool, List[Dict]]:
         """
         Realiza o tratamento dos dados do covid por país recebidos do consumer.
         :param country: O país de referência que deverá ser tratado os dados.
-        :param days: A quantidade de dias futuros que devem ser previstos.
-        :return: Os dados do covid19 ja tratados e com uma previsão para os próximos dias.
+            * por padão o parametro country é None, retornando os dados de todos os países.
+        :return: Os dados do covid19 (data, casos no dia), separados em dicionarios.
         """
 
-        country_exist = self.__get_countries.by_name(name=country)
+        if country is not None:
 
-        if not country_exist["success"]:
-            http_error = HttpUnprocessableEntityError(message="Invalid Country!")
+            country_exist = self.__get_countries.by_name(name=country)
 
-            return {"success": False, "data": {"error": http_error}}
+            if not country_exist["success"]:
+                http_error = HttpUnprocessableEntityError(message="Invalid Country!")
 
-        api_response = self.__api_consumer.get_data_covid_by_country(country).response
+                return {"success": False, "data": {"error": http_error}}
 
-        country_data_response = self.__separete_data(api_response, country)
+            api_response = self.__api_consumer.get_data_covid_by_country(
+                country
+            ).response
+            country_data_response = self.__separete_country_data(api_response, country)
 
-        return {"success": True, "data": country_data_response}
+            return {"success": True, "data": country_data_response}
+
+        api_response = self.__api_consumer.get_all_data_covid()
+        all_data_response = self.__separete_all_data(api_response=api_response.response)
+
+        return {"success": True, "data": all_data_response}
 
     @classmethod
-    def __separete_data(cls, data_days: List[Dict], country: str = None) -> List[Dict]:
+    def __separete_country_data(
+        cls, data_days: List[Dict], country: str = None
+    ) -> List[Dict]:
 
         separate_data = []
 
@@ -58,3 +68,34 @@ class CovidCasesColector(CovidCasesColectorInterface):
                 continue
 
         return separate_data
+
+    def __separete_all_data(self, api_response: List[Dict]) -> List[Dict]:
+
+        countries = self.__get_countries.all_countries()["data"]
+
+        separete_all_data = {}
+        separate_data = []
+
+        for country in countries:
+
+            if country.name == "WORLD":
+                continue
+
+            for index, day in enumerate(api_response[country.name]):
+
+                try:
+                    separate_data.append(
+                        {
+                            "id": index + 1,
+                            "date": day["date"],
+                            "new_cases": day["new_cases"],
+                            "country": country.name,
+                        }
+                    )
+                except KeyError:
+                    continue
+
+            separete_all_data[country.name] = separate_data[:]
+            separate_data.clear()
+
+        return separete_all_data

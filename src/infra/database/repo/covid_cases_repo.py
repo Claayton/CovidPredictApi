@@ -1,6 +1,7 @@
 """Diretório de manipulação de dados"""
 from datetime import date
 from typing import Tuple, List
+from sqlalchemy import func
 from sqlalchemy.orm.exc import NoResultFound
 from src.data.interfaces import CovidCasesRepoInterface
 from src.infra.database.config import DataBaseConnectionHandler
@@ -10,6 +11,7 @@ from src.infra.database.entities import (
 )
 from src.domain.models import CovidCases
 from src import config
+from src.domain.tests import mock_covid_cases
 
 
 class CovidCasesRepo(CovidCasesRepoInterface):
@@ -118,7 +120,23 @@ class CovidCasesRepo(CovidCasesRepoInterface):
 
             query_data = None
 
-            if country and not data_date:
+            if country == "WORLD":
+
+                with DataBaseConnectionHandler(self.__connection_string) as data_base:
+                    data = (
+                        data_base.session.query(
+                            CovidCasesModel.id,
+                            CovidCasesModel.date,
+                            func.sum(CovidCasesModel.new_cases),
+                        )
+                        .group_by(CovidCasesModel.date)
+                        .all()
+                    )
+
+                    query_data = self.__format_WORLD_response(data=data)
+
+            elif country and not data_date:
+
                 try:
                     country_id = self.__find_country_id(country)
                 except Exception as error:
@@ -164,12 +182,6 @@ class CovidCasesRepo(CovidCasesRepoInterface):
                     )
                     query_data = data
 
-            else:
-
-                with DataBaseConnectionHandler(self.__connection_string) as data_base:
-                    data = data_base.session.query(CovidCasesModel).all()
-                    query_data = data
-
             return query_data
 
         except NoResultFound:
@@ -182,3 +194,15 @@ class CovidCasesRepo(CovidCasesRepoInterface):
                 data_base.session.close()
             except UnboundLocalError:
                 pass
+
+    @classmethod
+    def __format_WORLD_response(cls, data: List) -> List[CovidCases]:
+
+        response = []
+
+        for day in data:
+            response.append(
+                CovidCases(id=day[0], date=day[1], new_cases=day[2], country_id=1)
+            )
+
+        return response

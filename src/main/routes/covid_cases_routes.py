@@ -1,6 +1,6 @@
 """Diretório de rotas do app"""
 from fastapi import APIRouter, Request as RequestFastApi
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, RedirectResponse
 from src.infra.tests import CountryRepoSpy, CovidCasesRepoSpy
 from src.main.adapters.request_adapter import request_adapter
 from src.presenters.errors.error_controller import handler_errors
@@ -35,6 +35,14 @@ async def get_covid_cases(request: RequestFastApi):
 
     except Exception as error:  # pylint: disable=W0703
         response = handler_errors(error)
+
+    if response.status_code == 302:
+
+        return RedirectResponse(
+            url="/api/colectors/covid_cases/",
+            status_code=response.status_code,
+            headers={"message": "Coletando dados em servidor externo!"},
+        )
 
     return JSONResponse(
         status_code=response.status_code, content={"data": response.body}

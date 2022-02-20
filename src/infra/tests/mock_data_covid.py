@@ -18,22 +18,40 @@ def mock_data_covid() -> Dict:
                 "date": fake.date(),
                 "new_cases": fake.random_int(),
                 "country": "BRA",
-            }
-        ],
-        "USA": [
+            },
             {
                 "id": 2,
                 "date": fake.date(),
                 "new_cases": fake.random_int(),
-                "country": "USA",
-            }
+                "country": "BRA",
+            },
         ],
-        "ARG": [
+        "USA": [
             {
                 "id": 3,
                 "date": fake.date(),
                 "new_cases": fake.random_int(),
+                "country": "USA",
+            },
+            {
+                "id": 4,
+                "date": fake.date(),
+                "new_cases": fake.random_int(),
+                "country": "USA",
+            },
+        ],
+        "ARG": [
+            {
+                "id": 5,
+                "date": fake.date(),
+                "new_cases": fake.random_int(),
                 "country": "ARG",
-            }
+            },
+            {
+                "id": 5,
+                "date": fake.date(),
+                "new_cases": fake.random_int(),
+                "country": "ARG",
+            },
         ],
     }

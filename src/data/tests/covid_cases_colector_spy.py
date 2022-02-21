@@ -16,9 +16,7 @@ class CovidCasesColectorSpy(CovidCasesColectorInterface):
         self.covid_cases_country_attributes = {}
         self.covid_cases_world_attributes = {}
 
-    def covid_cases_country(
-        self, country: str, days: int = 0
-    ) -> Dict[bool, List[Dict]]:
+    def covid_cases_colector(self, country: str = None) -> Dict[bool, List[Dict]]:
         """
         Realiza o tratamento dos dados do covid por país recebidos do consumer.
         :param country: O país de referência que deverá ser tratado os dados.
@@ -37,61 +35,9 @@ class CovidCasesColectorSpy(CovidCasesColectorInterface):
 
         api_response = mock_data_covid()["BRA"]
 
-        country_data_response = self.__separete_data(api_response, days, country)
+        country_data_response = self.__separete_data(api_response, country)
 
         return {"success": True, "data": country_data_response}
-
-    def covid_cases_world(self, days: int) -> Dict[bool, List[Dict]]:
-        """
-        Realiza o tratamento dos dados do covid do mundo inteiro recebidos do consumer.
-        :param days: A quantidade de dias futuros que devem ser previstos.
-        :return: Os dados do covid19 ja tratados e com uma previsão para os próximos dias.
-        """
-
-        countries = self.__get_countries.all_countries()["data"]
-
-        self.covid_cases_world_attributes["countries"] = countries
-
-        api_response = mock_data_covid()
-
-        countries_data = []
-
-        for country in countries:
-
-            country_data = api_response[country.name]
-            each_country = self.__separete_data(country_data, days, country)
-
-            countries_data.append(each_country)
-
-            world_data_response = self.__world_data_sum(countries_data, days)
-
-        return {"success": True, "data": world_data_response}
-
-    @classmethod
-    def __world_data_sum(cls, countries_data: List[List], days: int) -> List[Dict]:
-
-        world_data_response = []
-
-        for country in countries_data:
-            for index, day in enumerate(country):
-
-                date = day["date"]
-                new_cases = day["new_cases"]
-
-                if date == day["date"]:
-                    new_cases += new_cases
-
-                world_data_response.append(
-                    {
-                        "id": index,
-                        "date": date,
-                        "new_cases": new_cases,
-                        "country": "WORLD",
-                        "days": days,
-                    }
-                )
-
-        return world_data_response
 
     @classmethod
     def __separete_data(

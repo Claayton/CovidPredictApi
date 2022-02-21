@@ -36,6 +36,10 @@ class RegisterCountries(RegisterCountriesInterface):
         validate_entry = isinstance(countries, list)
 
         if validate_entry:
+
+            world_insertion = self.__countries_repo.insert_country("WORLD")
+            response.append(world_insertion)
+
             for country in countries:
 
                 if self.__registered_country(country_name=country):
@@ -43,9 +47,6 @@ class RegisterCountries(RegisterCountriesInterface):
 
                 insersion = self.__countries_repo.insert_country(country)
                 response.append(insersion)
-
-        world_insertion = self.__countries_repo.insert_country("WORLD")
-        response.append(world_insertion)
 
         return {"success": validate_entry, "data": response}
 

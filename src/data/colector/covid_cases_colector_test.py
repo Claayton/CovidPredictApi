@@ -4,8 +4,29 @@ from src.data.colector import CovidCasesColector
 from src.data.tests import GetCountrySpy
 
 
-def test_covid_cases_country():
-    """Testando o método covid_cases_country"""
+def test_covid_cases_colector_without_country_param():
+    """Testando o método covid_cases_colector sem utilizar o parametro 'country'"""
+
+    api_consumer = DataCovidConsumerSpy()
+    get_countries = GetCountrySpy(None)
+    covid_cases_colector = CovidCasesColector(api_consumer, get_countries)
+
+    response = covid_cases_colector.covid_cases_colector()
+
+    # Teste de entrada:
+    # Testando se os atributos enviados para a api_consumer são os mesmos enviados para o método.
+    assert api_consumer.get_data_covid_by_country_attributes == {}
+
+    # Teste de saída:
+    assert isinstance(response, dict)
+    assert isinstance(response["data"], dict)
+    assert isinstance(response["data"]["BRA"], list)
+    assert "new_cases" in response["data"]["BRA"][0]
+    assert "date" in response["data"]["BRA"][0]
+
+
+def test_covid_cases_colector_with_country_param():
+    """Testando o método covid_cases_colector com um valor valido para o parametro 'country'"""
 
     api_consumer = DataCovidConsumerSpy()
     get_countries = GetCountrySpy(None)
@@ -13,7 +34,7 @@ def test_covid_cases_country():
 
     attribute = {"country": "BRA"}
 
-    response = covid_cases_colector.covid_cases_country(attribute["country"])
+    response = covid_cases_colector.covid_cases_colector(attribute["country"])
 
     api_consumer_attributes = api_consumer.get_data_covid_by_country_attributes[
         "country"
@@ -31,10 +52,10 @@ def test_covid_cases_country():
     assert "date" in response["data"][0]
 
 
-def test_covid_cases_country_error():
+def test_covid_cases_colector_with_country_param_error():
     """
-    Testando o erro no método covid_cases_country.
-    Enviando um número inteiro para o atributo country que deveria ser uma string.
+    Testando o erro no método covid_cases_colector.
+    Enviando um número inteiro para o parametro 'country' que deveria ser uma string.
     """
 
     api_consumer = DataCovidConsumerSpy()
@@ -43,7 +64,7 @@ def test_covid_cases_country_error():
 
     attributes = {"country": 5}
 
-    response = covid_cases_colector.covid_cases_country(attributes["country"])
+    response = covid_cases_colector.covid_cases_colector(attributes["country"])
 
     api_consumer_attributes = api_consumer.get_data_covid_by_country_attributes
 

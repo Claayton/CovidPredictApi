@@ -28,20 +28,21 @@ class RegisterCovidCases(RegisterCovidCasesInterface):
         :return: Um dicionário com as informações do processo.
         """
 
+        data_covid = self.__covid_cases_colector.covid_cases_colector()["data"]
         countries = self.__get_countries.all_countries()["data"]
+
         country_response = []
         response = {}
 
         for country in countries:
 
+            print(f"{country.id} : {country.name}")
+            if country.name == "WORLD":
+                continue
+
             try:
 
-                data_covid = self.__covid_cases_colector.covid_cases_country(
-                    country=country.name
-                )
-
-                for day in data_covid["data"]:
-
+                for day in data_covid[country.name]:
                     insertion = self.__covid_cases_repo.insert_data(
                         data_date=day["date"],
                         new_cases=day["new_cases"],
@@ -59,6 +60,7 @@ class RegisterCovidCases(RegisterCovidCasesInterface):
             except Exception as error:
                 raise error
 
-            response[country.name] = country_response
+            response[country.name] = country_response[:]
+            country_response.clear()
 
         return {"success": True, "data": response}

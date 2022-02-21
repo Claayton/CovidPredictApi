@@ -39,7 +39,7 @@ class CovidCasesColectorController(ControllerInterface):
                 message="The country parameter cannot be an integer type"
             )
 
-        response = self.__use_case.covid_cases_country(country=country)
+        response = self.__use_case.covid_cases_colector(country=country)
 
         if response["success"] is False:
             raise HttpBadRequestError(message=response["data"]["error"])

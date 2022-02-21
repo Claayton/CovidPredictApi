@@ -35,11 +35,17 @@ class GetCovidCasesController(ControllerInterface):
             query_string_params = http_request.query.keys()
 
             if "date" in query_string_params:
-
                 data_date = http_request.query["date"]
 
                 try:
-                    datetime.strptime(data_date, "%Y-%m-%d")
+                    chosen_date = datetime.strptime(data_date, "%Y-%m-%d")
+                    today = datetime.strptime(str(date.today()), "%Y-%m-%d")
+
+                    if chosen_date >= today:
+                        raise HttpBadRequestError(
+                            message=f"Data for the {str(chosen_date).split()[0]} is not yet available"
+                        )
+
                 except ValueError as error:
                     raise HttpUnprocessableEntityError(message=str(error)) from error
                 except Exception as error:
